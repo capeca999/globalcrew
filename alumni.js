@@ -1,4 +1,4 @@
-import { list } from '@vercel/blob';
+import { list, get } from '@vercel/blob';
 
 // Matches image files: "Nombre, Aerolinea.jpg" (case-insensitive extension)
 const IMAGE_RE = /\.(jpe?g|png|webp)$/i;
@@ -8,19 +8,32 @@ function baseName(pathname) {
   return pathname.split('/').pop();
 }
 
-async function fetchBlobText(url) {
-  const res = await fetch(url, {
-    headers: { Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}` }
-  });
-  if (!res.ok) return '';
-  return (await res.text()).trim();
+async function streamToString(stream) {
+  const reader = stream.getReader();
+  const chunks = [];
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(Buffer.from(value));
+  }
+  return Buffer.concat(chunks).toString('utf-8');
 }
 
-function proxiedImageUrl(request, blobUrl) {
+async function fetchBlobText(pathname) {
+  try {
+    const result = await get(pathname, { access: 'private' });
+    if (!result || !result.stream) return '';
+    return (await streamToString(result.stream)).trim();
+  } catch (err) {
+    return '';
+  }
+}
+
+function proxiedImageUrl(request, pathname) {
   const host = request.headers['x-forwarded-host'] || request.headers.host;
   const protocol = request.headers['x-forwarded-proto'] || 'https';
   const base = host ? `${protocol}://${host}` : '';
-  return `${base}/api/blob-image?url=${encodeURIComponent(blobUrl)}`;
+  return `${base}/api/blob-image?path=${encodeURIComponent(pathname)}`;
 }
 
 export default async function handler(request, response) {
@@ -34,7 +47,7 @@ export default async function handler(request, response) {
     const textByName = {};
     for (const t of texts) {
       const key = baseName(t.pathname).replace(TEXT_RE, '').trim().toLowerCase();
-      textByName[key] = t.url;
+      textByName[key] = t.pathname;
     }
 
     const alumni = await Promise.all(
@@ -59,7 +72,7 @@ export default async function handler(request, response) {
           name,
           airline,
           quote,
-          photoUrl: proxiedImageUrl(request, img.url),
+          photoUrl: proxiedImageUrl(request, img.pathname),
           uploadedAt: img.uploadedAt
         };
       })

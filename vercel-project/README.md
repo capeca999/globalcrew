@@ -7,10 +7,12 @@ que leen directamente de tu Blob Store `globalcrew` para rellenar:
 - El carrusel "Alumnos contratados" (fotos + citas).
 - El texto "PRÓXIMO CURSO" de la barra superior.
 
-Tus archivos están subidos como **privados**, así que todas las lecturas
-(texto y fotos) pasan autenticadas por el servidor con tu
-`BLOB_READ_WRITE_TOKEN` — no hace falta cambiar nada de cómo subes los
-archivos ni marcarlos como públicos.
+Tu store es de tipo **privado con autenticación OIDC** (por eso tu proyecto
+tiene las variables `BLOB_STORE_ID` y `BLOB_WEBHOOK_PUBLIC_KEY`, en vez de un
+`BLOB_READ_WRITE_TOKEN`). Los blobs privados de Vercel **no se pueden leer con
+un `fetch()` normal a su URL, bajo ningún concepto** — hay que usar el método
+`get()` del SDK, que es justo lo que hacen estas funciones. No hace falta que
+cambies nada de cómo subes los archivos.
 
 ## 1. Desplegar
 
