@@ -367,15 +367,14 @@ body.announce-closed{--announce-h:0px;}
   object-fit:cover;box-shadow:0 0 0 3px rgba(247,241,236,.18);
 }
 .alumni-quote{font-family:var(--ff-display);font-size:1.15rem;line-height:1.4;color:var(--cream);}
-.alumni-who{margin-top:16px;font-family:var(--ff-mono);font-size:.72rem;color:rgba(247,241,236,.6);}
-.alumni-who span{display:inline-flex;align-items:center;gap:6px;}
-.airline-plane{width:13px;height:13px;flex-shrink:0;transform:rotate(90deg);}
-.airline-logo-chip{
-  display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
-  background:#fff;border-radius:5px;padding:2px 4px;height:16px;
-}
-.airline-logo-chip img{height:100%;width:auto;max-width:44px;object-fit:contain;display:block;}
-.alumni-who strong{display:block;font-family:var(--ff-display);font-size:.95rem;color:var(--steel-light);margin-bottom:2px;}
+.alumni-who{margin-top:18px;display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;}
+.alumni-who-text{font-family:var(--ff-mono);font-size:.72rem;color:rgba(247,241,236,.6);}
+.alumni-who-text strong{display:block;font-family:var(--ff-display);font-size:.95rem;color:var(--steel-light);margin-bottom:2px;}
+.airline-mark{flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.airline-logo-chip{background:#fff;border-radius:9px;padding:7px 12px;height:40px;box-shadow:0 6px 16px -6px rgba(0,0,0,.4);}
+.airline-logo-chip img{height:100%;width:auto;max-width:110px;object-fit:contain;display:block;}
+.airline-plane-badge{width:40px;height:40px;border-radius:50%;box-shadow:0 6px 16px -6px rgba(0,0,0,.4);}
+.airline-plane-badge svg{width:18px;height:18px;color:#fff;transform:rotate(90deg);}
 .alumni-nav{display:flex;align-items:center;justify-content:space-between;margin-top:22px;}
 .arrow-btn.small{width:36px;height:36px;}
 .arrow-btn.small svg{width:15px;height:15px;}
@@ -821,32 +820,32 @@ body.announce-closed{--announce-h:0px;}
           <div class="alumni-slide active">
             <div class="alumni-avatar">SL</div>
             <p class="alumni-quote">"Entré sin saber nada del sector y hoy vuelo con Iberia. Las prácticas reales en el A300 marcaron la diferencia."</p>
-            <div class="alumni-who"><strong>Sara L.</strong><span><svg class="airline-plane" viewBox="0 0 24 24" style="color:#D91023"><use href="#icon-plane"/></svg> Contratada en Iberia</span></div>
+            <div class="alumni-who"><div class="alumni-who-text"><strong>Sara L.</strong><span>Ahora vuela con Iberia</span></div><span class="airline-mark airline-plane-badge" style="background:#D91023"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span></div>
           </div>
           <div class="alumni-slide">
             <div class="alumni-avatar">DM</div>
             <p class="alumni-quote">"Apenas dos meses después de graduarme ya estaba volando de base en Valencia con Vueling."</p>
-            <div class="alumni-who"><strong>Daniel M.</strong><span><svg class="airline-plane" viewBox="0 0 24 24" style="color:#FFCC00"><use href="#icon-plane"/></svg> Contratado en Vueling</span></div>
+            <div class="alumni-who"><div class="alumni-who-text"><strong>Daniel M.</strong><span>Ahora vuela con Vueling</span></div><span class="airline-mark airline-plane-badge" style="background:#FFCC00"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span></div>
           </div>
           <div class="alumni-slide">
             <div class="alumni-avatar">CR</div>
             <p class="alumni-quote">"El acompañamiento hasta la entrevista fue clave. Hoy soy tripulante de cabina en Volotea."</p>
-            <div class="alumni-who"><strong>Carla R.</strong><span><svg class="airline-plane" viewBox="0 0 24 24" style="color:#6D2077"><use href="#icon-plane"/></svg> Contratada en Volotea</span></div>
+            <div class="alumni-who"><div class="alumni-who-text"><strong>Carla R.</strong><span>Ahora vuela con Volotea</span></div><span class="airline-mark airline-plane-badge" style="background:#6D2077"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span></div>
           </div>
           <div class="alumni-slide">
             <div class="alumni-avatar">TB</div>
             <p class="alumni-quote">"Superé el proceso de selección de Ryanair gracias al certificado oficial y a la preparación de entrevistas."</p>
-            <div class="alumni-who"><strong>Tomás B.</strong><span><svg class="airline-plane" viewBox="0 0 24 24" style="color:#073590"><use href="#icon-plane"/></svg> Contratado en Ryanair</span></div>
+            <div class="alumni-who"><div class="alumni-who-text"><strong>Tomás B.</strong><span>Ahora vuela con Ryanair</span></div><span class="airline-mark airline-plane-badge" style="background:#073590"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span></div>
           </div>
           <div class="alumni-slide">
             <div class="alumni-avatar">NP</div>
             <p class="alumni-quote">"Hice el TCP Ejecutivo y en pocas semanas ya estaba volando con easyJet en base Valencia."</p>
-            <div class="alumni-who"><strong>Nuria P.</strong><span><svg class="airline-plane" viewBox="0 0 24 24" style="color:#FF6600"><use href="#icon-plane"/></svg> Contratada en easyJet</span></div>
+            <div class="alumni-who"><div class="alumni-who-text"><strong>Nuria P.</strong><span>Ahora vuela con easyJet</span></div><span class="airline-mark airline-plane-badge" style="background:#FF6600"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span></div>
           </div>
           <div class="alumni-slide">
             <div class="alumni-avatar">HG</div>
             <p class="alumni-quote">"El programa intensivo y las prácticas oficiales AESA me llevaron directo a volar con World2Fly."</p>
-            <div class="alumni-who"><strong>Hugo G.</strong><span><svg class="airline-plane" viewBox="0 0 24 24" style="color:#0072CE"><use href="#icon-plane"/></svg> Contratado en World2Fly</span></div>
+            <div class="alumni-who"><div class="alumni-who-text"><strong>Hugo G.</strong><span>Ahora vuela con World2Fly</span></div><span class="airline-mark airline-plane-badge" style="background:#0072CE"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span></div>
           </div>
         </div>
         <div class="alumni-nav">
@@ -1358,18 +1357,21 @@ function alumniSlideHTML(a) {
     ? `<img class="alumni-photo" src="${a.photoUrl}" alt="${a.name}">`
     : `<div class="alumni-avatar">${(a.name || '?').slice(0, 2).toUpperCase()}</div>`;
 
-  let airlineMark = '';
+  let mark = '';
   if (a.airline) {
-    airlineMark = a.airlineLogoUrl
-      ? `<span class="airline-logo-chip"><img src="${a.airlineLogoUrl}" alt="${a.airline}"></span>`
-      : `<svg class="airline-plane" viewBox="0 0 24 24" style="color:${airlineColor(a.airline)}"><use href="#icon-plane"/></svg>`;
+    mark = a.airlineLogoUrl
+      ? `<span class="airline-mark airline-logo-chip"><img src="${a.airlineLogoUrl}" alt="${a.airline}"></span>`
+      : `<span class="airline-mark airline-plane-badge" style="background:${airlineColor(a.airline)}"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span>`;
   }
-  const airlineLine = a.airline ? `${airlineMark} Ahora vuela con ${a.airline}` : 'Antiguo alumno de Global Crew';
+  const subtitle = a.airline ? `Ahora vuela con ${a.airline}` : 'Antiguo alumno de Global Crew';
 
   return `<div class="alumni-slide">
     ${photo}
     <p class="alumni-quote">"${a.quote}"</p>
-    <div class="alumni-who"><strong>${a.name}</strong><span>${airlineLine}</span></div>
+    <div class="alumni-who">
+      <div class="alumni-who-text"><strong>${a.name}</strong><span>${subtitle}</span></div>
+      ${mark}
+    </div>
   </div>`;
 }
 
