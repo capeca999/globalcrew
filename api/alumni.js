@@ -8,6 +8,13 @@ function baseName(pathname) {
   return pathname.split('/').pop();
 }
 
+// Normalizes "Air Nostrum" / "airnostrum.jpg" / "TradeAir" to the same key,
+// so the airline name in the photo filename can be matched against the
+// logo filenames in the logo/ folder regardless of spacing or case.
+function normalize(str) {
+  return (str || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
 async function fetchBlobText(pathname) {
   try {
     const result = await get(pathname, { access: 'private' });
@@ -28,16 +35,27 @@ function proxiedImageUrl(request, pathname) {
 
 export default async function handler(request, response) {
   try {
-    const { blobs } = await list({ prefix: 'alumnoscontratados/' });
+    const [{ blobs }, logoResult] = await Promise.all([
+      list({ prefix: 'alumnoscontratados/' }),
+      list({ prefix: 'logo/' })
+    ]);
 
     const images = blobs.filter((b) => IMAGE_RE.test(b.pathname));
     const texts = blobs.filter((b) => TEXT_RE.test(b.pathname));
+    const logos = logoResult.blobs.filter((b) => IMAGE_RE.test(b.pathname));
 
     // Index quote files by the student's first name (lowercased, trimmed)
     const textByName = {};
     for (const t of texts) {
       const key = baseName(t.pathname).replace(TEXT_RE, '').trim().toLowerCase();
       textByName[key] = t.pathname;
+    }
+
+    // Index airline logos by normalized airline name
+    const logoByAirline = {};
+    for (const l of logos) {
+      const key = normalize(baseName(l.pathname).replace(IMAGE_RE, ''));
+      logoByAirline[key] = l.pathname;
     }
 
     const alumni = await Promise.all(
@@ -58,11 +76,14 @@ export default async function handler(request, response) {
             : 'Antiguo alumno de Global Crew, ¡ya está volando!';
         }
 
+        const logoPath = airline ? logoByAirline[normalize(airline)] : null;
+
         return {
           name,
           airline,
           quote,
           photoUrl: proxiedImageUrl(request, img.pathname),
+          airlineLogoUrl: logoPath ? proxiedImageUrl(request, logoPath) : null,
           uploadedAt: img.uploadedAt
         };
       })
