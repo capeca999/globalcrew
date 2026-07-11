@@ -8,6 +8,21 @@ function baseName(pathname) {
   return pathname.split('/').pop();
 }
 
+async function fetchBlobText(url) {
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}` }
+  });
+  if (!res.ok) return '';
+  return (await res.text()).trim();
+}
+
+function proxiedImageUrl(request, blobUrl) {
+  const host = request.headers['x-forwarded-host'] || request.headers.host;
+  const protocol = request.headers['x-forwarded-proto'] || 'https';
+  const base = host ? `${protocol}://${host}` : '';
+  return `${base}/api/blob-image?url=${encodeURIComponent(blobUrl)}`;
+}
+
 export default async function handler(request, response) {
   try {
     const { blobs } = await list({ prefix: 'alumnoscontratados/' });
@@ -32,12 +47,7 @@ export default async function handler(request, response) {
 
         let quote = '';
         if (textByName[key]) {
-          try {
-            const textRes = await fetch(textByName[key]);
-            quote = (await textRes.text()).trim();
-          } catch (_) {
-            quote = '';
-          }
+          quote = await fetchBlobText(textByName[key]);
         }
         if (!quote) {
           quote = airline
@@ -49,7 +59,7 @@ export default async function handler(request, response) {
           name,
           airline,
           quote,
-          photoUrl: img.url,
+          photoUrl: proxiedImageUrl(request, img.url),
           uploadedAt: img.uploadedAt
         };
       })

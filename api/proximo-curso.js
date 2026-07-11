@@ -16,7 +16,14 @@ export default async function handler(request, response) {
     candidates.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
     const target = candidates[0];
 
-    const fileRes = await fetch(target.url);
+    const fileRes = await fetch(target.url, {
+      headers: { Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}` }
+    });
+
+    if (!fileRes.ok) {
+      return response.status(200).json({ text: '' });
+    }
+
     const text = (await fileRes.text()).trim();
 
     response.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
