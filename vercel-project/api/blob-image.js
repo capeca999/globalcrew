@@ -1,33 +1,27 @@
 import { get } from '@vercel/blob';
 
-// Streams a private Blob file through the server using the SDK's get(),
-// so <img> tags in the browser can show it without needing credentials.
+// Only allow proxying files inside these known folders, to avoid
+// this route being used to fetch arbitrary paths from the store.
+const ALLOWED_PREFIXES = ['alumnoscontratados/', 'proximoscursos/'];
 
 export default async function handler(request, response) {
   const { path } = request.query;
 
-  if (!path || typeof path !== 'string' || !path.startsWith('alumnoscontratados/')) {
+  if (!path || typeof path !== 'string' || !ALLOWED_PREFIXES.some((p) => path.startsWith(p))) {
     return response.status(400).send('Invalid or missing path');
   }
 
   try {
     const result = await get(path, { access: 'private' });
-
-    if (!result || !result.stream) {
-      return response.status(404).send('Blob not found');
+    if (!result) {
+      return response.status(404).send('Not found');
     }
 
-    const reader = result.stream.getReader();
-    const chunks = [];
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      chunks.push(Buffer.from(value));
-    }
+    const arrayBuffer = await new Response(result.stream).arrayBuffer();
 
-    response.setHeader('Content-Type', result.blob?.contentType || 'application/octet-stream');
-    response.setHeader('Cache-Control', 'private, max-age=3600');
-    return response.status(200).send(Buffer.concat(chunks));
+    response.setHeader('Content-Type', result.blob.contentType || 'application/octet-stream');
+    response.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400');
+    return response.status(200).send(Buffer.from(arrayBuffer));
   } catch (err) {
     return response.status(500).send('Error fetching blob image');
   }

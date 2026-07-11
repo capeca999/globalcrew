@@ -1,16 +1,5 @@
 import { list, get } from '@vercel/blob';
 
-async function streamToString(stream) {
-  const reader = stream.getReader();
-  const chunks = [];
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    chunks.push(Buffer.from(value));
-  }
-  return Buffer.concat(chunks).toString('utf-8');
-}
-
 export default async function handler(request, response) {
   try {
     const { blobs } = await list({ prefix: 'proximoscursos/' });
@@ -28,11 +17,10 @@ export default async function handler(request, response) {
     const target = candidates[0];
 
     const result = await get(target.pathname, { access: 'private' });
-    if (!result || !result.stream) {
+    if (!result) {
       return response.status(200).json({ text: '' });
     }
-
-    const text = (await streamToString(result.stream)).trim();
+    const text = (await new Response(result.stream).text()).trim();
 
     response.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
     return response.status(200).json({ text });

@@ -8,22 +8,12 @@ function baseName(pathname) {
   return pathname.split('/').pop();
 }
 
-async function streamToString(stream) {
-  const reader = stream.getReader();
-  const chunks = [];
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    chunks.push(Buffer.from(value));
-  }
-  return Buffer.concat(chunks).toString('utf-8');
-}
-
 async function fetchBlobText(pathname) {
   try {
     const result = await get(pathname, { access: 'private' });
-    if (!result || !result.stream) return '';
-    return (await streamToString(result.stream)).trim();
+    if (!result) return '';
+    const text = await new Response(result.stream).text();
+    return text.trim();
   } catch (err) {
     return '';
   }
