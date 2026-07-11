@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Tienes madera de Cabin Crew? · Test · Global Crew Valencia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy-950:#2B060D;
+  --navy-800:#5C1220;
+  --navy-700:#7E1B2C;
+  --steel:#8C8783;
+  --steel-light:#D6D2CD;
+  --steel-dark:#4A4643;
+  --cream:#F7F1EC;
+  --sky:#EFEBE8;
+  --ink:#241E1C;
+  --ink-soft:#6E6763;
+  --line:rgba(43,38,36,0.14);
+  --line-light:rgba(247,241,236,0.22);
+  --radius-lg:22px;
+  --radius-md:14px;
+  --ff-display:'Space Grotesk',sans-serif;
+  --ff-body:'Inter',sans-serif;
+  --ff-mono:'IBM Plex Mono',monospace;
+  --ease:cubic-bezier(.22,.9,.32,1);
+}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--ff-body);color:var(--cream);
+  background:linear-gradient(180deg,#2B060D 0%,#4A0F1B 40%,#6B1220 75%,#8C2233 100%);
+  min-height:100vh;line-height:1.55;overflow-x:hidden;
+}
+img{max-width:100%;display:block;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+h1,h2,h3{font-family:var(--ff-display);line-height:1.1;letter-spacing:-.01em;}
+.wrap{max-width:720px;margin:0 auto;padding:0 24px;}
+
+/* stars bg */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,.45) 0, transparent 60%),
+    radial-gradient(1px 1px at 80% 15%, rgba(255,255,255,.35) 0, transparent 60%),
+    radial-gradient(1.5px 1.5px at 65% 70%, rgba(255,255,255,.3) 0, transparent 60%),
+    radial-gradient(1px 1px at 90% 60%, rgba(255,255,255,.3) 0, transparent 60%),
+    radial-gradient(1px 1px at 8% 75%, rgba(255,255,255,.25) 0, transparent 60%);
+  opacity:.7;
+}
+
+/* nav */
+.mini-nav{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:24px;}
+.mini-logo{display:flex;align-items:center;gap:10px;}
+.mini-logo img{width:32px;height:32px;border-radius:50%;box-shadow:0 0 0 1px rgba(247,241,236,.25);}
+.mini-logo-text{font-family:var(--ff-display);font-weight:700;font-size:1rem;}
+.mini-logo-text span{display:block;font-family:var(--ff-mono);font-size:.58rem;letter-spacing:.16em;color:var(--steel-light);font-weight:500;margin-top:2px;}
+.back-link{font-family:var(--ff-mono);font-size:.72rem;letter-spacing:.06em;color:rgba(247,241,236,.75);display:flex;align-items:center;gap:6px;padding:8px 4px;}
+.back-link:hover{color:var(--cream);}
+.back-link svg{width:14px;height:14px;}
+
+/* intro */
+main{position:relative;z-index:1;padding:20px 0 90px;}
+.intro{text-align:center;padding:30px 0 10px;}
+.eyebrow{
+  font-family:var(--ff-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--steel-light);
+  display:inline-flex;align-items:center;gap:.5em;
+}
+.eyebrow::before,.eyebrow::after{content:'';width:18px;height:1px;background:var(--steel-light);display:inline-block;}
+.intro h1{font-size:clamp(2rem,6vw,2.8rem);margin-top:16px;}
+.intro h1 em{font-style:normal;color:var(--steel-light);}
+.intro p{color:rgba(247,241,236,.75);max-width:480px;margin:16px auto 0;font-size:1.02rem;}
+.start-btn{
+  margin-top:32px;display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--ff-display);font-weight:600;font-size:1rem;
+  background:var(--steel-light);color:var(--navy-950);padding:16px 30px;border-radius:100px;
+  transition:transform .35s var(--ease),box-shadow .35s var(--ease);
+}
+.start-btn:hover{transform:translateY(-3px);box-shadow:0 16px 34px -12px rgba(0,0,0,.4);}
+.start-hint{margin-top:18px;font-family:var(--ff-mono);font-size:.7rem;color:rgba(247,241,236,.5);letter-spacing:.06em;}
+
+/* runway / plane progress */
+.runway-wrap{padding:0 0 8px;margin-top:6px;}
+.runway-strip{
+  position:relative;height:72px;border-radius:16px;overflow:visible;
+  background:linear-gradient(180deg,#433C39,#26201E);
+  border:1px solid rgba(247,241,236,.14);
+  box-shadow:inset 0 0 30px rgba(0,0,0,.35);
+}
+.runway-strip::before,.runway-strip::after{
+  content:'';position:absolute;left:14px;right:14px;height:2px;background:rgba(247,241,236,.4);
+}
+.runway-strip::before{top:9px;}
+.runway-strip::after{bottom:9px;}
+.runway-centerline{
+  position:absolute;top:50%;left:0;right:0;height:2px;transform:translateY(-50%);
+  background-image:repeating-linear-gradient(90deg,rgba(247,241,236,.55) 0 18px,transparent 18px 34px);
+}
+.runway-cloud{
+  position:absolute;border-radius:50%;background:rgba(247,241,236,.14);filter:blur(2px);pointer-events:none;
+}
+.runway-cloud.c1{width:38px;height:14px;top:10px;left:18%;animation:cloudDrift1 9s ease-in-out infinite;}
+.runway-cloud.c2{width:24px;height:10px;top:15px;left:55%;animation:cloudDrift2 7s ease-in-out infinite;}
+.runway-cloud.c3{width:30px;height:11px;top:8px;left:78%;animation:cloudDrift1 11s ease-in-out infinite reverse;}
+@keyframes cloudDrift1{0%,100%{transform:translateX(0);}50%{transform:translateX(14px);}}
+@keyframes cloudDrift2{0%,100%{transform:translateX(0);}50%{transform:translateX(-10px);}}
+
+.runway-plane-wrap{
+  position:absolute;top:50%;left:0%;transform:translate(-50%,-50%);
+  transition:left .6s var(--ease);z-index:2;
+}
+.runway-plane-wrap.taxiing{animation:taxiBounce .45s ease-in-out infinite;}
+@keyframes taxiBounce{0%,100%{margin-top:0;}50%{margin-top:-2px;}}
+.runway-plane{
+  display:block;width:24px;height:24px;color:var(--steel-light);
+  transform:rotate(90deg);transition:transform .5s var(--ease);
+  filter:drop-shadow(0 0 8px rgba(214,210,205,.55));
+}
+.runway-contrail{
+  position:absolute;top:50%;right:100%;width:0;height:2px;transform:translateY(-50%);
+  background:linear-gradient(90deg,transparent,rgba(247,241,236,.6));
+  transition:width .5s var(--ease);
+}
+.runway-plane-wrap.takeoff{
+  transition:left 1.1s cubic-bezier(.3,.05,.25,1), top 1.1s cubic-bezier(.3,.05,.25,1);
+  left:104% !important;top:-120px;
+}
+.runway-plane-wrap.takeoff .runway-plane{transform:rotate(38deg) scale(1.45);}
+.runway-plane-wrap.takeoff .runway-contrail{width:90px;transition:width 1.1s var(--ease);}
+.progress-label{
+  display:flex;justify-content:space-between;font-family:var(--ff-mono);font-size:.68rem;
+  letter-spacing:.06em;color:rgba(247,241,236,.55);margin-top:10px;
+}
+
+/* quiz card */
+.quiz-stage{display:none;}
+.quiz-stage.active{display:block;}
+.quiz-card{
+  background:rgba(247,241,236,.06);border:1px solid rgba(247,241,236,.14);
+  border-radius:var(--radius-lg);padding:34px 28px;margin-top:26px;backdrop-filter:blur(6px);
+}
+.q-count{font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.1em;color:var(--steel-light);text-transform:uppercase;}
+.q-text{font-family:var(--ff-display);font-size:1.5rem;margin-top:12px;line-height:1.25;}
+.q-options{margin-top:26px;display:flex;flex-direction:column;gap:12px;}
+.q-option{
+  text-align:left;border:1px solid rgba(247,241,236,.18);border-radius:14px;
+  padding:16px 18px;font-size:.96rem;color:var(--cream);
+  transition:background .25s,border-color .25s,transform .2s;
+  display:flex;align-items:center;gap:12px;
+}
+.q-option:hover{background:rgba(247,241,236,.1);border-color:rgba(247,241,236,.35);transform:translateX(3px);}
+.q-option.picked{background:var(--steel-light);color:var(--navy-950);border-color:var(--steel-light);}
+.q-option .opt-mark{
+  width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(247,241,236,.4);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:11px;
+}
+.q-option.picked .opt-mark{border-color:var(--navy-950);background:var(--navy-950);color:var(--steel-light);}
+
+/* result */
+.result-stage{display:none;text-align:center;}
+.result-stage.active{display:block;}
+.result-badge{
+  width:88px;height:88px;border-radius:50%;margin:10px auto 0;
+  background:linear-gradient(135deg,var(--steel-dark),var(--navy-700));
+  display:flex;align-items:center;justify-content:center;
+}
+.result-badge svg{width:40px;height:40px;color:var(--steel-light);}
+.result-kicker{font-family:var(--ff-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--steel-light);margin-top:22px;}
+.result-title{font-size:clamp(1.8rem,5.5vw,2.4rem);margin-top:12px;}
+.result-text{color:rgba(247,241,236,.8);max-width:520px;margin:16px auto 0;font-size:1rem;}
+.result-traits{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:22px;}
+.result-traits span{
+  font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.06em;color:var(--cream);
+  border:1px solid rgba(247,241,236,.25);padding:8px 14px;border-radius:100px;
+}
+.result-cta{margin-top:34px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;font-family:var(--ff-display);font-weight:600;font-size:.95rem;
+  padding:14px 26px;border-radius:100px;transition:transform .35s var(--ease),box-shadow .35s var(--ease),background .3s;
+}
+.btn-primary{background:var(--steel-light);color:var(--navy-950);}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 30px -10px rgba(0,0,0,.4);}
+.btn-ghost{border:1px solid rgba(247,241,236,.3);color:var(--cream);}
+.btn-ghost:hover{background:rgba(247,241,236,.08);transform:translateY(-3px);}
+.retry{margin-top:20px;}
+.retry button{font-family:var(--ff-mono);font-size:.72rem;letter-spacing:.06em;color:rgba(247,241,236,.55);text-decoration:underline;text-underline-offset:3px;}
+.retry button:hover{color:var(--cream);}
+
+@media (max-width:560px){
+  .wrap{padding:0 18px;}
+  .quiz-card{padding:26px 20px;}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms !important;}
+}
+
+/* ===================== WHATSAPP FLOATING BUTTON ===================== */
+.whatsapp-float{
+  position:fixed;bottom:24px;right:24px;z-index:250;
+  width:58px;height:58px;border-radius:50%;
+  background:#25D366;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 12px 28px -8px rgba(0,0,0,.45);
+  transition:transform .3s var(--ease),box-shadow .3s var(--ease);
+}
+.whatsapp-float:hover{transform:translateY(-4px) scale(1.05);box-shadow:0 16px 34px -8px rgba(0,0,0,.5);}
+.whatsapp-float svg{width:28px;height:28px;color:#fff;}
+.whatsapp-float .wa-pulse{
+  position:absolute;inset:0;border-radius:50%;background:#25D366;opacity:.55;
+  animation:waPulse 2.4s ease-out infinite;
+}
+@keyframes waPulse{0%{transform:scale(1);opacity:.55;}100%{transform:scale(1.7);opacity:0;}}
+@media (max-width:560px){
+  .whatsapp-float{bottom:18px;right:18px;width:52px;height:52px;}
+  .whatsapp-float svg{width:25px;height:25px;}
+}
+</style>
+</head>
+<body>
+
+<svg style="display:none">
+  <symbol id="icon-plane" viewBox="0 0 24 24" fill="none"><path d="M21 16V14L13 9V3.5C13 2.67 12.33 2 11.5 2S10 2.67 10 3.5V9L2 14V16L10 13.5V19L7.5 20.5V22L11.5 21L15.5 22V20.5L13 19V13.5L21 16Z" fill="currentColor"/></symbol>
+  <symbol id="icon-back" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M5 12L11 6M5 12L11 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-badge" viewBox="0 0 24 24" fill="none"><path d="M12 2L14.5 7.5L20.5 8.2L16 12.3L17.3 18.2L12 15.1L6.7 18.2L8 12.3L3.5 8.2L9.5 7.5L12 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-whatsapp" viewBox="0 0 24 24"><path fill="currentColor" d="M17.5 14.4c-.3-.15-1.75-.85-2-.95-.27-.1-.47-.15-.67.15-.2.3-.77.95-.94 1.15-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.47-.9-.8-1.5-1.78-1.67-2.08-.17-.3-.02-.46.13-.6.14-.14.3-.35.45-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.48-.5-.67-.5-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.47 0 1.45 1.06 2.86 1.21 3.06.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.75-.71 2-1.4.25-.68.25-1.27.17-1.4-.07-.12-.27-.2-.57-.35Z"/><path fill="currentColor" d="M12.02 2C6.5 2 2 6.48 2 12c0 1.85.5 3.58 1.35 5.07L2 22l5.08-1.33A9.96 9.96 0 0 0 12.02 22C17.53 22 22 17.52 22 12S17.53 2 12.02 2Zm0 18.1c-1.65 0-3.2-.46-4.51-1.26l-.32-.19-3.02.79.8-2.94-.21-.3A8.08 8.08 0 0 1 3.9 12c0-4.48 3.65-8.12 8.12-8.12 4.47 0 8.11 3.64 8.11 8.12 0 4.48-3.64 8.1-8.11 8.1Z"/></symbol>
+</svg>
+
+<a href="https://wa.me/34696186558?text=Hola%2C%20me%20gustar%C3%ADa%20informaci%C3%B3n%20sobre%20los%20cursos%20de%20Global%20Crew" target="_blank" rel="noopener" class="whatsapp-float" aria-label="Escríbenos por WhatsApp">
+  <span class="wa-pulse"></span>
+  <svg viewBox="0 0 24 24"><use href="#icon-whatsapp"/></svg>
+</a>
+
+<header class="mini-nav wrap">
+  <a href="index.html" class="mini-logo">
+    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD/wAARCAD8APwDACIAAREBAhEB/9sAQwAIBgYHBgUIBwcHCQkICgwUDQwLCwwZEhMPFB0aHx4dGhwcICQuJyAiLCMcHCg3KSwwMTQ0NB8nOT04MjwuMzQy/9sAQwEJCQkMCwwYDQ0YMiEcITIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIy/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMAAAERAhEAPwDyyiiiuY+tCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD648Hf8iRoH/YOt/wD0WtbVYvg7/kSNA/7B1v8A+i1rarojsfMYj+NP1f5hRRRTMT4tooormPrQooooAKKKKACiiigAooooAKKK6CTws32HzYLjzpfvKqrhSPY+tNK5E6sYW5nuc/RSkUlIsKKKKACiiigAooooAKKKKACiiigAooooAKKKKAPrjwd/yJGgf9g63/8ARa1tVi+Dv+RI0D/sHW//AKLWtquiOx8xiP40/V/mFFFFMxPi2iiiuY+tCiiigAooooAKKKKACirNrYXd5/x7W7Sf7Xb8zxWzB4RuX/19xFH/ALKqXP8ASmkzKdanD4mc7XV+FtT3p/Z8rfOuWh+ncfh/L6VHceEv3H+jXDNL/wBNMAH8ulSWHheW2nS4nutrq25VjXuP9o/4VUU0zlr1sPVptX9B/iDQ/O33tsn73/lpH/fHqPf+dctBbT3P+ot5ZP8AdUmvS6yNQ1+002R7dklklX7yqvTIzyTVyitzkwuMqJciVzk7jSNQtoPNnt2VP4m3A4+uDxVKtbU/EFzqUf2fYsMX8SryTj1NZNZO3Q9WjKco+/uFFFFI1FVWeREX77fLVmfT7m2j82VNqbtv3gfzqrXWW8i3+mp5vzeYu1vr0P61UVc5sTXlRSfTqcnRUtzbtbTvE38P3W9R2NRVJ0Qkpq6CiiigYUUUUAFFFFAH1x4O/wCRI0D/ALB1v/6LWtqsXwd/yJGgf9g63/8ARa1tV0R2PmMR/Gn6v8wooopmJ8W0UUVzH1oUUUUAFFFTWlpPeXaW8Cbnb8gPU+1ANpK7GwQS3M6RQIzO38K/56V1em+F4If3t9tml/55/wAI/wAa09N0uDTYNkXzO3+sk7n/AAHtV2tYw7njYnHyfuU9EIoVI9iptRf4e1LS1hat4iis99vbbZLj/wAdT6+p9qtuxwQhOrK0TWubmCzg82eVVRf7zdfYeprirnX9Sud/+keSn92Pj9etULm5nvJPNnlaR/8Aa7fQdhRDbT3P+qiZv9rt+fSs3JvY9ehgYUlzVLXO80dmfRrV2dmdkG5m5P51xGpzedq11L/elP5Dgfyrr9Pm+zaTb27J+9WPa3pmsuLRbRPvbpH/ANpv6CqabRy0K1KlVlJ/I5qrEdjczfdt5f8AvnH866qOCCH/AFUSr/uqBUlTyGs80X2YnNR6Jdv97yo/95v8Ksp4fb+K4/75X/69blFVyI55ZlWe2hzFxpFzDPsiTzE/hZf689a1NHt7m2jlSdNqN8y/MOvfp+FPvtVjs5PK2eY+3c3zYxTbDVGv5/K8rairu+9n09vehJJmk61erR96Onck1HT/ALfGm19sq/db29Kzx4eb+K4X/vj/AOvWlqN39jtPNX77NtX6/wD6s1hPq18//Lxt/wB1QP6USUUx4R4iUP3b0G39i1hIis6tu+72/MVUpzyNNJvldmf+8zZptZM9empqPvvUKKKKRQUUUUAfXHg7/kSNA/7B1v8A+i1rarF8Hf8AIkaB/wBg63/9FrW1XRHY+YxH8afq/wAwooopmJ8W0UUVzH1oUUUUAKB/d/ya7vRdLXTbT5k/0iT5pG/oPYVX+Hvhv+1ZNV1edN1vplozL7ylTt+u0At9dtbdaQXU8rMMRb93H5hS0lUdUmnS02W3+tk+VW7IO7f4e5rU8iKu7GPr+usm+ytH2v8AdkkXt7D/ABrEtdJubn5/9Wn95v6Ctqz0uCz+f/WS/wDPRv6DtV6o5b7nesTChHkpLXuULfSLaH7yeY/95v8ADpV8CiiqSSOOpWnUd5MKKR2VI97Oqp/ebpWXc65AnywJ5j/3ug/xNDaQqdKdT4UatVrjULa2/wBbL8/91eT+nSuduNTubn70u1P7q8D/ABNVKhz7HpUstb1m/uNqbXm/5YRf8Ck/wFZ01/czf624b/d6D9KrV03hcWM0csUtvE1wvzbmXJdT9fT29RU3bOqVCjQjzctzma2/D6f8fEv0X+p/pUOt6Q2mz74vmtW+63of7pqGx1NrCB4liVtzbt272/8ArUlo9S6r9tQ/ddSXXLjfdpEv3I1/U/8A1sVl06SRppHdvvs2786bQ3dmuHpeypqIVNPaXNvBazzRNHFdIZYWb+NQxUkfiDU+j6Tc69rNrpdon+kXDhF9EHdj7KMn8K9n+LXhKCDwJYT6fHtXR9sa+vkkBTn1OQpz9aErq5NbEKnKMO54XRRRUnQFFFFAH1x4O/5EjQP+wdb/APota2qxfB3/ACJGgf8AYOt//Ra1tV0R2PmMR/Gn6v8AMKKKKZifFtFFFcx9aFFFBNAH0f8ACrQ47b4bRLIvzal5k0nrhsqv/joWuFu7WWwu5bWf/WwyFG/Dv9D1/GvYfCMC2/g3RIF/gsIB/wCOCsPxv4Za/j/tKyQtcRj99GvWRR3A7kencfQV0LY+Xry5qjfmeaVnXjb53/2cLWjWXdD/AEt/89qZkRUUVTvdRgs/vfNL/wA816/j6ChsqEZTdootsVSPe3yp/erJu9ciT5LZPMf+83T/AOvWTd3095J+9f5P4Y16D/Gq1ZOfY9XD5d1qa+RLPcz3Mm+eVm/kPoKioorM9SEIwVkFFaNjot9f/PFFti/56ScD8O5/CujsvC9pbfPPuuX/ANrhfyHX8apRbMauJp0/iepxgVn+ZUZkX7zbeBUtneNYXcVxF99W/Mdx+NejqipHsVFVP7u0Y/KsySTRNKk+b7NDL97aseW59gCRV8ljk+vwnePJcvMINSsfmTdFMu704P8AI1zB8JXPnv8A6REsW75W5LY9x6/jXR2GoQalA8sG7Yr7PmXHIAP9RWP4h1q5s7tLW2dV+TczbQTkk9M+w/Wqla12cmHnWhUcKenqV7vwzBZ2Mtw162+NS3zKAD7fU1zsaNNIiRIzOzBVVVJJJ6AAck+1ammaXrPirUks7GKe8uG5+ZjtjH95ieFH+RmvfPAvwy0/wmiXl0y3mrbeZ2X5YsjkIO3+8eT7dKi3NsehKu6Eb1ZXkUvhd4AbwzaHVdTX/iaXKY8vj/R067cjueM/QDsc9DrrprutReGlHmWyx/adR9PL5EcZPYuwJ/3UYd6u+KfEVn4W0GfUrn5tnywwr96WQ/dQe5P5DJqt4M0e703SXu9UO7V9Rk+1XrejkABB6KqgKB7H1q7W0PHnUlUk6kvkfMet6XJoWuXulzfetZ2i3eqg/K34gg/jVGvUfjZpkCeJF1G2+ZvIiS7Vf4GYv5ZP+8EYf8BHrXl1ZSVme/hqvtaSkFFFFSbn1x4O/wCRI0D/ALB1v/6LWtqsXwd/yJGgf9g63/8ARa1tV0R2PmMR/Gn6v8wooopmJ8W0UUVzH1oUGiigD6u8B3YvPAehz7txFjEjf7yqFb9Qa6LtXmHwW1Nn8MNpE7/vbdjLGv8A0zc5/Q5/MV6hXQtj5eulGpJLucb4k8EQ6m73Vhtgu25Zf4JD/Q+//wCuvK9a0y7sJ9l3btDKv3lZe3qD0I9xX0PVO+0201K3Nve28c0X911/keoPuKZkfLep6p9m3xQf63+Juyf4mueYs8m9vmdv4q971j4HaJeF5NLvbuwdv4Wbzkz/AMCO7/x6uI1P4LeKbPc9o1pqC/w+XL5bH8GwP/Hqykmz2sHUw0I76+Z51RW7d+DPE1jJ5VzoOoL/ALXlF1/Flyo/OtLTvC8Vt899+8l/55/wj6+v8qhRbOypiacFe9zntP0i71L/AFabYv8Ano3C/h611en+HrGz2OyedL/ek6D6DoK1QP7tLWyikeRXx9SppHRBTZHWGN3ldVRfvM3AFZuq67aab8jP5lx/zzVv/Qj2Fchdahd6xP8AM7Sf3YY1JA+gHf3ockjOjhZ1tXojor7xVBD8ljF5z/8APRshfwHU/pXLXNxLczvcS/fkbc1beneBvFOqnFpoN9t/vTp5S/m+0H8K7bR/gZqlztfWdSgtF/5526mV8f7xwAfzrN3Z6lOOGwyvfX72c34UH/Epf/ruf/QVrZ0r4aaz4t12W8vUl0/S92PNkUeZIBx8innt95hjnjNev+GfA2ieGIFjtLd5JQ2fPuG3uT6jsOnYCumxWnLoeZUxTVWVSHUydB8O6Z4c05bPS7ZYYurN1Z2/vMepP1rQubiG1glnnkWOGJS8js2AoAyST2GKlJ2ivEvGPia8+IPiCLwb4bl/0Ld/pVyv3ZAD8x/3F/8AHjjtjLbsYwjOtPV+rNbQpJfiV44OuzI6+HtGfFjEy4E83/PQg9xweenyj+9Xp97eQadYzXdy4jggQvJI38KgZJ/Squh6NaaDo9rptkm2C3XavqT3Y+pJyT9a8y+NHiaQwweFNP8AmuLple4VeuCcIn1Zufoo9aWyKt7WahDb9BdO0258a/DjxNq08R+16vcPcWq91WHAiT80I99xrw4GvrPTrOLwt4Mitc5TT7P5m9Sq5Y/icn8a+S1P7tN1RUR6WXzvKUY7C0UUVmemfXHg7/kSNA/7B1v/AOi1rarF8Hf8iRoH/YOt/wD0WtbVdEdj5jEfxp+r/MKKKKZifFtFFFcx9aFPhTzp0i/vMF/M0yrFh/x/2/8Avj+dCJm7RbO/0HV59B1m3v4P+WfytH/fQ9V/L9QK9902/ttVsYr20lEkMy7lb+h9COhHtXzjXS+EfF1z4YutjK02nyN+8h7g/wB5ff27/rXSfKyep7vRVLT9StNVs0urKdJom6Mh/QjsfY1doEGKMUUUAJiopLeCb/WQxyf7yg/zqaigDOk0HSJfv6XZt/2wX/Cov+EZ0P8A6BFp/wB+lrWooAxo/Cnh6F98ehaarddwtU6/lWjDaW1sNsMEUf8A1zQD+VWM0ZoHzSExS4oooEJTHdUTcxwtU9S1Oy0exlvL+6jt7aMZaSQ4A/xPsOTXgXjz4n3fiktpekJJb6WzbG6+ZdZOMEDop/u9T39AnKxrRoSqu0du5r/ET4ky61OfDfhl2mhkbypp4clrhiceXHjse579uOvffDrwNF4R0cPPsbVLgBrmRei46Rr/ALI/U5PpjE+GHw4GhRLrOrxZ1SVf3cLf8uyn/wBnPc9ug759QJ+SklfVm9ecaa9lS+bMjxLr1p4Z0K51S7OVhHyp3kY/dUe5OK8O+G9jd+MviRLrmpfvPsrfa5m7eYeI1HsMEj2SqfxQ8bL4q1j7LZS7tLsWPllW4lfo0nuOy+2T/FXr/wAMPDDeGfCMSTptvbz/AEi49QSBtX8BgfXNK92awh7Ci5v4pbehL8UdR/s34e6q4+/NGLdf+BkKf0JP4V8wV7V8eNVH2bSNGRh+8drmT6KNq/mWb8q8Vqaj1OvLIWpuXcKKKKzPRPrjwd/yJGgf9g63/wDRa1tVi+Dv+RI0D/sHW/8A6LWtquiOx8xiP40/V/mFFFFMxPi2iiiuY+tCp7K6+wX9pe/8+88c3/fLBv6VBRQDV1Y918ZeB/JjbWdEXzLWRfMkgjX/AFeedyj+77dvp04CvZfhbrS614Estz7p7MfZJuecoAAT9V2n8apeK/h3FfvLe6Ptgum+aSDokh9v7p/Q+3WulHytSDjNxfQ850bXtS0G7+0afcbd33o25R/95e/16+9eq+H/AIh6Zq22G8/0G69HP7s/R+g+hx+NeO3VrPZzvb3cTQ3Ef3o5FwR/9b3piOySb1oMz6YVlcblp1eE6P4j1LTUzZXkka/xRNyv/fJ4/EV2On/Epk+TULBW/wCmlu2P/HW/xoGei4oxXN2/jfQLkfNe+R/12Upj8en61qWmt6Xfor2eo2lwjfdaGdXB/I0BZmhijFR+Yv8AeX86gm1Czthme6hh/wCukoX+ZoCzLWaPxrk774j+ENODGXXrOQr/AA27+cfyTNcZrHx10+HcmjaXPcP/AM9LlhEn1wMsfpxSbSNIUKk/hiz10kAc8V5/4r+LOh+H99vZOupX448uFxsQ/wC0/QfQZP0rxXxB4/8AEnibfFe3/l2rf8u1vmOP6EA5I/3iapeHPC2reKL77LpNr5m3/WTNxHH/ALzdvoMk+lS59jvpZfZc9Z2Jte8S694z1WL7dK1w7Ntt7SBTtBPZVGcn3OT717D8OfhfHoWzV9ZRZdU+9DDwVtv6F/foO3qdvwT8OtM8IR/aMfatTZcSXbjp6qg/hH6nuew7Y9KIxvqyMRiopezo6RCvH/i54++xwP4b0uX/AEqQYu5lbmND/AD2Zh19B9eN/wCI/wAQYvCtibOxZZNYnT92vUQKf42H8h3PsK+fdPsNQ8QazFZ2264vbqX7zMclicszH06kn60SlbRCwWF53zz2R13wr8I/8JH4kS6uYt2m6ewlk9Hfqie/I3EegGetfSorD8KeHLbwt4ft9Ltvm8vmSTvI5+8x+p7dgAO1VfHfiH/hGfCF/fq+242+Vb/9dG4X8uv4GnFWRniq3t6to9NEeAfEjWzr3jzUrhW3QW7fZYf92PIP5tuP4iuUoFFYM96jTVOCgugUUUUGh9ceDv8AkSNA/wCwdb/+i1rarF8Hf8iRoH/YOt//AEWtbVdEdj5jEfxp+r/MKKKKZifFtFFFcx9aFFFFAHoXwi8ULoPir7Bcy7bLU8RfN0SUfcPtnJX8V9K+jga+L6+kfhh44XxVo/2K7lH9rWagTesqdBIPr0PofqK1hLoePmOH19rH5nWaz4f03XoPK1C1WTb92Toyf7rDkV5prfwv1Kz3y6VKt7F/zzbCSD/2Vv0+lewUVoeUfNc9vc6bP5Vzby28q/wyIUP5HtVmC6V/kb5X/Q19BXdlbX0PlXdvFPF/dlQMP1rmL74b+Hbw7o7eW0f+9byn+TZA/KgDx/V2ZNGunX/nk38sV54UV/vIv/fNfQ1/8J/OtLi3g1l1WSMovnQByMj1DDP5Vyj/AAG1T/lnrlo3+9Aw/qazmmz08BWpU01NnkgjX+4tIIl/uL/3zXrkfwG1Q/6zXLNf92B2/mwrVsvgJaL/AMf+vXMn/XvAsf6sXqeSR3PF4ZdfwPEK0tH0DV/EM/laRYT3XzbWaNfkT/eY/KPxNfROlfCnwhpZV10tbqVf+Wl25l/8dPy/pXYRQRQRrFDEkaLwqqoAH0A6VSh3OepmUV/DX3njnhj4HqrrceJLrzP4vslqxVfoz9T9Fx9a9e0/TrPS7RLWxtYreCP7scahQPwFWxSE1aSR5tbEVKr95gTx0rgPiD8RrbwlAbO023GryL+7j6rED/G+P0HU/TmsPx78W4NOEum+HZVuLwfLJd8FIvXb2Zv0Hv0rxB3nvLvezS3F1M/3uXeRyfzLE1Mp22OjC4KVT3pbDri4u9VvnnneW7vbiTLN1eRzxwB1PQAD2Ar6F+GXgJfC1ib++RTq9wuJOh8hOvlg+vQsR1IHpVD4a/DRNBCazrMSNqjL+6i6i2B/QufXt0Hcn1IURj1ZpjMVG3saewZxXzz8ZPE/9r+Ik0i2bdaadnzNvR5iOf8AvkfL9S1es/ELxdF4S8OSToyfb5/3Vojd3I+8R6KOT+A718vO7PI7ys0jsxZmbkkk5JJ9SaU30Fl2H5pe0fTYbRRRWR7YUUUUAfXHg7/kSNA/7B1v/wCi1rarF8Hf8iRoH/YOt/8A0WtbVdEdj5jEfxp+r/MKKKKZifFtFFFcx9aFFFFABVzS9UvdF1K31HT7jybqFtyt29ww7gjgiqdFApRUlZn1D4I8d6f4ysf3e2G/hH+kWzNyP9pfVSe/boa6/PFfGtpeXNjdRXNpPJbzwtmOWNsMD7H+nevc/AXxZOtzppWsQbb/AB8lxCPlmx/s9Q2OcLnPPAraMjw8VgZU/eht+R6zRUEF1BcR+bBKsidNytnn0qerPPCiiigAopM1HLNFDGzySLGi9WZgAPxNAEgFITXE618VfCmjh1/tBb2Zf+WVmvmn6ZHyj8TXmPiH4065qO+LSYI9Ng/56Z8yU/iRtH4A/WpckjenhqtX4Uey+IvGGi+F7fzdUvVidh+7gX5pJP8AdUc/j0968I8Z/FDVvE5ls7bdp+ltkGJW+eUf7bDt/sjj1zXEzTT3l20s8stxcTN8zSMXeRug5PJPQV6H4U+EGsa3sutXLaZZNztZf37j2U/d+rc+1Q5t7HpU8JSw656ruzhdJ0fUNdvksNLtWuLhv4V6IP7zHoB7mvoPwH8NLLwrGl5eMl3q7L/rdvyxZ6hAf1bqfYcV1OgeGtK8NWP2XS7RYU/ibq0h9WY8k/WteqjGxzYnHOfuU9EAGBVHU9QtNJ024v72YRW0KF5HbsP6nsBUl/qNtptjLeXc8cNvCu6SSQ4Civm/4hfECfxfffZ7bdDpELboYm4MzD+Nv6Dt9ejlKxzUKEq07L5mT4x8V3Pi/XHv590duvyWsH/PNM/+hHqT+HYVz9FFYH0dOkqceSOwUUUUFhRRRQB9ceDv+RI0D/sHW/8A6LWtqsXwd/yJGgf9g63/APRa1tV0R2PmMR/Gn6v8wooopmJ8W0UUVzH1oUUUUAFFFFABTkdkkR1ZldWDKykggg5BBHQ5702igD2vwT8RrDW/K03xJN9l1ThIdRjcxefjoGZcYPsflPseK9BubPxNbAvp2qQXSfwx3cQDf99LjP4gV8p12nhX4na74WRLXet9YL8q21wxyo/2W6j6HI9q1jPueRicv15qX3Hr9z4g8aWf+v0iP/ejhaQf+Osax7jx9r6fJIkEL/8AXAg/+PGtnQfix4X1tUWe6/s64/55XmEGfZvun8wfau4imjuI98TpIjdGVgQfxFWnc8ycJQdpKx84+I/H3jS2n+fXGjtG/wBW0MSJ+BIXIP41yEs+s+IX3SNqGqtu/i3z4Pt1x+FfX3kxf88l/IU8ACpcG+p10sXCnH4Fc+VtN+HXi3UdvkaHcwq38dxiID6hiD+ldxovwJupNr63q0cafxRWa7m/77bgf98mvcaWjkQ55jVl8OhzegeB9A8MjdpunRrPtx58nzyn/gR5H0GBXR4xVa7v7OwgMt3dQW8X96aQKPzJrjdX+LnhLStyR3zX8o/gs03j/vo4X9arRHI/aVXrdndn3rmfFPjfRvCdrvv7jdcMuY7aPBkk/DsPc4FeP+IfjPruq7odLiTS7dv+WinzJSP94jav4A/WvOJZpbmd5Z5ZZJZG3NJIxdnPqSeSahz7HbQy6c9Z6HSeL/HGqeMrrfcv5NlG2YbSNjtT3Y/xH3P4Ac1zFFFZN3PYpUoUlaKCiiig0CiiigAooooA+uPB3/IkaB/2Drf/ANFrW1WL4O/5EjQP+wdb/wDota2q6I7HzGI/jT9X+YUUUUzE+LaKKK5j60KKKKACiiigAooooAKKKKACrNjqF9pcm+wvbmzf/p3laPd9cEZqtRQKUYy+I6y1+J3jKz+7rk8if3Z40f8AUrn9a0B8YfGX/P7bN/26rXB0VXOzF4Si/so7ib4u+NJf+YlFH/1ztk/qDWReePPFd+m2fxDqH/bJ/K/9AArnqKLsFhaK2ih08stzP5tzK80v/PSRi7fmeabRRUm0UohRRRQUFFFFAgooooAKKKKACiiigD648Hf8iRoH/YOt/wD0WtbVYvg7/kSNA/7B1v8A+i1rarojsfMYj+NP1f5hRRRTMT4tooormPrQooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA+uPB3/IkaB/2Drf/wBFrW1WL4O/5EjQP+wdb/8Aota2q6I7HzGI/jT9X+YUUUUzExf+EO8Mf9C5pH/gDF/8TR/wh3hj/oXNI/8AAGL/AOJraopcqNvrFb+d/ezF/wCEO8Mf9C5pH/gDF/8AE0f8Id4Y/wChc0j/AMAYv/ia2qKOVB9Yrfzv72Yv/CHeGP8AoXNI/wDAGL/4mj/hDvDH/QuaR/4Axf8AxNbVFHKg+sVv5397MX/hDvDH/QuaR/4Axf8AxNH/AAh3hj/oXNI/8AYv/ia2qKOVB9Yrfzv72Yv/AAh3hj/oXNI/8AYv/iaP+EO8Mf8AQuaR/wCAMX/xNbVFHKg+sVv5397MX/hDvDH/AELmkf8AgDF/8TR/wh3hj/oXNI/8AYv/AImtqijlQfWK387+9mL/AMId4Y/6FzSP/AGL/wCJo/4Q7wx/0Lmkf+AMX/xNbVFHKg+sVv5397MX/hDvDH/QuaR/4Axf/E0f8Id4Y/6FzSP/AABi/wDia2qKOVB9Yrfzv72Yv/CHeGP+hc0j/wAAYv8A4mj/AIQ7wx/0Lmkf+AMX/wATW1RRyoPrFb+d/ezF/wCEO8Mf9C5pH/gDF/8AE0f8Id4Y/wChc0j/AMAYv/ia2qKOVB9Yrfzv72Yv/CHeGP8AoXNI/wDAGL/4mj/hDvDH/QuaR/4Axf8AxNbVFHKg+sVv5397MX/hDvDH/QuaR/4Axf8AxNH/AAh3hj/oXNI/8AYv/ia2qKOVB9Yrfzv72Yv/AAh3hj/oXNI/8AYv/iaP+EO8Mf8AQuaR/wCAMX/xNbVFHKg+sVv5397MX/hDvDH/AELmkf8AgDF/8TR/wh3hj/oXNI/8AYv/AImtqijlQfWK387+9jIYYreCOCCNIoY1CJGihVVQMAADoAO1PoopmTbbuwooooEFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAH//Z" alt="Global Crew Valencia">
+    <span class="mini-logo-text">GLOBAL CREW<span>ESCUELA DE TRIPULANTES</span></span>
+  </a>
+  <a href="index.html" class="back-link"><svg viewBox="0 0 24 24" style="transform:rotate(-90deg);"><use href="#icon-plane"/></svg> Volver a la web</a>
+</header>
+
+<main class="wrap">
+
+  <!-- INTRO -->
+  <section class="quiz-stage active" id="stage-intro">
+    <div class="intro">
+      <span class="eyebrow">TEST VOCACIONAL</span>
+      <h1>¿Tienes madera de <em>Cabin Crew</em>?</h1>
+      <p>Responde 6 preguntas rápidas y descubre tu perfil como tripulante. Spoiler: seguro que apuntas más alto de lo que crees.</p>
+      <button class="start-btn" id="startBtn">Empezar el test <svg viewBox="0 0 24 24" style="width:16px;height:16px;transform:rotate(90deg);"><use href="#icon-plane"/></svg></button>
+      <p class="start-hint">Dura menos de un minuto · Sin registro</p>
+    </div>
+  </section>
+
+  <!-- RUNWAY / PLANE PROGRESS -->
+  <div id="runwaySection" style="display:none;">
+    <div class="runway-wrap">
+      <div class="runway-strip">
+        <div class="runway-cloud c1"></div>
+        <div class="runway-cloud c2"></div>
+        <div class="runway-cloud c3"></div>
+        <div class="runway-centerline"></div>
+        <div class="runway-plane-wrap taxiing" id="runwayPlaneWrap">
+          <div class="runway-contrail" id="runwayContrail"></div>
+          <svg class="runway-plane" id="runwayPlane" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+        </div>
+      </div>
+      <div class="progress-label">
+        <span id="progressText">Pregunta 1 de 6</span>
+        <span id="progressPct">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUESTIONS -->
+  <section class="quiz-stage" id="stage-quiz">
+    <div class="quiz-card">
+      <span class="q-count" id="qCount">PREGUNTA 1 / 6</span>
+      <h2 class="q-text" id="qText">Cargando...</h2>
+      <div class="q-options" id="qOptions"></div>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section class="result-stage" id="stage-result">
+    <div class="result-badge"><svg viewBox="0 0 24 24"><use href="#icon-badge"/></svg></div>
+    <div class="result-kicker">TU PERFIL DE TRIPULANTE</div>
+    <h2 class="result-title" id="resultTitle">—</h2>
+    <p class="result-text" id="resultText">—</p>
+    <div class="result-traits" id="resultTraits"></div>
+    <div class="result-cta">
+      <a href="index.html#cursos" class="btn btn-primary">Ver los cursos</a>
+      <a href="index.html#contacto" class="btn btn-ghost">Hablar con un profesor</a>
+    </div>
+    <div class="retry">
+      <button id="retryBtn">Repetir el test</button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+const questions = [
+  {
+    text: '¿Cómo reaccionas cuando surge un imprevisto de última hora?',
+    options: [
+      { label: 'Respiro, priorizo y busco la solución más rápida', trait: 'calma' },
+      { label: 'Reúno al equipo y repartimos tareas al momento', trait: 'equipo' },
+      { label: 'Me centro en que nadie a mi alrededor se agobie', trait: 'sonrisa' },
+      { label: 'Reviso cada detalle antes de decidir cómo actuar', trait: 'detalle' }
+    ]
+  },
+  {
+    text: 'Un pasajero se pone nervioso durante el vuelo. ¿Qué haces?',
+    options: [
+      { label: 'Le hablo con calma hasta que se tranquiliza', trait: 'calma' },
+      { label: 'Le dedico una sonrisa y hago que se sienta acompañado', trait: 'sonrisa' },
+      { label: 'Coordino con el resto de la tripulación para atenderlo', trait: 'equipo' },
+      { label: 'Le explico con detalle todo lo que está pasando', trait: 'detalle' }
+    ]
+  },
+  {
+    text: '¿Qué es lo que más te atrae de trabajar en un avión?',
+    options: [
+      { label: 'Conocer culturas, idiomas y lugares nuevos', trait: 'aventura' },
+      { label: 'El trabajo en equipo con la tripulación', trait: 'equipo' },
+      { label: 'Hacer que cada pasajero tenga un buen viaje', trait: 'sonrisa' },
+      { label: 'La precisión de los protocolos y procedimientos', trait: 'detalle' }
+    ]
+  },
+  {
+    text: 'Te proponen un destino nuevo sin apenas aviso. ¿Cómo te sientes?',
+    options: [
+      { label: 'Emocionado/a, me encanta lo imprevisto', trait: 'aventura' },
+      { label: 'Tranquilo/a, me adapto rápido a cualquier plan', trait: 'calma' },
+      { label: 'Bien, siempre que vaya con mi equipo', trait: 'equipo' },
+      { label: 'Curioso/a, ya estoy pensando en cómo prepararlo todo', trait: 'detalle' }
+    ]
+  },
+  {
+    text: 'En un grupo de trabajo, ¿qué rol sueles tomar?',
+    options: [
+      { label: 'El que anima y mantiene el buen ambiente', trait: 'sonrisa' },
+      { label: 'El que mantiene la calma cuando hay tensión', trait: 'calma' },
+      { label: 'El que se asegura de que todo encaje al detalle', trait: 'detalle' },
+      { label: 'El que empuja al grupo a intentar algo nuevo', trait: 'aventura' }
+    ]
+  },
+  {
+    text: '¿Qué frase te representa mejor?',
+    options: [
+      { label: '"Un problema es solo una solución sin encontrar todavía"', trait: 'calma' },
+      { label: '"Solos llegamos antes, en equipo llegamos más lejos"', trait: 'equipo' },
+      { label: '"La vida es demasiado corta para no sonreír"', trait: 'sonrisa' },
+      { label: '"El mundo es enorme y quiero verlo todo"', trait: 'aventura' }
+    ]
+  }
+];
+
+const profiles = {
+  calma: {
+    title: 'La Torre de Control',
+    text: 'Mantienes la cabeza fría justo cuando más se necesita. Esa serenidad bajo presión es exactamente lo que buscan las aerolíneas en su tripulación de cabina: alguien en quien todos pueden confiar cuando el ritmo se acelera.',
+    traits: ['Sangre fría', 'Foco en soluciones', 'Seguridad ante todo']
+  },
+  equipo: {
+    title: 'El Motor del Equipo',
+    text: 'Tu instinto natural es coordinar y sumar. En una cabina, la tripulación funciona como un solo organismo, y personas como tú son las que hacen que ese engranaje funcione sin fricciones vuelo tras vuelo.',
+    traits: ['Espíritu de equipo', 'Coordinación', 'Liderazgo natural']
+  },
+  sonrisa: {
+    title: 'La Sonrisa Embajadora',
+    text: 'Tienes el don de hacer que cualquiera se sienta bien recibido. Esa calidez es la carta de presentación de cualquier aerolínea, y es justo lo que convierte un vuelo cualquiera en una gran experiencia.',
+    traits: ['Trato cercano', 'Empatía', 'Orientación al pasajero']
+  },
+  detalle: {
+    title: 'El Ojo de Halcón',
+    text: 'Nada se te escapa. Esa atención al detalle es una de las cualidades más valoradas en seguridad aérea: los protocolos existen por algo, y tú eres de los que se aseguran de que se cumplan siempre.',
+    traits: ['Precisión', 'Rigor', 'Seguridad']
+  },
+  aventura: {
+    title: 'El Espíritu Aventurero',
+    text: 'Vives para lo que viene después del despegue. Las ganas de descubrir, conocer gente y adaptarte a cualquier destino son el motor de quienes hacen de volar su forma de vida.',
+    traits: ['Curiosidad', 'Adaptabilidad', 'Mentalidad global']
+  }
+};
+
+let current = 0;
+const answers = [];
+
+const stageIntro = document.getElementById('stage-intro');
+const stageQuiz = document.getElementById('stage-quiz');
+const stageResult = document.getElementById('stage-result');
+const runwaySection = document.getElementById('runwaySection');
+const runwayPlane = document.getElementById('runwayPlaneWrap');
+const progressText = document.getElementById('progressText');
+const progressPct = document.getElementById('progressPct');
+
+document.getElementById('startBtn').addEventListener('click', () => {
+  stageIntro.classList.remove('active');
+  runwaySection.style.display = 'block';
+  stageQuiz.classList.add('active');
+  renderQuestion();
+});
+
+function updateRunway(index) {
+  const pct = Math.round((index / questions.length) * 100);
+  runwayPlane.style.left = pct + '%';
+  progressText.textContent = `Pregunta ${Math.min(index + 1, questions.length)} de ${questions.length}`;
+  progressPct.textContent = pct + '%';
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  document.getElementById('qCount').textContent = `PREGUNTA ${current + 1} / ${questions.length}`;
+  document.getElementById('qText').textContent = q.text;
+  updateRunway(current);
+
+  const optWrap = document.getElementById('qOptions');
+  optWrap.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'q-option';
+    btn.innerHTML = `<span class="opt-mark">${String.fromCharCode(65 + i)}</span><span>${opt.label}</span>`;
+    btn.addEventListener('click', () => selectOption(btn, opt.trait));
+    optWrap.appendChild(btn);
+  });
+}
+
+function selectOption(btn, trait) {
+  document.querySelectorAll('.q-option').forEach(b => b.classList.remove('picked'));
+  btn.classList.add('picked');
+  answers.push(trait);
+
+  setTimeout(() => {
+    current++;
+    if (current < questions.length) {
+      renderQuestion();
+    } else {
+      finishQuiz();
+    }
+  }, 380);
+}
+
+function finishQuiz() {
+  updateRunway(questions.length);
+  runwayPlane.classList.remove('taxiing');
+  runwayPlane.classList.add('takeoff');
+
+  setTimeout(() => {
+    stageQuiz.classList.remove('active');
+    runwaySection.style.display = 'none';
+    showResult();
+  }, 750);
+}
+
+function showResult() {
+  const counts = {};
+  answers.forEach(t => { counts[t] = (counts[t] || 0) + 1; });
+  let topTrait = 'sonrisa';
+  let topCount = -1;
+  Object.keys(counts).forEach(t => {
+    if (counts[t] > topCount) { topCount = counts[t]; topTrait = t; }
+  });
+
+  const profile = profiles[topTrait];
+  document.getElementById('resultTitle').textContent = profile.title;
+  document.getElementById('resultText').textContent = profile.text;
+  const traitsWrap = document.getElementById('resultTraits');
+  traitsWrap.innerHTML = profile.traits.map(t => `<span>${t}</span>`).join('');
+
+  stageResult.classList.add('active');
+}
+
+document.getElementById('retryBtn').addEventListener('click', () => {
+  current = 0;
+  answers.length = 0;
+  runwayPlane.classList.remove('takeoff');
+  runwayPlane.classList.add('taxiing');
+  runwayPlane.style.left = '0%';
+  runwayPlane.style.top = '';
+  stageResult.classList.remove('active');
+  stageIntro.classList.add('active');
+});
+</script>
+</body>
+</html>
