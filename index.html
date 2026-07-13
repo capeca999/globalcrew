@@ -218,6 +218,38 @@ body.announce-closed{--announce-h:0px;}
   display:flex;align-items:center;justify-content:center;
 }
 .test-promo-plane svg{width:32px;height:32px;color:var(--steel-light);transform:rotate(90deg);}
+
+/* ===================== DOSSIER DOWNLOAD ===================== */
+.dossier-section{background:var(--cream);padding:0 0 90px;}
+.dossier-card{
+  position:relative;overflow:hidden;border-radius:var(--radius-lg);
+  background:linear-gradient(120deg,var(--navy-950),var(--navy-800) 60%,var(--navy-700));
+  padding:44px 40px;display:flex;align-items:center;justify-content:space-between;gap:30px;flex-wrap:wrap;
+}
+.dossier-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(500px 240px at 10% 100%,rgba(214,210,205,.12),transparent 70%);
+}
+.dossier-text{position:relative;z-index:1;max-width:420px;}
+.dossier-text .eyebrow{color:var(--steel-light);}
+.dossier-text .eyebrow::before{background:var(--steel-light);}
+.dossier-text h3{color:var(--cream);font-size:clamp(1.4rem,2.8vw,1.8rem);margin-top:12px;}
+.dossier-text p{color:rgba(247,241,236,.72);margin-top:10px;font-size:.95rem;}
+.dossier-form{position:relative;z-index:1;display:flex;gap:10px;flex-wrap:wrap;flex-shrink:0;}
+.dossier-form input[type="email"]{
+  font-family:var(--ff-body);font-size:.92rem;color:var(--cream);
+  background:rgba(247,241,236,.08);border:1px solid rgba(247,241,236,.25);border-radius:100px;
+  padding:13px 18px;min-width:220px;
+}
+.dossier-form input[type="email"]::placeholder{color:rgba(247,241,236,.5);}
+.dossier-form input[type="email"]:focus{outline:none;border-color:var(--steel-light);}
+.dossier-note{text-align:center;margin-top:16px;font-family:var(--ff-mono);font-size:.72rem;color:var(--ink-soft);min-height:1em;}
+.dossier-note.ok{color:#2E7D4F;}
+.dossier-note.error{color:#B3261E;}
+@media (max-width:700px){
+  .dossier-form{width:100%;}
+  .dossier-form input[type="email"]{flex:1;min-width:0;}
+}
 .test-promo-cta{position:relative;z-index:1;flex-shrink:0;}
 
 /* ===================== ROUTE DIVIDER (signature element) ===================== */
@@ -403,6 +435,34 @@ body.announce-closed{--announce-h:0px;}
 .arrow-btn svg{width:18px;height:18px;}
 
 /* ===================== TEAM ===================== */
+/* ===================== WORLD ROUTES MAP ===================== */
+.world-map-section{background:var(--navy-950);padding:0 0 100px;color:var(--cream);}
+.world-map-card{
+  position:relative;border-radius:var(--radius-lg);border:1px solid var(--line-light);
+  background:radial-gradient(700px 360px at 30% 20%,rgba(140,135,131,.1),transparent 70%);
+  overflow:hidden;padding:10px;
+}
+.world-map-svg{width:100%;height:auto;display:block;}
+.wm-dot{fill:rgba(247,241,236,.14);}
+.wm-route{
+  fill:none;stroke:rgba(214,210,205,.4);stroke-width:1.3;stroke-dasharray:2 5;
+  animation:wmFlow 2.4s linear infinite;
+}
+@keyframes wmFlow{to{stroke-dashoffset:-28;}}
+.wm-origin-pin{fill:var(--steel-light);}
+.wm-origin-ring{fill:none;stroke:var(--steel-light);stroke-width:1.4;opacity:.55;
+  transform-origin:center;animation:wmPulse 2.6s ease-out infinite;}
+@keyframes wmPulse{
+  0%{transform:scale(.4);opacity:.6;}
+  100%{transform:scale(2.6);opacity:0;}
+}
+.wm-origin-label{font-family:var(--ff-mono);font-size:11px;font-weight:700;letter-spacing:.05em;fill:var(--steel-light);}
+.wm-pin-label{font-family:var(--ff-mono);font-size:9.5px;fill:rgba(247,241,236,.8);}
+.wm-pin-airline{font-family:var(--ff-mono);font-size:8px;fill:rgba(247,241,236,.5);}
+@media (max-width:560px){
+  .wm-pin-label,.wm-pin-airline,.wm-origin-label{font-size:12px;}
+}
+
 .team{background:var(--cream);padding:100px 0;}
 .team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;max-width:920px;margin:0 auto;}
 .crew-card{
@@ -552,6 +612,20 @@ body.announce-closed{--announce-h:0px;}
 
 /* ===================== TESTIMONIALS ===================== */
 .testimonials{background:var(--navy-950);color:var(--cream);padding:100px 0;position:relative;overflow:hidden;}
+
+/* ===================== FAQ ===================== */
+.faq-section{background:var(--cream);padding:100px 0;}
+.faq-list{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
+.faq-item{border:1px solid var(--line);border-radius:var(--radius-md);background:#fff;overflow:hidden;}
+.faq-question{
+  width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:20px 24px;text-align:left;font-family:var(--ff-display);font-weight:600;
+  font-size:1rem;color:var(--navy-950);
+}
+.faq-icon{width:16px;height:16px;color:var(--steel);flex-shrink:0;transform:rotate(180deg);transition:transform .35s var(--ease);}
+.faq-item.open .faq-icon{transform:rotate(0deg);}
+.faq-answer{max-height:0;overflow:hidden;transition:max-height .4s var(--ease);}
+.faq-answer p{padding:0 24px 20px;color:var(--ink-soft);font-size:.94rem;line-height:1.6;}
 .testi-track{position:relative;max-width:760px;margin:0 auto;min-height:180px;}
 .testi{
   position:absolute;inset:0;opacity:0;transform:translateY(14px);transition:opacity .7s var(--ease),transform .7s var(--ease);
@@ -804,6 +878,25 @@ body.announce-closed{--announce-h:0px;}
   </div>
 </section>
 
+<!-- ============ DOSSIER DOWNLOAD ============ -->
+<section class="dossier-section">
+  <div class="wrap">
+    <div class="dossier-card reveal">
+      <div class="dossier-text">
+        <span class="eyebrow">DESCARGA GRATIS</span>
+        <h3>¿Prefieres verlo todo con calma?</h3>
+        <p>Te mandamos el dossier completo en PDF: temario oficial AESA, prácticas, precios y todo lo que incluye tu curso.</p>
+      </div>
+      <form class="dossier-form" id="dossierForm">
+        <input type="email" id="dossier-email" name="email" placeholder="Tu email" required>
+        <input type="hidden" name="_subject" value="Descarga de dossier — Global Crew Valencia">
+        <button type="submit" class="btn btn-primary">Enviarme el dossier</button>
+      </form>
+    </div>
+    <p class="dossier-note" id="dossierNote"></p>
+  </div>
+</section>
+
 <div class="route-divider on-dark" data-wp="3">
   <div class="route-inner">
     <span class="route-label">WP03 · VIDA EN LA ESCUELA</span>
@@ -872,7 +965,29 @@ body.announce-closed{--announce-h:0px;}
 
 <div class="route-divider on-dark" data-wp="4">
   <div class="route-inner">
-    <span class="route-label">WP04 · TRIPULACIÓN DOCENTE</span>
+    <span class="route-label">WP04 · ALREDEDOR DEL MUNDO</span>
+    <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
+    <span class="route-dest">MIRA HASTA DÓNDE LLEGAN</span>
+  </div>
+</div>
+
+<!-- ============ WORLD MAP ============ -->
+<section class="world-map-section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">NUESTROS ALUMNOS, POR EL MUNDO</span>
+      <h2>Desde Valencia hasta cualquier destino.</h2>
+      <p>Esto es solo una muestra de las aerolíneas en las que vuelan nuestros antiguos alumnos ahora mismo.</p>
+    </div>
+    <div class="world-map-card reveal" id="worldMapCard">
+      <svg id="worldMapSvg" viewBox="0 0 1000 480" class="world-map-svg"></svg>
+    </div>
+  </div>
+</section>
+
+<div class="route-divider on-dark" data-wp="5">
+  <div class="route-inner">
+    <span class="route-label">WP05 · TRIPULACIÓN DOCENTE</span>
     <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
     <span class="route-dest">CONOCE A TUS INSTRUCTORES</span>
   </div>
@@ -933,9 +1048,9 @@ body.announce-closed{--announce-h:0px;}
   </div>
 </section>
 
-<div class="route-divider" data-wp="5">
+<div class="route-divider" data-wp="6">
   <div class="route-inner">
-    <span class="route-label">WP05 · RECONOCIMIENTO</span>
+    <span class="route-label">WP06 · RECONOCIMIENTO</span>
     <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
     <span class="route-dest">RESPALDO OFICIAL</span>
   </div>
@@ -957,9 +1072,9 @@ body.announce-closed{--announce-h:0px;}
   </div>
 </section>
 
-<div class="route-divider" data-wp="6">
+<div class="route-divider" data-wp="7">
   <div class="route-inner">
-    <span class="route-label">WP06 · DESTINO FINAL</span>
+    <span class="route-label">WP07 · DESTINO FINAL</span>
     <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
     <span class="route-dest">TU CARRERA</span>
   </div>
@@ -986,9 +1101,72 @@ body.announce-closed{--announce-h:0px;}
   </div>
 </section>
 
-<div class="route-divider" data-wp="7">
+<div class="route-divider" data-wp="8">
   <div class="route-inner">
-    <span class="route-label">WP07 · EMBARQUE INMEDIATO</span>
+    <span class="route-label">WP08 · ANTES DE DESPEGAR</span>
+    <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
+    <span class="route-dest">RESOLVEMOS TUS DUDAS</span>
+  </div>
+</div>
+
+<!-- ============ FAQ ============ -->
+<section class="faq-section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">PREGUNTAS FRECUENTES</span>
+      <h2>Lo que todo el mundo nos pregunta.</h2>
+      <p>Y si tu duda no está aquí, escríbenos por WhatsApp y te respondemos al momento.</p>
+    </div>
+    <div class="faq-list" id="faqList">
+      <div class="faq-item reveal">
+        <button type="button" class="faq-question">
+          <span>¿Necesito saber inglés para apuntarme?</span>
+          <svg class="faq-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+        </button>
+        <div class="faq-answer"><p>No hace falta un nivel alto para empezar. Durante el curso trabajamos el inglés específico de la profesión (el que se usa a bordo), así que llegas preparado/a a las entrevistas aunque no partas de un nivel avanzado.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button type="button" class="faq-question">
+          <span>¿Qué pasa si no supero el examen médico?</span>
+          <svg class="faq-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+        </button>
+        <div class="faq-answer"><p>Te orientamos antes de que lo hagas para que sepas qué esperar y minimices sorpresas. La mayoría de nuestros alumnos lo superan sin problema; si tienes dudas sobre tu caso concreto, coméntanoslo en la entrevista informativa y te asesoramos sin compromiso.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button type="button" class="faq-question">
+          <span>¿Hay algún límite de edad?</span>
+          <svg class="faq-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+        </button>
+        <div class="faq-answer"><p>Para empezar el curso necesitas tener 18 años cumplidos. No hay una edad máxima: cada aerolínea tiene sus propios requisitos, y te ayudamos a identificar cuáles encajan mejor con tu perfil.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button type="button" class="faq-question">
+          <span>¿Puedo financiar el curso?</span>
+          <svg class="faq-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+        </button>
+        <div class="faq-answer"><p>Sí, ofrecemos financiación hasta en 12 meses sin intereses. Lo hablamos contigo en la entrevista informativa para ajustarlo a tu situación.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button type="button" class="faq-question">
+          <span>¿De verdad ayudáis a conseguir trabajo al terminar?</span>
+          <svg class="faq-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+        </button>
+        <div class="faq-answer"><p>Sí. Incluye preparación de entrevista individual e ilimitada con nuestro director, TCP en Iberia y ex seleccionador internacional, además de asesoramiento laboral continuo hasta que empieces a volar y acceso a procesos de selección reales.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button type="button" class="faq-question">
+          <span>¿Cuál es la diferencia entre el TCP normal y el TCP Ejecutivo?</span>
+          <svg class="faq-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+        </button>
+        <div class="faq-answer"><p>Ambos incluyen la misma formación oficial AESA. El TCP Ejecutivo añade 4 asignaturas exclusivas en servicio VIP, protocolo y aviación privada, pensadas para quien quiere trabajar en el segmento más exclusivo del sector.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="route-divider" data-wp="9">
+  <div class="route-inner">
+    <span class="route-label">WP09 · EMBARQUE INMEDIATO</span>
     <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
     <span class="route-dest">HABLEMOS</span>
   </div>
@@ -1351,6 +1529,74 @@ if (videoEmbed) {
   });
 }
 
+/* ===================== WORLD ROUTES MAP ===================== */
+(function renderWorldMap() {
+  const svg = document.getElementById('worldMapSvg');
+  if (!svg) return;
+
+  const ORIGIN = { x: 490, y: 195 };
+  const routes = [
+    { city: 'Madrid', airline: 'Iberia', x: 455, y: 185, color: '#D91023' },
+    { city: 'Barcelona', airline: 'Vueling', x: 500, y: 175, color: '#FFCC00' },
+    { city: 'Valencia', airline: 'Air Nostrum', x: 505, y: 205, color: '#004990' },
+    { city: 'Dublín', airline: 'Ryanair', x: 445, y: 120, color: '#6C86C7' },
+    { city: 'Londres', airline: 'easyJet', x: 470, y: 130, color: '#FF6600' },
+    { city: 'Düsseldorf', airline: 'Eurowings', x: 515, y: 122, color: '#B266FF' },
+    { city: 'Zagreb', airline: 'TradeAir', x: 550, y: 155, color: '#4D9DE0' },
+    { city: 'Vilna', airline: 'Klasjet', x: 585, y: 95, color: '#D6D2CD' },
+    { city: 'Dubái', airline: 'Emirates', x: 700, y: 220, color: '#E85A5A' },
+    { city: 'Doha', airline: 'Qatar Airways', x: 680, y: 230, color: '#B266A0' },
+    { city: 'Sharjah', airline: 'Air Arabia', x: 715, y: 218, color: '#E4032E' },
+    { city: 'Punta Cana', airline: 'World2Fly', x: 110, y: 250, color: '#4FA8E0' }
+  ];
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (tag, attrs) => {
+    const node = document.createElementNS(NS, tag);
+    Object.keys(attrs || {}).forEach((k) => node.setAttribute(k, attrs[k]));
+    return node;
+  };
+
+  // Subtle dot-grid backdrop (decorative, not a literal map)
+  const defs = el('defs', {});
+  const pattern = el('pattern', { id: 'wmDots', width: 22, height: 22, patternUnits: 'userSpaceOnUse' });
+  pattern.appendChild(el('circle', { cx: 2, cy: 2, r: 1.1, class: 'wm-dot' }));
+  defs.appendChild(pattern);
+  svg.appendChild(defs);
+  svg.appendChild(el('rect', { x: 0, y: 0, width: 1000, height: 480, fill: 'url(#wmDots)' }));
+
+  // Routes (curved lines) drawn first so pins sit on top
+  routes.forEach((r, i) => {
+    const midX = (ORIGIN.x + r.x) / 2;
+    const midY = Math.min(ORIGIN.y, r.y) - 55 - (i % 3) * 8;
+    const d = `M ${ORIGIN.x} ${ORIGIN.y} Q ${midX} ${midY} ${r.x} ${r.y}`;
+    svg.appendChild(el('path', { d, class: 'wm-route', style: `animation-delay:${(i * 0.15).toFixed(2)}s` }));
+  });
+
+  // Destination pins + labels
+  routes.forEach((r) => {
+    const g = el('g', {});
+    g.appendChild(el('circle', { cx: r.x, cy: r.y, r: 4, fill: r.color }));
+    g.appendChild(el('circle', { cx: r.x, cy: r.y, r: 7, fill: 'none', stroke: r.color, 'stroke-width': 1, opacity: 0.5 }));
+    const labelX = r.x + (r.x < 500 ? -9 : 9);
+    const anchor = r.x < 500 ? 'end' : 'start';
+    const label = el('text', { x: labelX, y: r.y - 6, class: 'wm-pin-label', 'text-anchor': anchor });
+    label.textContent = r.city;
+    const sub = el('text', { x: labelX, y: r.y + 12, class: 'wm-pin-airline', 'text-anchor': anchor });
+    sub.textContent = r.airline;
+    g.appendChild(label);
+    g.appendChild(sub);
+    svg.appendChild(g);
+  });
+
+  // Origin (Valencia) — pulsing ring
+  svg.appendChild(el('circle', Object.assign({ cx: ORIGIN.x, cy: ORIGIN.y, r: 16 }, { class: 'wm-origin-ring' })));
+  svg.appendChild(el('circle', { cx: ORIGIN.x, cy: ORIGIN.y, r: 5.5, class: 'wm-origin-pin' }));
+  const originLabel = el('text', { x: ORIGIN.x, y: ORIGIN.y + 24, class: 'wm-origin-label', 'text-anchor': 'middle' });
+  originLabel.textContent = 'VALENCIA';
+  svg.appendChild(originLabel);
+})();
+
 /* ===================== ALUMNI CAROUSEL ===================== */
 // Brand colors (public info, not logos) used to tint the little plane icon
 // next to each airline name — never the airline's actual logo/trademark.
@@ -1469,6 +1715,43 @@ function initAlumniCarousel() {
   }
 })();
 
+/* ===================== DOSSIER DOWNLOAD (Formspree + PDF) ===================== */
+const dossierForm = document.getElementById('dossierForm');
+const dossierNote = document.getElementById('dossierNote');
+const DOSSIER_URL = 'dossier-global-crew.pdf';
+
+if (dossierForm) {
+  dossierForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = dossierForm.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    dossierNote.classList.remove('ok', 'error');
+    dossierNote.textContent = 'Enviando...';
+
+    try {
+      await fetch('https://formspree.io/f/xrewnjqk', {
+        method: 'POST',
+        body: new FormData(dossierForm),
+        headers: { 'Accept': 'application/json' }
+      });
+    } catch (err) {
+      // Even if the lead capture fails, still let them download the dossier.
+    }
+
+    dossierNote.textContent = '¡Gracias! Descargando tu dossier...';
+    dossierNote.classList.add('ok');
+    const link = document.createElement('a');
+    link.href = DOSSIER_URL;
+    link.download = 'Dossier-Global-Crew-Valencia.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    dossierForm.reset();
+    submitBtn.disabled = false;
+  });
+}
+
 /* ===================== CONTACT FORM (Formspree) ===================== */
 const contactForm = document.getElementById('contactForm');
 const formNote = document.getElementById('formNote');
@@ -1509,6 +1792,28 @@ if (contactForm) {
     }
   });
 }
+
+/* ===================== FAQ ACCORDION ===================== */
+document.querySelectorAll('.faq-item').forEach((item) => {
+  const question = item.querySelector('.faq-question');
+  const answer = item.querySelector('.faq-answer');
+  question.addEventListener('click', () => {
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach((openItem) => {
+      if (openItem !== item) {
+        openItem.classList.remove('open');
+        openItem.querySelector('.faq-answer').style.maxHeight = null;
+      }
+    });
+    if (isOpen) {
+      item.classList.remove('open');
+      answer.style.maxHeight = null;
+    } else {
+      item.classList.add('open');
+      answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+  });
+});
 
 /* ===================== TESTIMONIALS CAROUSEL ===================== */
 const testis = document.querySelectorAll('.testi');
