@@ -29,8 +29,8 @@ cambies nada de cómo subes los archivos.
 Sube a la carpeta `alumnoscontratados/` del Blob Store **dos archivos**:
 
 - La foto: `Nombre, Aerolínea.jpg` (o .jpeg/.png/.webp) — ej. `Sara, Iberia.jpg`
-- El texto: `Nombre.txt` (mismo nombre, sin la aerolínea) — ej. `Sara.txt`,
-  con la cita que quieras que aparezca en su tarjeta, por ejemplo:
+- El texto: **el mismo nombre exacto que la foto, con `.txt`** — ej.
+  `Sara, Iberia.txt`, con la cita que quieras que aparezca en su tarjeta:
 
   ```
   Entré sin saber nada del sector y hoy vuelo con Iberia. Las prácticas
@@ -41,8 +41,15 @@ En cuanto lo subas, aparecerá solo en la web (la caché dura 5 minutos, así
 que puede tardar un poco en verse el cambio). Si subes una foto sin su
 `.txt`, la tarjeta usará una frase genérica automáticamente.
 
-**Importante:** el nombre del `.txt` debe coincidir con la parte del nombre
-antes de la coma en el `.jpg` (no hace falta que coincidan mayúsculas).
+**¿Por qué el texto lleva también la aerolínea?** Para que dos alumnos con
+el mismo nombre (dos "Abril", por ejemplo) nunca se mezclen: como cada uno
+vuela con una aerolínea distinta, `Abril, Air Arabia.txt` y
+`Abril, Vueling.txt` son dos archivos totalmente distintos, sin ninguna
+ambigüedad. Solo tienes que copiar el nombre de la foto tal cual y cambiar
+`.jpg` por `.txt` — no hace falta pensar en números ni sufijos.
+
+(Si ya tenías `.txt` solo con el nombre, tipo `Abril.txt`, siguen
+funcionando mientras ese nombre no se repita entre dos fotos distintas.)
 
 ## 3. Cómo cambiar el "Próximo curso"
 
