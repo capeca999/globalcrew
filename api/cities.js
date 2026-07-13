@@ -1,0 +1,925 @@
+// Auto-generated world cities database (name -> approx coordinates).
+// Used to place dots on the world map from the city named in each
+// alumni photo filename ("Nombre, Aerolinea, Ciudad.jpg").
+export default {
+  "madrid": {
+    "display": "Madrid",
+    "lat": 40.4168,
+    "lon": -3.7038
+  },
+  "barcelona": {
+    "display": "Barcelona",
+    "lat": 41.3874,
+    "lon": 2.1686
+  },
+  "valencia": {
+    "display": "Valencia",
+    "lat": 39.4699,
+    "lon": -0.3763
+  },
+  "sevilla": {
+    "display": "Sevilla",
+    "lat": 37.3891,
+    "lon": -5.9845
+  },
+  "bilbao": {
+    "display": "Bilbao",
+    "lat": 43.263,
+    "lon": -2.935
+  },
+  "malaga": {
+    "display": "Malaga",
+    "lat": 36.7213,
+    "lon": -4.4213
+  },
+  "palmademallorca": {
+    "display": "Palma de Mallorca",
+    "lat": 39.5696,
+    "lon": 2.6502
+  },
+  "laspalmas": {
+    "display": "Las Palmas",
+    "lat": 28.1235,
+    "lon": -15.4363
+  },
+  "tenerife": {
+    "display": "Tenerife",
+    "lat": 28.4636,
+    "lon": -16.2518
+  },
+  "alicante": {
+    "display": "Alicante",
+    "lat": 38.3452,
+    "lon": -0.481
+  },
+  "zaragoza": {
+    "display": "Zaragoza",
+    "lat": 41.6488,
+    "lon": -0.8891
+  },
+  "santiagodecompostela": {
+    "display": "Santiago de Compostela",
+    "lat": 42.8782,
+    "lon": -8.5448
+  },
+  "vigo": {
+    "display": "Vigo",
+    "lat": 42.2406,
+    "lon": -8.7207
+  },
+  "ibiza": {
+    "display": "Ibiza",
+    "lat": 38.9067,
+    "lon": 1.4206
+  },
+  "menorca": {
+    "display": "Menorca",
+    "lat": 39.9494,
+    "lon": 4.0993
+  },
+  "granada": {
+    "display": "Granada",
+    "lat": 37.1773,
+    "lon": -3.5986
+  },
+  "girona": {
+    "display": "Girona",
+    "lat": 41.9794,
+    "lon": 2.8214
+  },
+  "londres": {
+    "display": "Londres",
+    "lat": 51.5074,
+    "lon": -0.1278
+  },
+  "london": {
+    "display": "London",
+    "lat": 51.5074,
+    "lon": -0.1278
+  },
+  "paris": {
+    "display": "Paris",
+    "lat": 48.8566,
+    "lon": 2.3522
+  },
+  "roma": {
+    "display": "Roma",
+    "lat": 41.9028,
+    "lon": 12.4964
+  },
+  "rome": {
+    "display": "Rome",
+    "lat": 41.9028,
+    "lon": 12.4964
+  },
+  "milan": {
+    "display": "Milan",
+    "lat": 45.4642,
+    "lon": 9.19
+  },
+  "berlin": {
+    "display": "Berlin",
+    "lat": 52.52,
+    "lon": 13.405
+  },
+  "munich": {
+    "display": "Munich",
+    "lat": 48.1351,
+    "lon": 11.582
+  },
+  "frankfurt": {
+    "display": "Frankfurt",
+    "lat": 50.1109,
+    "lon": 8.6821
+  },
+  "dusseldorf": {
+    "display": "Dusseldorf",
+    "lat": 51.2277,
+    "lon": 6.7735
+  },
+  "colonia": {
+    "display": "Colonia",
+    "lat": 50.9375,
+    "lon": 6.9603
+  },
+  "cologne": {
+    "display": "Cologne",
+    "lat": 50.9375,
+    "lon": 6.9603
+  },
+  "hamburgo": {
+    "display": "Hamburgo",
+    "lat": 53.5511,
+    "lon": 9.9937
+  },
+  "hamburg": {
+    "display": "Hamburg",
+    "lat": 53.5511,
+    "lon": 9.9937
+  },
+  "viena": {
+    "display": "Viena",
+    "lat": 48.2082,
+    "lon": 16.3738
+  },
+  "vienna": {
+    "display": "Vienna",
+    "lat": 48.2082,
+    "lon": 16.3738
+  },
+  "zurich": {
+    "display": "Zurich",
+    "lat": 47.3769,
+    "lon": 8.5417
+  },
+  "ginebra": {
+    "display": "Ginebra",
+    "lat": 46.2044,
+    "lon": 6.1432
+  },
+  "geneva": {
+    "display": "Geneva",
+    "lat": 46.2044,
+    "lon": 6.1432
+  },
+  "amsterdam": {
+    "display": "Amsterdam",
+    "lat": 52.3676,
+    "lon": 4.9041
+  },
+  "bruselas": {
+    "display": "Bruselas",
+    "lat": 50.8503,
+    "lon": 4.3517
+  },
+  "brussels": {
+    "display": "Brussels",
+    "lat": 50.8503,
+    "lon": 4.3517
+  },
+  "lisboa": {
+    "display": "Lisboa",
+    "lat": 38.7223,
+    "lon": -9.1393
+  },
+  "lisbon": {
+    "display": "Lisbon",
+    "lat": 38.7223,
+    "lon": -9.1393
+  },
+  "oporto": {
+    "display": "Oporto",
+    "lat": 41.1579,
+    "lon": -8.6291
+  },
+  "porto": {
+    "display": "Porto",
+    "lat": 41.1579,
+    "lon": -8.6291
+  },
+  "dublin": {
+    "display": "Dublín",
+    "lat": 53.3498,
+    "lon": -6.2603
+  },
+  "edimburgo": {
+    "display": "Edimburgo",
+    "lat": 55.9533,
+    "lon": -3.1883
+  },
+  "edinburgh": {
+    "display": "Edinburgh",
+    "lat": 55.9533,
+    "lon": -3.1883
+  },
+  "manchester": {
+    "display": "Manchester",
+    "lat": 53.4808,
+    "lon": -2.2426
+  },
+  "copenhague": {
+    "display": "Copenhague",
+    "lat": 55.6761,
+    "lon": 12.5683
+  },
+  "copenhagen": {
+    "display": "Copenhagen",
+    "lat": 55.6761,
+    "lon": 12.5683
+  },
+  "estocolmo": {
+    "display": "Estocolmo",
+    "lat": 59.3293,
+    "lon": 18.0686
+  },
+  "stockholm": {
+    "display": "Stockholm",
+    "lat": 59.3293,
+    "lon": 18.0686
+  },
+  "oslo": {
+    "display": "Oslo",
+    "lat": 59.9139,
+    "lon": 10.7522
+  },
+  "helsinki": {
+    "display": "Helsinki",
+    "lat": 60.1699,
+    "lon": 24.9384
+  },
+  "varsovia": {
+    "display": "Varsovia",
+    "lat": 52.2297,
+    "lon": 21.0122
+  },
+  "warsaw": {
+    "display": "Warsaw",
+    "lat": 52.2297,
+    "lon": 21.0122
+  },
+  "praga": {
+    "display": "Praga",
+    "lat": 50.0755,
+    "lon": 14.4378
+  },
+  "prague": {
+    "display": "Prague",
+    "lat": 50.0755,
+    "lon": 14.4378
+  },
+  "budapest": {
+    "display": "Budapest",
+    "lat": 47.4979,
+    "lon": 19.0402
+  },
+  "zagreb": {
+    "display": "Zagreb",
+    "lat": 45.815,
+    "lon": 15.9819
+  },
+  "belgrado": {
+    "display": "Belgrado",
+    "lat": 44.7866,
+    "lon": 20.4489
+  },
+  "belgrade": {
+    "display": "Belgrade",
+    "lat": 44.7866,
+    "lon": 20.4489
+  },
+  "bucarest": {
+    "display": "Bucarest",
+    "lat": 44.4268,
+    "lon": 26.1025
+  },
+  "bucharest": {
+    "display": "Bucharest",
+    "lat": 44.4268,
+    "lon": 26.1025
+  },
+  "sofia": {
+    "display": "Sofía",
+    "lat": 42.6977,
+    "lon": 23.3219
+  },
+  "atenas": {
+    "display": "Atenas",
+    "lat": 37.9838,
+    "lon": 23.7275
+  },
+  "athens": {
+    "display": "Athens",
+    "lat": 37.9838,
+    "lon": 23.7275
+  },
+  "estambul": {
+    "display": "Estambul",
+    "lat": 41.0082,
+    "lon": 28.9784
+  },
+  "istanbul": {
+    "display": "Istanbul",
+    "lat": 41.0082,
+    "lon": 28.9784
+  },
+  "moscu": {
+    "display": "Moscu",
+    "lat": 55.7558,
+    "lon": 37.6173
+  },
+  "moscow": {
+    "display": "Moscow",
+    "lat": 55.7558,
+    "lon": 37.6173
+  },
+  "vilna": {
+    "display": "Vilna",
+    "lat": 54.6872,
+    "lon": 25.2797
+  },
+  "vilnius": {
+    "display": "Vilnius",
+    "lat": 54.6872,
+    "lon": 25.2797
+  },
+  "riga": {
+    "display": "Riga",
+    "lat": 56.9496,
+    "lon": 24.1052
+  },
+  "tallin": {
+    "display": "Tallin",
+    "lat": 59.437,
+    "lon": 24.7536
+  },
+  "tallinn": {
+    "display": "Tallinn",
+    "lat": 59.437,
+    "lon": 24.7536
+  },
+  "reikiavik": {
+    "display": "Reikiavik",
+    "lat": 64.1466,
+    "lon": -21.9426
+  },
+  "reykjavik": {
+    "display": "Reykjavik",
+    "lat": 64.1466,
+    "lon": -21.9426
+  },
+  "luxemburgo": {
+    "display": "Luxemburgo",
+    "lat": 49.6116,
+    "lon": 6.1319
+  },
+  "luxembourg": {
+    "display": "Luxembourg",
+    "lat": 49.6116,
+    "lon": 6.1319
+  },
+  "niza": {
+    "display": "Niza",
+    "lat": 43.7102,
+    "lon": 7.262
+  },
+  "nice": {
+    "display": "Nice",
+    "lat": 43.7102,
+    "lon": 7.262
+  },
+  "marsella": {
+    "display": "Marsella",
+    "lat": 43.2965,
+    "lon": 5.3698
+  },
+  "marseille": {
+    "display": "Marseille",
+    "lat": 43.2965,
+    "lon": 5.3698
+  },
+  "venecia": {
+    "display": "Venecia",
+    "lat": 45.4408,
+    "lon": 12.3155
+  },
+  "venice": {
+    "display": "Venice",
+    "lat": 45.4408,
+    "lon": 12.3155
+  },
+  "napoles": {
+    "display": "Napoles",
+    "lat": 40.8518,
+    "lon": 14.2681
+  },
+  "naples": {
+    "display": "Naples",
+    "lat": 40.8518,
+    "lon": 14.2681
+  },
+  "palermo": {
+    "display": "Palermo",
+    "lat": 38.1157,
+    "lon": 13.3615
+  },
+  "bolonia": {
+    "display": "Bolonia",
+    "lat": 44.4949,
+    "lon": 11.3426
+  },
+  "bologna": {
+    "display": "Bologna",
+    "lat": 44.4949,
+    "lon": 11.3426
+  },
+  "malta": {
+    "display": "Malta",
+    "lat": 35.8989,
+    "lon": 14.5146
+  },
+  "dubai": {
+    "display": "Dubái",
+    "lat": 25.2048,
+    "lon": 55.2708
+  },
+  "abudhabi": {
+    "display": "Abu Dhabi",
+    "lat": 24.4539,
+    "lon": 54.3773
+  },
+  "doha": {
+    "display": "Doha",
+    "lat": 25.2854,
+    "lon": 51.531
+  },
+  "sharjah": {
+    "display": "Sharjah",
+    "lat": 25.3573,
+    "lon": 55.4033
+  },
+  "riad": {
+    "display": "Riad",
+    "lat": 24.7136,
+    "lon": 46.6753
+  },
+  "riyadh": {
+    "display": "Riyadh",
+    "lat": 24.7136,
+    "lon": 46.6753
+  },
+  "jeddah": {
+    "display": "Jeddah",
+    "lat": 21.4858,
+    "lon": 39.1925
+  },
+  "yeda": {
+    "display": "Yeda",
+    "lat": 21.4858,
+    "lon": 39.1925
+  },
+  "amman": {
+    "display": "Amman",
+    "lat": 31.9454,
+    "lon": 35.9284
+  },
+  "beirut": {
+    "display": "Beirut",
+    "lat": 33.8938,
+    "lon": 35.5018
+  },
+  "telaviv": {
+    "display": "Tel Aviv",
+    "lat": 32.0853,
+    "lon": 34.7818
+  },
+  "kuwait": {
+    "display": "Kuwait",
+    "lat": 29.3759,
+    "lon": 47.9774
+  },
+  "manama": {
+    "display": "Manama",
+    "lat": 26.2285,
+    "lon": 50.586
+  },
+  "muscat": {
+    "display": "Muscat",
+    "lat": 23.5859,
+    "lon": 58.4059
+  },
+  "elcairo": {
+    "display": "El Cairo",
+    "lat": 30.0444,
+    "lon": 31.2357
+  },
+  "cairo": {
+    "display": "Cairo",
+    "lat": 30.0444,
+    "lon": 31.2357
+  },
+  "casablanca": {
+    "display": "Casablanca",
+    "lat": 33.5731,
+    "lon": -7.5898
+  },
+  "marrakech": {
+    "display": "Marrakech",
+    "lat": 31.6295,
+    "lon": -7.9811
+  },
+  "tanger": {
+    "display": "Tanger",
+    "lat": 35.7595,
+    "lon": -5.834
+  },
+  "tangier": {
+    "display": "Tangier",
+    "lat": 35.7595,
+    "lon": -5.834
+  },
+  "tunez": {
+    "display": "Tunez",
+    "lat": 36.8065,
+    "lon": 10.1815
+  },
+  "tunis": {
+    "display": "Tunis",
+    "lat": 36.8065,
+    "lon": 10.1815
+  },
+  "argel": {
+    "display": "Argel",
+    "lat": 36.7538,
+    "lon": 3.0588
+  },
+  "algiers": {
+    "display": "Algiers",
+    "lat": 36.7538,
+    "lon": 3.0588
+  },
+  "lagos": {
+    "display": "Lagos",
+    "lat": 6.5244,
+    "lon": 3.3792
+  },
+  "nairobi": {
+    "display": "Nairobi",
+    "lat": -1.2921,
+    "lon": 36.8219
+  },
+  "johannesburgo": {
+    "display": "Johannesburgo",
+    "lat": -26.2041,
+    "lon": 28.0473
+  },
+  "johannesburg": {
+    "display": "Johannesburg",
+    "lat": -26.2041,
+    "lon": 28.0473
+  },
+  "ciudaddelcabo": {
+    "display": "Ciudad del Cabo",
+    "lat": -33.9249,
+    "lon": 18.4241
+  },
+  "capetown": {
+    "display": "Cape Town",
+    "lat": -33.9249,
+    "lon": 18.4241
+  },
+  "addisabeba": {
+    "display": "Addis Abeba",
+    "lat": 9.032,
+    "lon": 38.7469
+  },
+  "addisababa": {
+    "display": "Addis Ababa",
+    "lat": 9.032,
+    "lon": 38.7469
+  },
+  "dakar": {
+    "display": "Dakar",
+    "lat": 14.7167,
+    "lon": -17.4677
+  },
+  "nuevayork": {
+    "display": "Nueva York",
+    "lat": 40.7128,
+    "lon": -74.006
+  },
+  "newyork": {
+    "display": "New York",
+    "lat": 40.7128,
+    "lon": -74.006
+  },
+  "miami": {
+    "display": "Miami",
+    "lat": 25.7617,
+    "lon": -80.1918
+  },
+  "losangeles": {
+    "display": "Los Angeles",
+    "lat": 34.0522,
+    "lon": -118.2437
+  },
+  "chicago": {
+    "display": "Chicago",
+    "lat": 41.8781,
+    "lon": -87.6298
+  },
+  "boston": {
+    "display": "Boston",
+    "lat": 42.3601,
+    "lon": -71.0589
+  },
+  "washington": {
+    "display": "Washington",
+    "lat": 38.9072,
+    "lon": -77.0369
+  },
+  "orlando": {
+    "display": "Orlando",
+    "lat": 28.5383,
+    "lon": -81.3792
+  },
+  "atlanta": {
+    "display": "Atlanta",
+    "lat": 33.749,
+    "lon": -84.388
+  },
+  "toronto": {
+    "display": "Toronto",
+    "lat": 43.6532,
+    "lon": -79.3832
+  },
+  "montreal": {
+    "display": "Montreal",
+    "lat": 45.5019,
+    "lon": -73.5674
+  },
+  "cancun": {
+    "display": "Cancún",
+    "lat": 21.1619,
+    "lon": -86.8515
+  },
+  "ciudaddemexico": {
+    "display": "Ciudad de México",
+    "lat": 19.4326,
+    "lon": -99.1332
+  },
+  "mexicocity": {
+    "display": "Mexico City",
+    "lat": 19.4326,
+    "lon": -99.1332
+  },
+  "puntacana": {
+    "display": "Punta Cana",
+    "lat": 18.582,
+    "lon": -68.3725
+  },
+  "lahabana": {
+    "display": "La Habana",
+    "lat": 23.1136,
+    "lon": -82.3666
+  },
+  "havana": {
+    "display": "Havana",
+    "lat": 23.1136,
+    "lon": -82.3666
+  },
+  "santodomingo": {
+    "display": "Santo Domingo",
+    "lat": 18.4861,
+    "lon": -69.9312
+  },
+  "sanjuan": {
+    "display": "San Juan",
+    "lat": 18.4655,
+    "lon": -66.1057
+  },
+  "bogota": {
+    "display": "Bogotá",
+    "lat": 4.711,
+    "lon": -74.0721
+  },
+  "lima": {
+    "display": "Lima",
+    "lat": -12.0464,
+    "lon": -77.0428
+  },
+  "santiagodechile": {
+    "display": "Santiago de Chile",
+    "lat": -33.4489,
+    "lon": -70.6693
+  },
+  "buenosaires": {
+    "display": "Buenos Aires",
+    "lat": -34.6037,
+    "lon": -58.3816
+  },
+  "saopaulo": {
+    "display": "São Paulo",
+    "lat": -23.5505,
+    "lon": -46.6333
+  },
+  "riodejaneiro": {
+    "display": "Río de Janeiro",
+    "lat": -22.9068,
+    "lon": -43.1729
+  },
+  "caracas": {
+    "display": "Caracas",
+    "lat": 10.4806,
+    "lon": -66.9036
+  },
+  "quito": {
+    "display": "Quito",
+    "lat": -0.1807,
+    "lon": -78.4678
+  },
+  "panama": {
+    "display": "Panamá",
+    "lat": 8.9824,
+    "lon": -79.5199
+  },
+  "sanjose": {
+    "display": "San José",
+    "lat": 9.9281,
+    "lon": -84.0907
+  },
+  "montevideo": {
+    "display": "Montevideo",
+    "lat": -34.9011,
+    "lon": -56.1645
+  },
+  "tokio": {
+    "display": "Tokio",
+    "lat": 35.6762,
+    "lon": 139.6503
+  },
+  "tokyo": {
+    "display": "Tokyo",
+    "lat": 35.6762,
+    "lon": 139.6503
+  },
+  "osaka": {
+    "display": "Osaka",
+    "lat": 34.6937,
+    "lon": 135.5023
+  },
+  "seul": {
+    "display": "Seúl",
+    "lat": 37.5665,
+    "lon": 126.978
+  },
+  "seoul": {
+    "display": "Seoul",
+    "lat": 37.5665,
+    "lon": 126.978
+  },
+  "pekin": {
+    "display": "Pekín",
+    "lat": 39.9042,
+    "lon": 116.4074
+  },
+  "beijing": {
+    "display": "Beijing",
+    "lat": 39.9042,
+    "lon": 116.4074
+  },
+  "shanghai": {
+    "display": "Shanghai",
+    "lat": 31.2304,
+    "lon": 121.4737
+  },
+  "hongkong": {
+    "display": "Hong Kong",
+    "lat": 22.3193,
+    "lon": 114.1694
+  },
+  "taipei": {
+    "display": "Taipei",
+    "lat": 25.033,
+    "lon": 121.5654
+  },
+  "bangkok": {
+    "display": "Bangkok",
+    "lat": 13.7563,
+    "lon": 100.5018
+  },
+  "singapur": {
+    "display": "Singapur",
+    "lat": 1.3521,
+    "lon": 103.8198
+  },
+  "singapore": {
+    "display": "Singapore",
+    "lat": 1.3521,
+    "lon": 103.8198
+  },
+  "kualalumpur": {
+    "display": "Kuala Lumpur",
+    "lat": 3.139,
+    "lon": 101.6869
+  },
+  "yakarta": {
+    "display": "Yakarta",
+    "lat": -6.2088,
+    "lon": 106.8456
+  },
+  "jakarta": {
+    "display": "Jakarta",
+    "lat": -6.2088,
+    "lon": 106.8456
+  },
+  "manila": {
+    "display": "Manila",
+    "lat": 14.5995,
+    "lon": 120.9842
+  },
+  "delhi": {
+    "display": "Delhi",
+    "lat": 28.7041,
+    "lon": 77.1025
+  },
+  "nuevadelhi": {
+    "display": "Nueva Delhi",
+    "lat": 28.6139,
+    "lon": 77.209
+  },
+  "mumbai": {
+    "display": "Mumbai",
+    "lat": 19.076,
+    "lon": 72.8777
+  },
+  "bombay": {
+    "display": "Bombay",
+    "lat": 19.076,
+    "lon": 72.8777
+  },
+  "bangalore": {
+    "display": "Bangalore",
+    "lat": 12.9716,
+    "lon": 77.5946
+  },
+  "hanoi": {
+    "display": "Hanoi",
+    "lat": 21.0285,
+    "lon": 105.8542
+  },
+  "hochiminh": {
+    "display": "Ho Chi Minh",
+    "lat": 10.8231,
+    "lon": 106.6297
+  },
+  "sidney": {
+    "display": "Sidney",
+    "lat": -33.8688,
+    "lon": 151.2093
+  },
+  "sydney": {
+    "display": "Sydney",
+    "lat": -33.8688,
+    "lon": 151.2093
+  },
+  "melbourne": {
+    "display": "Melbourne",
+    "lat": -37.8136,
+    "lon": 144.9631
+  },
+  "auckland": {
+    "display": "Auckland",
+    "lat": -36.8485,
+    "lon": 174.7633
+  },
+  "perth": {
+    "display": "Perth",
+    "lat": -31.9505,
+    "lon": 115.8605
+  },
+  "brisbane": {
+    "display": "Brisbane",
+    "lat": -27.4698,
+    "lon": 153.0251
+  }
+};

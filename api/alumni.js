@@ -1,6 +1,7 @@
 import { list, get } from '@vercel/blob';
+import CITIES from './cities.js';
 
-// Matches image files: "Nombre, Aerolinea.jpg" (case-insensitive extension)
+// Matches image files: "Nombre, Aerolinea, Ciudad.jpg" (case-insensitive extension)
 const IMAGE_RE = /\.(jpe?g|png|webp)$/i;
 const TEXT_RE = /\.txt$/i;
 
@@ -15,6 +16,13 @@ function normalize(str) {
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // strip accents
     .toLowerCase()
     .replace(/[^a-z0-9]/g, '');
+}
+
+function lookupCity(cityName) {
+  if (!cityName) return null;
+  const entry = CITIES[normalize(cityName)];
+  if (!entry) return null;
+  return { name: entry.display, lat: entry.lat, lon: entry.lon };
 }
 
 async function fetchBlobText(pathname) {
@@ -49,9 +57,10 @@ export default async function handler(request, response) {
     const logos = logoResult.blobs.filter((b) => IMAGE_RE.test(b.pathname));
 
     // Index quote files two ways:
-    //  - by their FULL filename ("Abril, Air Arabia") — the recommended way,
-    //    matches the photo exactly, so two people with the same first name
-    //    never collide as long as their .txt is named just like their photo.
+    //  - by their FULL filename ("Abril, Air Arabia, Sharjah") — the
+    //    recommended way, matches the photo exactly, so two people with the
+    //    same first name never collide as long as their .txt is named just
+    //    like their photo.
     //  - by first name only ("Abril") — kept as a fallback for older uploads
     //    that only used the first name, but only used when that first name
     //    is unique among the photos (otherwise it's ambiguous and skipped).
@@ -91,9 +100,13 @@ export default async function handler(request, response) {
     const alumni = await Promise.all(
       images.map(async (img) => {
         const filename = baseName(img.pathname).replace(IMAGE_RE, '');
-        const [rawName, rawAirline] = filename.split(',');
+        // "Nombre, Aerolinea, Ciudad" — city is optional (older uploads may
+        // only have "Nombre, Aerolinea", which is still fully supported,
+        // it just won't get a point on the world map).
+        const [rawName, rawAirline, rawCity] = filename.split(',');
         const name = (rawName || filename).trim();
         const airline = (rawAirline || '').trim();
+        const cityName = (rawCity || '').trim();
 
         const fullKey = normalize(filename.trim());
         const firstKey = normalize(name);
@@ -122,11 +135,12 @@ export default async function handler(request, response) {
         }
 
         const logoPath = airline ? logoByAirline[normalize(airline)] : null;
+        const city = lookupCity(cityName);
 
         if (debug) {
           debugAlumni.push({
-            imageFile: baseName(img.pathname), name, airline,
-            matchedTextFile: matchedTextPath, matchSource, fetchError,
+            imageFile: baseName(img.pathname), name, airline, cityName,
+            cityMatched: !!city, matchedTextFile: matchedTextPath, matchSource, fetchError,
             firstNameIsAmbiguous: !isFirstNameUnique
           });
         }
@@ -135,6 +149,9 @@ export default async function handler(request, response) {
           name,
           airline,
           quote,
+          city: city ? city.name : null,
+          cityLat: city ? city.lat : null,
+          cityLon: city ? city.lon : null,
           photoUrl: proxiedImageUrl(request, img.pathname),
           airlineLogoUrl: logoPath ? proxiedImageUrl(request, logoPath) : null,
           uploadedAt: img.uploadedAt

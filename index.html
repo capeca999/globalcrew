@@ -1858,27 +1858,20 @@ if (videoEmbed) {
     [[-45,60],[-20,70],[-20,83],[-50,83],[-70,75],[-55,65],[-45,60]]
   ];
 
-  // Known base city for each airline we might have alumni with — used to auto-generate map pins.
-  const AIRLINE_GEO = {
-    'iberia': { city: 'Madrid', lon: -3.70, lat: 40.42 },
-    'vueling': { city: 'Barcelona', lon: 2.17, lat: 41.39 },
-    'volotea': { city: 'Barcelona', lon: 2.17, lat: 41.39 },
-    'ryanair': { city: 'Dublín', lon: -6.27, lat: 53.35 },
-    'easyjet': { city: 'Londres', lon: -0.13, lat: 51.51 },
-    'world2fly': { city: 'Punta Cana', lon: -68.37, lat: 18.58 },
-    'emirates': { city: 'Dubái', lon: 55.27, lat: 25.20 },
-    'qatarairways': { city: 'Doha', lon: 51.53, lat: 25.29 },
-    'qatar': { city: 'Doha', lon: 51.53, lat: 25.29 },
-    'airarabia': { city: 'Sharjah', lon: 55.42, lat: 25.35 },
-    'airnostrum': { city: 'Valencia', lon: -0.38, lat: 39.47 },
-    'klasjet': { city: 'Vilna', lon: 25.28, lat: 54.69 },
-    'eurowings': { city: 'Düsseldorf', lon: 6.79, lat: 51.23 },
-    'tradeair': { city: 'Zagreb', lon: 15.98, lat: 45.81 }
-  };
-  const normalize = (s) => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-
-  const DEFAULT_ROUTES = ['Iberia','Vueling','Air Nostrum','Ryanair','easyJet','Eurowings',
-    'TradeAir','Klasjet','Emirates','Qatar Airways','Air Arabia','World2Fly'];
+  // Fallback points used only if the API isn't reachable (e.g. hosted outside Vercel)
+  const DEFAULT_POINTS = [
+    { city: 'Madrid', lon: -3.70, lat: 40.42, airline: 'Iberia' },
+    { city: 'Barcelona', lon: 2.17, lat: 41.39, airline: 'Vueling' },
+    { city: 'Dublín', lon: -6.27, lat: 53.35, airline: 'Ryanair' },
+    { city: 'Londres', lon: -0.13, lat: 51.51, airline: 'easyJet' },
+    { city: 'Düsseldorf', lon: 6.79, lat: 51.23, airline: 'Eurowings' },
+    { city: 'Zagreb', lon: 15.98, lat: 45.81, airline: 'TradeAir' },
+    { city: 'Vilna', lon: 25.28, lat: 54.69, airline: 'Klasjet' },
+    { city: 'Dubái', lon: 55.27, lat: 25.20, airline: 'Emirates' },
+    { city: 'Doha', lon: 51.53, lat: 25.29, airline: 'Qatar Airways' },
+    { city: 'Sharjah', lon: 55.42, lat: 25.35, airline: 'Air Arabia' },
+    { city: 'Punta Cana', lon: -68.37, lat: 18.58, airline: 'World2Fly' }
+  ];
 
   const project = (lon, lat) => ({
     x: (lon + 180) / 360 * WIDTH,
@@ -1918,16 +1911,26 @@ if (videoEmbed) {
   }
   svg.appendChild(dotsGroup);
 
-  function drawRoutesAndPins(routeNames) {
+  function drawRoutesAndPins(points) {
     const originXY = project(ORIGIN.lon, ORIGIN.lat);
-    const routes = routeNames
-      .map((name) => {
-        const geo = AIRLINE_GEO[normalize(name)];
-        if (!geo) return null;
-        const p = project(geo.lon, geo.lat);
-        return { airline: name, city: geo.city, x: p.x, y: p.y, color: airlineColor(name) };
-      })
-      .filter(Boolean);
+
+    // Group by city, in case several alumni share the same city — one dot,
+    // one legend line listing every airline that flies from there.
+    const byCity = {};
+    points.forEach((p) => {
+      const key = p.city.toLowerCase();
+      if (!byCity[key]) {
+        byCity[key] = { city: p.city, lon: p.lon, lat: p.lat, airlines: [], color: p.color };
+      }
+      if (p.airline && !byCity[key].airlines.includes(p.airline)) {
+        byCity[key].airlines.push(p.airline);
+      }
+    });
+
+    const routes = Object.values(byCity).map((r) => {
+      const p = project(r.lon, r.lat);
+      return { ...r, x: p.x, y: p.y };
+    });
 
     const linesGroup = el('g', {});
     const pinsGroup = el('g', {});
@@ -1964,21 +1967,27 @@ if (videoEmbed) {
       legend.innerHTML = routes.map((r) => `
         <div class="wm-legend-item">
           <span class="wm-legend-dot" style="background:${r.color}"></span>
-          <span class="wm-legend-text"><b>${r.city}</b><span>${r.airline}</span></span>
+          <span class="wm-legend-text"><b>${r.city}</b><span>${r.airlines.join(', ')}</span></span>
         </div>
       `).join('');
     }
   }
 
-  // Pull the real, current list of airlines from the alumni data (Blob-powered),
-  // so every new alumnus with a new airline adds its own dot automatically.
+  // Pull the real, current list of alumni (with city + airline) from the
+  // Blob-powered API — every alumnus whose photo is named
+  // "Nombre, Aerolinea, Ciudad.jpg" adds their own dot automatically,
+  // with no lookup table to keep updated in the code.
   fetch('/api/alumni')
     .then((res) => (res.ok ? res.json() : Promise.reject()))
     .then((data) => {
-      const airlines = [...new Set((data.alumni || []).map((a) => a.airline).filter(Boolean))];
-      drawRoutesAndPins(airlines.length ? airlines : DEFAULT_ROUTES);
+      const withCity = (data.alumni || []).filter((a) => a.cityLat != null && a.cityLon != null);
+      const points = withCity.map((a) => ({
+        city: a.city, lon: a.cityLon, lat: a.cityLat, airline: a.airline,
+        color: airlineColor(a.airline)
+      }));
+      drawRoutesAndPins(points.length ? points : DEFAULT_POINTS.map((p) => ({ ...p, color: airlineColor(p.airline) })));
     })
-    .catch(() => drawRoutesAndPins(DEFAULT_ROUTES));
+    .catch(() => drawRoutesAndPins(DEFAULT_POINTS.map((p) => ({ ...p, color: airlineColor(p.airline) }))));
 })();
 
 /* ===================== ALUMNI CAROUSEL ===================== */
