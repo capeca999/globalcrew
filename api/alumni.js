@@ -48,11 +48,26 @@ export default async function handler(request, response) {
     const texts = blobs.filter((b) => TEXT_RE.test(b.pathname));
     const logos = logoResult.blobs.filter((b) => IMAGE_RE.test(b.pathname));
 
-    // Index quote files by the student's normalized first name
-    const textByName = {};
+    // Index quote files two ways:
+    //  - by their FULL filename ("Abril, Air Arabia") — the recommended way,
+    //    matches the photo exactly, so two people with the same first name
+    //    never collide as long as their .txt is named just like their photo.
+    //  - by first name only ("Abril") — kept as a fallback for older uploads
+    //    that only used the first name, but only used when that first name
+    //    is unique among the photos (otherwise it's ambiguous and skipped).
+    const textByFullName = {};
+    const textByFirstName = {};
     for (const t of texts) {
-      const key = normalize(baseName(t.pathname).replace(TEXT_RE, ''));
-      textByName[key] = t.pathname;
+      const raw = baseName(t.pathname).replace(TEXT_RE, '').trim();
+      const fullKey = normalize(raw);
+      textByFullName[fullKey] = t.pathname;
+      const firstKey = normalize(raw.split(',')[0]);
+      // Only keep first-name fallback if not already claimed by another text file
+      if (!(firstKey in textByFirstName)) {
+        textByFirstName[firstKey] = t.pathname;
+      } else {
+        textByFirstName[firstKey] = null; // ambiguous, disable fallback
+      }
     }
 
     // Index airline logos by normalized airline name
@@ -60,6 +75,15 @@ export default async function handler(request, response) {
     for (const l of logos) {
       const key = normalize(baseName(l.pathname).replace(IMAGE_RE, ''));
       logoByAirline[key] = l.pathname;
+    }
+
+    // Count how many photos share each first name, to know if the
+    // first-name-only fallback would be ambiguous for a given photo.
+    const firstNameCounts = {};
+    for (const img of images) {
+      const raw = baseName(img.pathname).replace(IMAGE_RE, '');
+      const firstKey = normalize(raw.split(',')[0]);
+      firstNameCounts[firstKey] = (firstNameCounts[firstKey] || 0) + 1;
     }
 
     const debugAlumni = [];
@@ -70,16 +94,26 @@ export default async function handler(request, response) {
         const [rawName, rawAirline] = filename.split(',');
         const name = (rawName || filename).trim();
         const airline = (rawAirline || '').trim();
-        const key = normalize(name);
+
+        const fullKey = normalize(filename.trim());
+        const firstKey = normalize(name);
+        const isFirstNameUnique = firstNameCounts[firstKey] === 1;
+
+        let matchedTextPath = textByFullName[fullKey] || null;
+        let matchSource = matchedTextPath ? 'full_name' : null;
+        if (!matchedTextPath && isFirstNameUnique && textByFirstName[firstKey]) {
+          matchedTextPath = textByFirstName[firstKey];
+          matchSource = 'first_name_fallback';
+        }
 
         let quote = '';
-        let textLookup = { matchedKey: key, foundTextFile: textByName[key] || null, fetchError: null };
-        if (textByName[key]) {
-          const result = await fetchBlobText(textByName[key]);
+        let fetchError = null;
+        if (matchedTextPath) {
+          const result = await fetchBlobText(matchedTextPath);
           quote = result.text;
-          textLookup.fetchError = result.error;
+          fetchError = result.error;
         } else {
-          textLookup.fetchError = 'no_matching_txt_file';
+          fetchError = 'no_matching_txt_file';
         }
         if (!quote) {
           quote = airline
@@ -89,7 +123,13 @@ export default async function handler(request, response) {
 
         const logoPath = airline ? logoByAirline[normalize(airline)] : null;
 
-        if (debug) debugAlumni.push({ imageFile: baseName(img.pathname), name, airline, ...textLookup });
+        if (debug) {
+          debugAlumni.push({
+            imageFile: baseName(img.pathname), name, airline,
+            matchedTextFile: matchedTextPath, matchSource, fetchError,
+            firstNameIsAmbiguous: !isFirstNameUnique
+          });
+        }
 
         return {
           name,
