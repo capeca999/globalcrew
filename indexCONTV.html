@@ -639,6 +639,66 @@ body.announce-closed{--announce-h:0px;}
 /* ===================== TESTIMONIALS ===================== */
 .testimonials{background:var(--navy-950);color:var(--cream);padding:100px 0;position:relative;overflow:hidden;}
 
+/* ===================== IN-FLIGHT ENTERTAINMENT FRAME ===================== */
+.ife-frame{
+  position:relative;max-width:820px;margin:0 auto;border-radius:22px;
+  background:linear-gradient(160deg,#2A2A2C,#151516 60%,#0D0D0E);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 30px 70px -30px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06);
+  padding:14px 14px 16px;
+}
+.ife-topbar{display:flex;align-items:center;gap:10px;padding:6px 10px 14px;}
+.ife-camera{width:6px;height:6px;border-radius:50%;background:#444;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15);}
+.ife-channel{
+  font-family:var(--ff-mono);font-size:.62rem;letter-spacing:.1em;color:rgba(247,241,236,.45);
+  flex:1;text-align:center;
+}
+.ife-signal svg{width:12px;height:12px;color:rgba(247,241,236,.35);transform:rotate(90deg);}
+.ife-screen{
+  background:radial-gradient(120% 100% at 50% 0%,#3D0910 0%,#26060B 65%,#160408 100%);
+  border-radius:8px;padding:52px 32px;min-height:200px;display:flex;align-items:center;
+  box-shadow:inset 0 0 40px rgba(0,0,0,.5),inset 0 0 0 1px rgba(0,0,0,.4);
+  position:relative;overflow:hidden;
+}
+.ife-screen::before{ /* subtle scanline / glow */
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.04),transparent 40%);
+}
+.ife-bottombar{display:flex;align-items:center;gap:14px;padding:16px 12px 4px;}
+.ife-play{
+  width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.08);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.ife-play svg{width:11px;height:11px;color:rgba(247,241,236,.7);transform:rotate(90deg);}
+.ife-scrub{flex:1;height:3px;background:rgba(255,255,255,.12);border-radius:3px;overflow:hidden;}
+.ife-scrub-fill{height:100%;width:0%;background:var(--steel-light);border-radius:3px;}
+.ife-btn{
+  position:absolute;top:50%;width:34px;height:34px;border-radius:50%;transform:translateY(-50%);
+  background:linear-gradient(160deg,#333,#161616);box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 4px 10px rgba(0,0,0,.4);
+  display:none;
+}
+.ife-btn-left{left:-50px;}
+.ife-btn-right{right:-50px;}
+
+.testi-track{position:relative;max-width:600px;margin:0 auto;min-height:150px;width:100%;}
+.testi{
+  position:absolute;inset:0;opacity:0;transform:translateY(14px);transition:opacity .7s var(--ease),transform .7s var(--ease);
+  text-align:center;
+}
+.testi.active{opacity:1;transform:translateY(0);position:relative;}
+.testi p{font-family:var(--ff-display);font-size:1.3rem;line-height:1.4;color:var(--cream);}
+.testi .who{margin-top:18px;font-family:var(--ff-mono);font-size:.68rem;color:var(--steel-light);letter-spacing:.08em;}
+.testi-dots{display:flex;gap:7px;flex-shrink:0;}
+.testi-dots button{width:6px;height:6px;border-radius:50%;background:rgba(247,244,236,.25);}
+.testi-dots button.active{background:var(--steel-light);width:16px;border-radius:4px;}
+@media (min-width:900px){
+  .ife-btn{display:block;}
+}
+@media (max-width:560px){
+  .ife-screen{padding:38px 20px;min-height:220px;}
+  .testi p{font-size:1.1rem;}
+}
+
 /* ===================== FAQ ===================== */
 .faq-section{background:var(--cream);padding:100px 0;}
 .faq-list{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
@@ -652,17 +712,6 @@ body.announce-closed{--announce-h:0px;}
 .faq-item.open .faq-icon{transform:rotate(0deg);}
 .faq-answer{max-height:0;overflow:hidden;transition:max-height .4s var(--ease);}
 .faq-answer p{padding:0 24px 20px;color:var(--ink-soft);font-size:.94rem;line-height:1.6;}
-.testi-track{position:relative;max-width:760px;margin:0 auto;min-height:180px;}
-.testi{
-  position:absolute;inset:0;opacity:0;transform:translateY(14px);transition:opacity .7s var(--ease),transform .7s var(--ease);
-  text-align:center;
-}
-.testi.active{opacity:1;transform:translateY(0);position:relative;}
-.testi p{font-family:var(--ff-display);font-size:1.5rem;line-height:1.4;color:var(--cream);}
-.testi .who{margin-top:22px;font-family:var(--ff-mono);font-size:.72rem;color:var(--steel);letter-spacing:.08em;}
-.testi-dots{display:flex;gap:8px;justify-content:center;margin-top:40px;}
-.testi-dots button{width:7px;height:7px;border-radius:50%;background:rgba(247,244,236,.3);}
-.testi-dots button.active{background:var(--steel);width:20px;border-radius:4px;}
 
 /* ===================== FOOTER ===================== */
 .site-footer{background:var(--navy-950);color:rgba(247,244,236,.75);padding:0 0 30px;border-top:1px solid var(--line-light);}
@@ -1150,21 +1199,36 @@ body.announce-closed{--announce-h:0px;}
 <!-- ============ TESTIMONIALS ============ -->
 <section class="testimonials">
   <div class="wrap">
-    <div class="testi-track" id="testiTrack">
-      <div class="testi active">
-        <p>“Entré sin saber nada del sector y salí con contrato en mano. Las prácticas reales en el avión marcaron la diferencia.”</p>
-        <div class="who">— Alumna, promoción TCP</div>
+    <div class="ife-frame reveal">
+      <div class="ife-topbar">
+        <span class="ife-camera"></span>
+        <span class="ife-channel">GLOBAL CREW TV · CANAL TESTIMONIOS</span>
+        <span class="ife-signal"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span>
       </div>
-      <div class="testi">
-        <p>“Los profesores siguen volando, así que todo lo que enseñan pasa por la realidad de una cabina, no solo por un libro.”</p>
-        <div class="who">— Alumno, TCP Ejecutivo</div>
+      <div class="ife-screen">
+        <div class="testi-track" id="testiTrack">
+          <div class="testi active">
+            <p>“Entré sin saber nada del sector y salí con contrato en mano. Las prácticas reales en el avión marcaron la diferencia.”</p>
+            <div class="who">— Alumna, promoción TCP</div>
+          </div>
+          <div class="testi">
+            <p>“Los profesores siguen volando, así que todo lo que enseñan pasa por la realidad de una cabina, no solo por un libro.”</p>
+            <div class="who">— Alumno, TCP Ejecutivo</div>
+          </div>
+          <div class="testi">
+            <p>“El acompañamiento hasta la entrevista fue clave. Me prepararon de forma individual hasta que conseguí volar.”</p>
+            <div class="who">— Alumno, promoción TCP</div>
+          </div>
+        </div>
       </div>
-      <div class="testi">
-        <p>“El acompañamiento hasta la entrevista fue clave. Me prepararon de forma individual hasta que conseguí volar.”</p>
-        <div class="who">— Alumno, promoción TCP</div>
+      <div class="ife-bottombar">
+        <span class="ife-play"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span>
+        <div class="ife-scrub"><div class="ife-scrub-fill" id="ifeScrubFill"></div></div>
+        <div class="testi-dots" id="testiDots"></div>
       </div>
+      <span class="ife-btn ife-btn-left"></span>
+      <span class="ife-btn ife-btn-right"></span>
     </div>
-    <div class="testi-dots" id="testiDots"></div>
   </div>
 </section>
 
@@ -2186,10 +2250,12 @@ document.querySelectorAll('.faq-item').forEach((item) => {
   });
 });
 
-/* ===================== TESTIMONIALS CAROUSEL ===================== */
+/* ===================== TESTIMONIALS CAROUSEL (IFE style) ===================== */
 const testis = document.querySelectorAll('.testi');
 const testiDotsWrap = document.getElementById('testiDots');
+const ifeScrubFill = document.getElementById('ifeScrubFill');
 let testiIndex = 0;
+const TESTI_INTERVAL_MS = 6000;
 testiDotsWrap.innerHTML = [...testis].map((_, i) => `<button data-i="${i}" class="${i===0?'active':''}"></button>`).join('');
 const testiDots = testiDotsWrap.querySelectorAll('button');
 
@@ -2198,8 +2264,27 @@ function showTesti(i) {
   testiDots.forEach((d, idx) => d.classList.toggle('active', idx === i));
   testiIndex = i;
 }
-testiDots.forEach(d => d.addEventListener('click', () => showTesti(parseInt(d.dataset.i))));
-setInterval(() => showTesti((testiIndex + 1) % testis.length), 6000);
+testiDots.forEach(d => d.addEventListener('click', () => {
+  showTesti(parseInt(d.dataset.i));
+  restartScrub();
+}));
+
+let scrubStart = performance.now();
+function restartScrub() { scrubStart = performance.now(); }
+
+function tickScrub(now) {
+  if (ifeScrubFill) {
+    const pct = Math.min(((now - scrubStart) / TESTI_INTERVAL_MS) * 100, 100);
+    ifeScrubFill.style.width = pct + '%';
+  }
+  requestAnimationFrame(tickScrub);
+}
+requestAnimationFrame(tickScrub);
+
+setInterval(() => {
+  showTesti((testiIndex + 1) % testis.length);
+  restartScrub();
+}, TESTI_INTERVAL_MS);
 </script>
 </body>
 </html>
