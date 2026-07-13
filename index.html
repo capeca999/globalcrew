@@ -145,7 +145,7 @@ body.announce-closed{--announce-h:0px;}
 /* ===================== HERO ===================== */
 .hero{
   position:relative;min-height:100vh;display:flex;align-items:center;
-  background:linear-gradient(180deg,#2B060D 0%,#6B1220 45%,#8C3448 78%,#6B2438 100%);
+  background:linear-gradient(180deg,#2B060D 0%,#6B1220 45%,#A9435A 78%,#E3AFAE 100%);
   overflow:hidden;padding-top:calc(110px + var(--announce-h));transition:padding-top .3s var(--ease);
 }
 .hero::before{ /* stars/dust */
@@ -156,10 +156,6 @@ body.announce-closed{--announce-h:0px;}
     radial-gradient(1px 1px at 85% 45%, rgba(255,255,255,.35) 0, transparent 60%),
     radial-gradient(1px 1px at 10% 55%, rgba(255,255,255,.3) 0, transparent 60%);
   opacity:.8;
-}
-.hero::after{ /* dark scrim so text stays readable regardless of the gradient's color */
-  content:'';position:absolute;left:0;right:0;bottom:0;height:48%;z-index:1;pointer-events:none;
-  background:linear-gradient(180deg,transparent,rgba(8,3,5,.55) 55%,rgba(8,3,5,.82) 100%);
 }
 .hero-flight-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
 .hero-plane{
@@ -200,14 +196,13 @@ body.announce-closed{--announce-h:0px;}
 .hero-cta{display:flex;gap:16px;margin-top:38px;flex-wrap:wrap;}
 .hero-meta{
   margin-top:70px;display:flex;gap:40px;flex-wrap:wrap;
-  font-family:var(--ff-mono);font-size:.78rem;color:rgba(247,244,236,.75);letter-spacing:.06em;
-  text-shadow:0 1px 8px rgba(10,4,6,.5);
+  font-family:var(--ff-mono);font-size:.78rem;color:rgba(247,244,236,.6);letter-spacing:.06em;
 }
-.hero-meta b{display:block;color:var(--steel-light);font-family:var(--ff-display);font-size:1.4rem;letter-spacing:0;margin-bottom:2px;text-shadow:0 2px 10px rgba(10,4,6,.55);}
+.hero-meta b{display:block;color:var(--steel-light);font-family:var(--ff-display);font-size:1.4rem;letter-spacing:0;margin-bottom:2px;}
 .scroll-cue{
   position:absolute;bottom:34px;left:50%;transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(247,244,236,.6);
-  font-family:var(--ff-mono);font-size:.68rem;letter-spacing:.18em;text-shadow:0 1px 8px rgba(10,4,6,.5);
+  font-family:var(--ff-mono);font-size:.68rem;letter-spacing:.18em;
 }
 .scroll-cue .line{width:1px;height:34px;background:linear-gradient(180deg,rgba(247,244,236,.6),transparent);animation:scrollLine 2s ease-in-out infinite;}
 @keyframes scrollLine{0%{transform:scaleY(0);transform-origin:top;}50%{transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{transform:scaleY(0);transform-origin:bottom;}}
