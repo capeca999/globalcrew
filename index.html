@@ -145,7 +145,7 @@ body.announce-closed{--announce-h:0px;}
 /* ===================== HERO ===================== */
 .hero{
   position:relative;min-height:100vh;display:flex;align-items:center;
-  background:linear-gradient(180deg,#2B060D 0%,#6B1220 45%,#A9435A 78%,#E3AFAE 100%);
+  background:linear-gradient(180deg,#2B060D 0%,#6B1220 45%,#8C3448 78%,#6B2438 100%);
   overflow:hidden;padding-top:calc(110px + var(--announce-h));transition:padding-top .3s var(--ease);
 }
 .hero::before{ /* stars/dust */
@@ -156,6 +156,10 @@ body.announce-closed{--announce-h:0px;}
     radial-gradient(1px 1px at 85% 45%, rgba(255,255,255,.35) 0, transparent 60%),
     radial-gradient(1px 1px at 10% 55%, rgba(255,255,255,.3) 0, transparent 60%);
   opacity:.8;
+}
+.hero::after{ /* dark scrim so text stays readable regardless of the gradient's color */
+  content:'';position:absolute;left:0;right:0;bottom:0;height:48%;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(8,3,5,.55) 55%,rgba(8,3,5,.82) 100%);
 }
 .hero-flight-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
 .hero-plane{
@@ -196,13 +200,14 @@ body.announce-closed{--announce-h:0px;}
 .hero-cta{display:flex;gap:16px;margin-top:38px;flex-wrap:wrap;}
 .hero-meta{
   margin-top:70px;display:flex;gap:40px;flex-wrap:wrap;
-  font-family:var(--ff-mono);font-size:.78rem;color:rgba(247,244,236,.6);letter-spacing:.06em;
+  font-family:var(--ff-mono);font-size:.78rem;color:rgba(247,244,236,.75);letter-spacing:.06em;
+  text-shadow:0 1px 8px rgba(10,4,6,.5);
 }
-.hero-meta b{display:block;color:var(--steel-light);font-family:var(--ff-display);font-size:1.4rem;letter-spacing:0;margin-bottom:2px;}
+.hero-meta b{display:block;color:var(--steel-light);font-family:var(--ff-display);font-size:1.4rem;letter-spacing:0;margin-bottom:2px;text-shadow:0 2px 10px rgba(10,4,6,.55);}
 .scroll-cue{
   position:absolute;bottom:34px;left:50%;transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(247,244,236,.6);
-  font-family:var(--ff-mono);font-size:.68rem;letter-spacing:.18em;
+  font-family:var(--ff-mono);font-size:.68rem;letter-spacing:.18em;text-shadow:0 1px 8px rgba(10,4,6,.5);
 }
 .scroll-cue .line{width:1px;height:34px;background:linear-gradient(180deg,rgba(247,244,236,.6),transparent);animation:scrollLine 2s ease-in-out infinite;}
 @keyframes scrollLine{0%{transform:scaleY(0);transform-origin:top;}50%{transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{transform:scaleY(0);transform-origin:bottom;}}
@@ -230,6 +235,23 @@ body.announce-closed{--announce-h:0px;}
 }
 .test-promo-plane svg{width:32px;height:32px;color:var(--steel-light);transform:rotate(90deg);}
 .test-promo-cta{position:relative;z-index:1;flex-shrink:0;}
+
+/* ===================== BOARDING PASS GENERATOR ===================== */
+.boarding-pass-section{background:var(--cream);padding:0 0 90px;}
+.bp-generator{max-width:900px;margin:0 auto;}
+.bp-input-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px;}
+.bp-input-row input{
+  flex:1;min-width:200px;font-family:var(--ff-body);font-size:.95rem;color:var(--ink);
+  background:#fff;border:1px solid var(--line);border-radius:100px;padding:14px 22px;
+}
+.bp-input-row input:focus{outline:none;border-color:var(--steel);box-shadow:0 0 0 3px rgba(140,135,131,.18);}
+.bp-input-row .btn{flex-shrink:0;}
+.bp-canvas-wrap{
+  border-radius:var(--radius-lg);overflow:hidden;box-shadow:0 24px 50px -24px rgba(43,6,13,.35);
+  border:1px solid var(--line);
+}
+.bp-canvas-wrap canvas{width:100%;height:auto;display:block;}
+.bp-hint{text-align:center;margin-top:16px;font-family:var(--ff-mono);font-size:.72rem;color:var(--ink-soft);}
 
 /* ===================== ROUTE DIVIDER (signature element) ===================== */
 .route-divider{
@@ -829,6 +851,30 @@ body.announce-closed{--announce-h:0px;}
       </div>
       <div class="test-promo-plane"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
       <a href="test-cabin-crew.html" class="btn btn-primary test-promo-cta">Descubre tu perfil como Cabin Crew</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BOARDING PASS GENERATOR ============ -->
+<section class="boarding-pass-section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">PARA COMPARTIR</span>
+      <h2>Tu tarjeta de embarque hacia ser TCP.</h2>
+      <p>Escribe tu nombre, genera tu tarjeta y compártela — el primer paso hacia tu nueva carrera empieza aquí.</p>
+    </div>
+    <div class="bp-generator reveal">
+      <div class="bp-input-row">
+        <input type="text" id="bpName" placeholder="Escribe tu nombre" maxlength="22" autocomplete="off">
+        <button type="button" class="btn btn-primary" id="bpDownloadBtn">
+          <svg viewBox="0 0 24 24" style="width:15px;height:15px;transform:rotate(90deg);"><use href="#icon-plane"/></svg>
+          Descargar tarjeta
+        </button>
+      </div>
+      <div class="bp-canvas-wrap">
+        <canvas id="bpCanvas" width="1200" height="500"></canvas>
+      </div>
+      <p class="bp-hint">Se descarga como imagen — puedes compartirla directamente en Instagram, WhatsApp o donde quieras.</p>
     </div>
   </div>
 </section>
@@ -1830,18 +1876,238 @@ function initAlumniCarousel() {
 })();
 
 /* ===================== NEXT COURSE DATE (from Blob) ===================== */
+let bpCourseDate = 'SEPTIEMBRE 2026';
 (async function loadNextCourseDate() {
   const el = document.getElementById('nextCourseDate');
-  if (!el) return;
   try {
     const res = await fetch('/api/proximo-curso');
     if (!res.ok) throw new Error('proximo-curso API not available');
     const data = await res.json();
-    if (data.text) el.textContent = data.text;
+    if (data.text) {
+      bpCourseDate = data.text;
+      if (el) el.textContent = data.text;
+    }
   } catch (err) {
     // Keep the default date already in the HTML.
+  } finally {
+    if (typeof drawBoardingPass === 'function') drawBoardingPass();
   }
 })();
+
+/* ===================== BOARDING PASS GENERATOR ===================== */
+const bpCanvas = document.getElementById('bpCanvas');
+let drawBoardingPass = null;
+
+if (bpCanvas) {
+  const ctx = bpCanvas.getContext('2d');
+  const W = bpCanvas.width, H = bpCanvas.height;
+  const STUB_X = 900; // where the tear-off stub begins
+
+  function seededFlightNum(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
+    return 100 + (hash % 900);
+  }
+
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  drawBoardingPass = function () {
+    const rawName = (document.getElementById('bpName').value || '').trim();
+    const name = rawName ? rawName.toUpperCase() : 'TU NOMBRE AQUÍ';
+    const flightNum = 'GC' + seededFlightNum(rawName || 'globalcrew');
+
+    ctx.clearRect(0, 0, W, H);
+
+    // Card background
+    roundRect(0, 0, W, H, 26);
+    ctx.save();
+    ctx.clip();
+    const grad = ctx.createLinearGradient(0, 0, W, H);
+    grad.addColorStop(0, '#2B060D');
+    grad.addColorStop(0.55, '#5C1220');
+    grad.addColorStop(1, '#7E1B2C');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Subtle dot texture
+    ctx.fillStyle = 'rgba(247,241,236,0.05)';
+    for (let x = 20; x < STUB_X; x += 26) {
+      for (let y = 20; y < H - 20; y += 26) {
+        ctx.beginPath();
+        ctx.arc(x, y, 1.1, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Stub background (slightly darker)
+    ctx.fillStyle = 'rgba(0,0,0,0.18)';
+    ctx.fillRect(STUB_X, 0, W - STUB_X, H);
+
+    // Perforation line + punched circles
+    ctx.setLineDash([6, 8]);
+    ctx.strokeStyle = 'rgba(247,241,236,0.4)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(STUB_X, 0);
+    ctx.lineTo(STUB_X, H);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath(); ctx.arc(STUB_X, 0, 22, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(STUB_X, H, 22, 0, Math.PI * 2); ctx.fill();
+    ctx.globalCompositeOperation = 'source-over';
+
+    ctx.restore();
+
+    // ---- Header ----
+    ctx.fillStyle = 'rgba(247,241,236,0.85)';
+    ctx.font = '700 15px "Space Grotesk", sans-serif';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('GLOBAL CREW', 56, 60);
+    ctx.fillStyle = '#D6D2CD';
+    ctx.font = '500 12px "IBM Plex Mono", monospace';
+    ctx.fillText('ESCUELA DE TRIPULANTES · VALENCIA', 56, 78);
+
+    ctx.textAlign = 'right';
+    ctx.fillStyle = 'rgba(247,241,236,0.6)';
+    ctx.font = '500 11px "IBM Plex Mono", monospace';
+    ctx.fillText('BOARDING PASS', STUB_X - 40, 60);
+    ctx.textAlign = 'left';
+
+    // ---- Passenger ----
+    ctx.fillStyle = '#D6D2CD';
+    ctx.font = '600 11px "IBM Plex Mono", monospace';
+    ctx.fillText('PASAJERO', 56, 150);
+    ctx.fillStyle = '#F7F1EC';
+    let nameSize = 48;
+    ctx.font = `700 ${nameSize}px "Space Grotesk", sans-serif`;
+    while (ctx.measureText(name).width > (STUB_X - 112) && nameSize > 24) {
+      nameSize -= 2;
+      ctx.font = `700 ${nameSize}px "Space Grotesk", sans-serif`;
+    }
+    ctx.fillText(name, 56, 150 + nameSize * 0.85);
+
+    // ---- From / To ----
+    const rowY = 250;
+    ctx.fillStyle = '#D6D2CD';
+    ctx.font = '600 11px "IBM Plex Mono", monospace';
+    ctx.fillText('ORIGEN', 56, rowY);
+    ctx.fillText('DESTINO', 300, rowY);
+    ctx.fillStyle = '#F7F1EC';
+    ctx.font = '700 26px "Space Grotesk", sans-serif';
+    ctx.fillText('VALENCIA (VLC)', 56, rowY + 34);
+    ctx.fillText('TU FUTURO COMO TCP', 300, rowY + 34);
+
+    // plane icon between origin/destination
+    ctx.save();
+    ctx.translate(262, rowY + 16);
+    ctx.rotate(Math.PI / 2);
+    ctx.fillStyle = '#D6D2CD';
+    ctx.beginPath();
+    ctx.moveTo(0, -11); ctx.lineTo(4, -3); ctx.lineTo(12, 0); ctx.lineTo(4, 3);
+    ctx.lineTo(2, 11); ctx.lineTo(0, 6); ctx.lineTo(-2, 11); ctx.lineTo(-4, 3);
+    ctx.lineTo(-12, 0); ctx.lineTo(-4, -3); ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+
+    // ---- Bottom meta row ----
+    const metaY = 350;
+    const cols = [
+      ['VUELO', flightNum],
+      ['PUERTA', '07'],
+      ['ASIENTO', '1A'],
+      ['CONVOCATORIA', bpCourseDate]
+    ];
+    let cx = 56;
+    cols.forEach(([label, value], i) => {
+      ctx.fillStyle = '#D6D2CD';
+      ctx.font = '600 10.5px "IBM Plex Mono", monospace';
+      ctx.fillText(label, cx, metaY);
+      ctx.fillStyle = '#F7F1EC';
+      ctx.font = '700 19px "Space Grotesk", sans-serif';
+      ctx.fillText(value, cx, metaY + 26);
+      cx += i === 3 ? 0 : (i === 2 ? 230 : 190);
+    });
+
+    // ---- Stub (right side) ----
+    const stubCenter = STUB_X + (W - STUB_X) / 2;
+    ctx.save();
+    ctx.translate(stubCenter, H / 2);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(247,241,236,0.6)';
+    ctx.font = '600 11px "IBM Plex Mono", monospace';
+    ctx.fillText('TCP', 0, -150);
+    ctx.fillStyle = '#F7F1EC';
+    ctx.font = '700 22px "Space Grotesk", sans-serif';
+    let stubName = name.length > 14 ? name.slice(0, 13) + '…' : name;
+    ctx.fillText(stubName, 0, -118);
+
+    ctx.fillStyle = 'rgba(247,241,236,0.6)';
+    ctx.font = '600 10px "IBM Plex Mono", monospace';
+    ctx.fillText('VUELO', 0, -40);
+    ctx.fillStyle = '#F7F1EC';
+    ctx.font = '700 18px "Space Grotesk", sans-serif';
+    ctx.fillText(flightNum, 0, -14);
+
+    // decorative barcode
+    ctx.textAlign = 'left';
+    const barY = 40;
+    let barX = stubCenter - 110;
+    const seed = seededFlightNum(name);
+    for (let i = 0; i < 34; i++) {
+      const w = ((seed * (i + 3)) % 4) + 1;
+      if (i % 2 === 0) {
+        ctx.fillStyle = 'rgba(247,241,236,0.75)';
+        ctx.fillRect(barX, barY, w, 46);
+      }
+      barX += w + 2;
+    }
+    ctx.restore();
+  };
+
+  document.getElementById('bpName').addEventListener('input', drawBoardingPass);
+
+  document.getElementById('bpDownloadBtn').addEventListener('click', () => {
+    bpCanvas.toBlob((blob) => {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      const rawName = (document.getElementById('bpName').value || 'global-crew').trim() || 'global-crew';
+      link.href = url;
+      link.download = `boarding-pass-${rawName.toLowerCase().replace(/\s+/g, '-')}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+
+      if (navigator.canShare) {
+        bpCanvas.toBlob((shareBlob) => {
+          const file = new File([shareBlob], 'boarding-pass.png', { type: 'image/png' });
+          if (navigator.canShare({ files: [file] })) {
+            navigator.share({
+              files: [file],
+              title: 'Mi tarjeta de embarque Global Crew',
+              text: '¡Voy camino de ser TCP! ✈️'
+            }).catch(() => {});
+          }
+        }, 'image/png');
+      }
+    }, 'image/png');
+  });
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(drawBoardingPass);
+  }
+  drawBoardingPass();
+}
 
 /* ===================== CONTACT FORM (Formspree) ===================== */
 const contactForm = document.getElementById('contactForm');
