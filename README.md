@@ -51,7 +51,21 @@ ambigüedad. Solo tienes que copiar el nombre de la foto tal cual y cambiar
 (Si ya tenías `.txt` solo con el nombre, tipo `Abril.txt`, siguen
 funcionando mientras ese nombre no se repita entre dos fotos distintas.)
 
-## 3. Cómo cambiar el "Próximo curso"
+## 3. Cómo añadir un testimonio
+
+Sube un `.txt` a la carpeta `testimonios/` del Blob Store. El nombre del
+archivo es el nombre de la persona (con espacio si quieres que se vea con
+espacio, ej. `Paco Pinazo.txt`), y el contenido del archivo es la cita que
+quieres que aparezca. Aparece automáticamente en el carrusel de
+testimonios (la "pantalla de avión"), ordenado del más reciente al más
+antiguo — nada que tocar en el código.
+
+Si subes el nombre sin espacio (`PacoPinazo.txt`), el sistema intenta
+separarlo solo por las mayúsculas ("Paco Pinazo"), pero para evitar
+sorpresas es mejor poner el espacio tú mismo directamente en el nombre del
+archivo.
+
+## 4. Cómo cambiar el "Próximo curso"
 
 Sube un `.txt` a la carpeta `proximoscursos/` del Blob Store con el texto
 que quieras que aparezca en negrita en la barra superior, por ejemplo:
