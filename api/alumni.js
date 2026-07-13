@@ -3,7 +3,9 @@ import CITIES from './cities.js';
 
 // Matches image files: "Nombre, Aerolinea, Ciudad.jpg" (case-insensitive extension)
 const IMAGE_RE = /\.(jpe?g|png|webp)$/i;
-const TEXT_RE = /\.txt$/i;
+// English quote files end in ".en.txt"; Spanish (default) ones just end in ".txt"
+const EN_TEXT_RE = /\.en\.txt$/i;
+const ES_TEXT_RE = /(?<!\.en)\.txt$/i;
 
 function baseName(pathname) {
   return pathname.split('/').pop();
@@ -43,8 +45,36 @@ function proxiedImageUrl(request, pathname) {
   return `${base}/api/blob-image?path=${encodeURIComponent(pathname)}`;
 }
 
+// Builds "full name" and "first name" lookup indexes for a set of text
+// blobs, matching the same rules used for Spanish quote files: prefer an
+// exact match on the full filename, fall back to first-name-only only
+// when that first name isn't ambiguous among the photos.
+function buildTextIndex(texts, stripRe) {
+  const byFullName = {};
+  const byFirstName = {};
+  for (const t of texts) {
+    const raw = baseName(t.pathname).replace(stripRe, '').trim();
+    const fullKey = normalize(raw);
+    byFullName[fullKey] = t.pathname;
+    const firstKey = normalize(raw.split(',')[0]);
+    if (!(firstKey in byFirstName)) {
+      byFirstName[firstKey] = t.pathname;
+    } else {
+      byFirstName[firstKey] = null; // ambiguous, disable fallback
+    }
+  }
+  return { byFullName, byFirstName };
+}
+
+function resolveTextPath(index, fullKey, firstKey, isFirstNameUnique) {
+  if (index.byFullName[fullKey]) return { path: index.byFullName[fullKey], source: 'full_name' };
+  if (isFirstNameUnique && index.byFirstName[firstKey]) return { path: index.byFirstName[firstKey], source: 'first_name_fallback' };
+  return { path: null, source: null };
+}
+
 export default async function handler(request, response) {
   const debug = request.query && (request.query.debug === '1' || request.query.debug === 'true');
+  const lang = request.query && request.query.lang === 'en' ? 'en' : 'es';
 
   try {
     const [{ blobs }, logoResult] = await Promise.all([
@@ -53,31 +83,16 @@ export default async function handler(request, response) {
     ]);
 
     const images = blobs.filter((b) => IMAGE_RE.test(b.pathname));
-    const texts = blobs.filter((b) => TEXT_RE.test(b.pathname));
+    const esTexts = blobs.filter((b) => ES_TEXT_RE.test(b.pathname));
+    const enTexts = blobs.filter((b) => EN_TEXT_RE.test(b.pathname));
     const logos = logoResult.blobs.filter((b) => IMAGE_RE.test(b.pathname));
 
-    // Index quote files two ways:
-    //  - by their FULL filename ("Abril, Air Arabia, Sharjah") — the
-    //    recommended way, matches the photo exactly, so two people with the
-    //    same first name never collide as long as their .txt is named just
-    //    like their photo.
-    //  - by first name only ("Abril") — kept as a fallback for older uploads
-    //    that only used the first name, but only used when that first name
-    //    is unique among the photos (otherwise it's ambiguous and skipped).
-    const textByFullName = {};
-    const textByFirstName = {};
-    for (const t of texts) {
-      const raw = baseName(t.pathname).replace(TEXT_RE, '').trim();
-      const fullKey = normalize(raw);
-      textByFullName[fullKey] = t.pathname;
-      const firstKey = normalize(raw.split(',')[0]);
-      // Only keep first-name fallback if not already claimed by another text file
-      if (!(firstKey in textByFirstName)) {
-        textByFirstName[firstKey] = t.pathname;
-      } else {
-        textByFirstName[firstKey] = null; // ambiguous, disable fallback
-      }
-    }
+    // Two independent indexes: Spanish quote files ("Nombre, Aerolinea,
+    // Ciudad.txt") and English ones ("Nombre, Aerolinea, Ciudad.en.txt").
+    // The English one is optional — if it isn't there, we fall back to
+    // the Spanish quote so nothing ever ends up blank.
+    const esIndex = buildTextIndex(esTexts, ES_TEXT_RE);
+    const enIndex = buildTextIndex(enTexts, EN_TEXT_RE);
 
     // Index airline logos by normalized airline name
     const logoByAirline = {};
@@ -112,26 +127,30 @@ export default async function handler(request, response) {
         const firstKey = normalize(name);
         const isFirstNameUnique = firstNameCounts[firstKey] === 1;
 
-        let matchedTextPath = textByFullName[fullKey] || null;
-        let matchSource = matchedTextPath ? 'full_name' : null;
-        if (!matchedTextPath && isFirstNameUnique && textByFirstName[firstKey]) {
-          matchedTextPath = textByFirstName[firstKey];
-          matchSource = 'first_name_fallback';
+        // Prefer the requested language; fall back to Spanish if there's
+        // no English quote yet for this person.
+        let resolved = lang === 'en'
+          ? resolveTextPath(enIndex, fullKey, firstKey, isFirstNameUnique)
+          : { path: null, source: null };
+        let usedLang = 'en';
+        if (!resolved.path) {
+          resolved = resolveTextPath(esIndex, fullKey, firstKey, isFirstNameUnique);
+          usedLang = 'es';
         }
 
         let quote = '';
         let fetchError = null;
-        if (matchedTextPath) {
-          const result = await fetchBlobText(matchedTextPath);
+        if (resolved.path) {
+          const result = await fetchBlobText(resolved.path);
           quote = result.text;
           fetchError = result.error;
         } else {
           fetchError = 'no_matching_txt_file';
         }
         if (!quote) {
-          quote = airline
-            ? `Antiguo alumno de Global Crew, ahora contratado en ${airline}.`
-            : 'Antiguo alumno de Global Crew, ¡ya está volando!';
+          quote = lang === 'en'
+            ? (airline ? `Former Global Crew student, now hired at ${airline}.` : 'Former Global Crew student, already flying!')
+            : (airline ? `Antiguo alumno de Global Crew, ahora contratado en ${airline}.` : 'Antiguo alumno de Global Crew, ¡ya está volando!');
         }
 
         const logoPath = airline ? logoByAirline[normalize(airline)] : null;
@@ -140,7 +159,8 @@ export default async function handler(request, response) {
         if (debug) {
           debugAlumni.push({
             imageFile: baseName(img.pathname), name, airline, cityName,
-            cityMatched: !!city, matchedTextFile: matchedTextPath, matchSource, fetchError,
+            cityMatched: !!city, requestedLang: lang, usedLang,
+            matchedTextFile: resolved.path, matchSource: resolved.source, fetchError,
             firstNameIsAmbiguous: !isFirstNameUnique
           });
         }
@@ -169,7 +189,9 @@ export default async function handler(request, response) {
     const payload = { alumni };
     if (debug) {
       payload.debug = {
-        textFilesFoundInFolder: texts.map((t) => baseName(t.pathname)),
+        lang,
+        esTextFilesFound: esTexts.map((t) => baseName(t.pathname)),
+        enTextFilesFound: enTexts.map((t) => baseName(t.pathname)),
         matching: debugAlumni
       };
     }

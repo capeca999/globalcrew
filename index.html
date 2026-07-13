@@ -153,6 +153,15 @@ body.announce-closed{--announce-h:0px;}
 .nav-links a:hover::after{width:100%;}
 .nav-links a:hover{color:var(--cream);}
 .nav-cta{display:flex;align-items:center;gap:14px;}
+.lang-toggle{
+  display:flex;align-items:center;gap:5px;font-family:var(--ff-mono);font-size:.76rem;
+  letter-spacing:.04em;color:rgba(247,244,236,.55);padding:6px 4px;
+}
+.lang-toggle .lang-sep{color:rgba(247,244,236,.3);}
+.lang-toggle .lang-opt{padding:2px 3px;transition:color .2s;}
+.lang-toggle .lang-opt.active{color:var(--cream);font-weight:700;}
+.lang-toggle:hover .lang-opt{color:var(--cream);}
+.lang-toggle-mobile{margin-top:12px;font-size:.9rem;}
 .burger{display:none;flex-direction:column;gap:5px;width:26px;z-index:200;}
 .burger span{height:2px;background:var(--cream);border-radius:2px;transition:transform .3s,opacity .3s;}
 .mobile-menu{
@@ -865,7 +874,11 @@ body.announce-closed{--announce-h:0px;}
     "addressCountry": "ES"
   },
   "areaServed": "ES",
-  "sameAs": [],
+  "sameAs": [
+    "https://www.instagram.com/globalcrewtcp/",
+    "https://www.linkedin.com/company/global-crew-tcp/",
+    "https://www.tiktok.com/@globalcrewvalencia"
+  ],
   "openingHoursSpecification": {
     "@type": "OpeningHoursSpecification",
     "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
@@ -885,7 +898,7 @@ body.announce-closed{--announce-h:0px;}
       {
         "@type": "Course",
         "name": "TCP Ejecutivo",
-        "description": "Formación oficial AESA de 4 semanas con especialización en servicio VIP, protocolo y aviación privada.",
+        "description": "Complemento de especialización en servicio VIP, protocolo y aviación privada para llevar tu formación de Cabin Crew a otro nivel.",
         "provider": { "@type": "EducationalOrganization", "name": "Global Crew Valencia" }
       }
     ]
@@ -898,7 +911,7 @@ body.announce-closed{--announce-h:0px;}
 <div class="announce-bar" id="announceBar">
   <a href="#contacto">
     <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
-    <span>PRÓXIMO CURSO: <strong id="nextCourseDate">SEPTIEMBRE 2026</strong> — plazas limitadas, reserva ya la tuya</span>
+    <span><span data-i18n="announce.prefix">PRÓXIMO CURSO:</span> <strong id="nextCourseDate">SEPTIEMBRE 2026</strong> <span data-i18n="announce.suffix">— plazas limitadas, reserva ya la tuya</span></span>
   </a>
   <button type="button" class="announce-close" id="announceClose" aria-label="Cerrar aviso">✕</button>
 </div>
@@ -931,17 +944,20 @@ body.announce-closed{--announce-h:0px;}
 <header class="nav" id="siteNav">
   <a href="#inicio" class="logo">
     <span class="logo-mark"><img src="images/logo-nav.png" alt="Global Crew Valencia"></span>
-    <span class="logo-text">GLOBAL CREW<span>ESCUELA DE TRIPULANTES · VALENCIA</span></span>
+    <span class="logo-text">GLOBAL CREW<span data-i18n="nav.tagline">ESCUELA DE TRIPULANTES · VALENCIA</span></span>
   </a>
   <nav class="nav-links">
-    <a href="#cursos">Cursos</a>
-    <a href="#galeria">La escuela</a>
-    <a href="#equipo">Instructores</a>
-    <a href="test-cabin-crew.html">Descubre tu perfil</a>
-    <a href="#contacto">Contacto</a>
+    <a href="#cursos" data-i18n="nav.courses">Cursos</a>
+    <a href="#galeria" data-i18n="nav.school">La escuela</a>
+    <a href="#equipo" data-i18n="nav.team">Instructores</a>
+    <a href="test-cabin-crew.html" data-i18n="nav.quiz">Descubre tu perfil</a>
+    <a href="#contacto" data-i18n="nav.contact">Contacto</a>
   </nav>
   <div class="nav-cta">
-    <a href="#contacto" class="btn btn-ghost" style="padding:11px 22px;font-size:.85rem;">Hablemos</a>
+    <button type="button" class="lang-toggle" id="langToggle" aria-label="Cambiar idioma / Switch language">
+      <span class="lang-opt lang-es" data-lang="es">ES</span><span class="lang-sep">/</span><span class="lang-opt lang-en" data-lang="en">EN</span>
+    </button>
+    <a href="#contacto" class="btn btn-ghost" style="padding:11px 22px;font-size:.85rem;" data-i18n="nav.talk">Hablemos</a>
     <button class="burger" id="burgerBtn" aria-label="Abrir menú">
       <span></span><span></span><span></span>
     </button>
@@ -949,11 +965,14 @@ body.announce-closed{--announce-h:0px;}
 </header>
 
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#cursos">Cursos</a>
-  <a href="#galeria">La escuela</a>
-  <a href="#equipo">Instructores</a>
-  <a href="test-cabin-crew.html">Descubre tu perfil</a>
-  <a href="#contacto">Contacto</a>
+  <a href="#cursos" data-i18n="nav.courses">Cursos</a>
+  <a href="#galeria" data-i18n="nav.school">La escuela</a>
+  <a href="#equipo" data-i18n="nav.team">Instructores</a>
+  <a href="test-cabin-crew.html" data-i18n="nav.quiz">Descubre tu perfil</a>
+  <a href="#contacto" data-i18n="nav.contact">Contacto</a>
+  <button type="button" class="lang-toggle lang-toggle-mobile" id="langToggleMobile" aria-label="Cambiar idioma / Switch language">
+    <span class="lang-opt lang-es" data-lang="es">ES</span><span class="lang-sep">/</span><span class="lang-opt lang-en" data-lang="en">EN</span>
+  </button>
 </div>
 
 <!-- ============ HERO ============ -->
@@ -961,36 +980,36 @@ body.announce-closed{--announce-h:0px;}
   <svg class="hero-plane" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
   <div class="hero-content">
     <div class="wrap">
-      <span class="eyebrow reveal is-visible">CENTRO HOMOLOGADO AESA · TCP</span>
+      <span class="eyebrow reveal is-visible" data-i18n="hero.eyebrow">CENTRO HOMOLOGADO AESA · TCP</span>
       <a href="#cursos" class="vr-badge reveal is-visible" style="transition-delay:.05s">
         <span class="vr-star"><svg viewBox="0 0 24 24"><use href="#icon-star"/></svg></span>
         <svg viewBox="0 0 24 24"><use href="#icon-vr"/></svg>
-        <span>Primera escuela de España con formación en Realidad Virtual: extinción de incendios y evacuación</span>
+        <span data-i18n="hero.vrBadge">Primera escuela de España con formación en Realidad Virtual: extinción de incendios y evacuación</span>
       </a>
-      <h1 class="reveal is-visible" style="transition-delay:.1s">Tu carrera <em>despega</em> aquí.</h1>
-      <p class="lede reveal is-visible" style="transition-delay:.2s">
+      <h1 class="reveal is-visible" style="transition-delay:.1s" data-i18n-html="hero.title">Tu carrera <em>despega</em> aquí.</h1>
+      <p class="lede reveal is-visible" style="transition-delay:.2s" data-i18n="hero.lede">
         Formamos tripulantes de cabina de pasajeros con formación oficial AESA, prácticas reales en un avión de Iberia,
         instructores en activo y un plan de estudios pensado para que vueles con una aerolínea, no solo para aprobar un examen.
       </p>
       <div class="hero-cta reveal is-visible" style="transition-delay:.3s">
-        <a href="#cursos" class="btn btn-primary">Ver los cursos</a>
-        <a href="#contacto" class="btn btn-ghost">Reservar una llamada</a>
+        <a href="#cursos" class="btn btn-primary" data-i18n="hero.ctaCourses">Ver los cursos</a>
+        <a href="#contacto" class="btn btn-ghost" data-i18n="hero.ctaCall">Reservar una llamada</a>
       </div>
       <div class="hero-meta reveal is-visible" style="transition-delay:.4s">
-        <div><b data-count="7">0</b>años formando TCP</div>
-        <div><b data-count="94" data-suffix="%">0</b>inserción laboral</div>
-        <div><b data-count="9">0</b>semanas, curso completo</div>
+        <div><b data-count="7">0</b><span data-i18n="hero.metaYears">años formando TCP</span></div>
+        <div><b data-count="94" data-suffix="%">0</b><span data-i18n="hero.metaJobs">inserción laboral</span></div>
+        <div><b data-count="9">0</b><span data-i18n="hero.metaWeeks">semanas, curso completo</span></div>
       </div>
     </div>
   </div>
-  <div class="scroll-cue"><span>DESLIZA</span><span class="line"></span></div>
+  <div class="scroll-cue"><span data-i18n="hero.scroll">DESLIZA</span><span class="line"></span></div>
 </section>
 
 <div class="route-divider" data-wp="1">
   <div class="route-inner">
-    <span class="route-label">WP01 · EMBARQUE</span>
+    <span class="route-label" data-i18n="wp.01">WP01 · EMBARQUE</span>
     <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-    <span class="route-dest">TU PUNTO DE PARTIDA</span>
+    <span class="route-dest" data-i18n="wp.01dest">TU PUNTO DE PARTIDA</span>
   </div>
 </div>
 
@@ -1000,22 +1019,22 @@ body.announce-closed{--announce-h:0px;}
     <div class="stats-grid">
       <div class="stat-card reveal">
         <div class="stat-num"><span data-count="7">0</span></div>
-        <div class="stat-label">Años formando TCP</div>
+        <div class="stat-label" data-i18n="stats.years">Años formando TCP</div>
       </div>
       <div class="stat-card reveal" style="transition-delay:.1s">
         <div class="stat-num"><span data-count="300">0</span>+</div>
-        <div class="stat-label">Alumnos formados</div>
+        <div class="stat-label" data-i18n="stats.students">Alumnos formados</div>
       </div>
       <div class="stat-card reveal" style="transition-delay:.2s">
         <div class="stat-num"><span data-count="94">0</span>%</div>
-        <div class="stat-label">Empleabilidad</div>
+        <div class="stat-label" data-i18n="stats.employability">Empleabilidad</div>
       </div>
       <div class="stat-card reveal" style="transition-delay:.3s">
         <div class="stat-num"><span data-count="4">0</span></div>
-        <div class="stat-label">Semanas, TCP Ejecutivo</div>
+        <div class="stat-label" data-i18n="stats.execWeeks">Semanas, TCP Ejecutivo</div>
       </div>
     </div>
-    <p class="stats-tagline reveal" style="transition-delay:.4s"><svg viewBox="0 0 24 24" style="width:15px;height:15px;transform:rotate(90deg);vertical-align:-2px;margin-right:6px;"><use href="#icon-plane"/></svg>La escuela TCP de Valencia con más alumnos volando</p>
+    <p class="stats-tagline reveal" style="transition-delay:.4s"><svg viewBox="0 0 24 24" style="width:15px;height:15px;transform:rotate(90deg);vertical-align:-2px;margin-right:6px;"><use href="#icon-plane"/></svg><span data-i18n="stats.tagline">La escuela TCP de Valencia con más alumnos volando</span></p>
   </div>
 </section>
 
@@ -1024,12 +1043,12 @@ body.announce-closed{--announce-h:0px;}
   <div class="wrap">
     <div class="test-promo-card reveal">
       <div class="test-promo-text">
-        <span class="eyebrow">TEST RÁPIDO · 1 MINUTO</span>
-        <h3>¿Tienes lo que hace falta para ser Cabin Crew?</h3>
-        <p>Responde 6 preguntas y despega: descubre tu perfil de tripulante mientras el avión va tomando pista en tiempo real.</p>
+        <span class="eyebrow" data-i18n="testPromo.eyebrow">TEST RÁPIDO · 1 MINUTO</span>
+        <h3 data-i18n="testPromo.title">¿Tienes lo que hace falta para ser Cabin Crew?</h3>
+        <p data-i18n="testPromo.body">Responde 6 preguntas y despega: descubre tu perfil de tripulante mientras el avión va tomando pista en tiempo real.</p>
       </div>
       <div class="test-promo-plane"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-      <a href="test-cabin-crew.html" class="btn btn-primary test-promo-cta">Descubre tu perfil como Cabin Crew</a>
+      <a href="test-cabin-crew.html" class="btn btn-primary test-promo-cta" data-i18n="testPromo.cta">Descubre tu perfil como Cabin Crew</a>
     </div>
   </div>
 </section>
@@ -1038,31 +1057,31 @@ body.announce-closed{--announce-h:0px;}
 <section class="boarding-pass-section">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">PARA COMPARTIR</span>
-      <h2>Tu tarjeta de embarque hacia ser TCP.</h2>
-      <p>Escribe tu nombre, genera tu tarjeta y compártela — el primer paso hacia tu nueva carrera empieza aquí.</p>
+      <span class="eyebrow" data-i18n="bp.eyebrow">PARA COMPARTIR</span>
+      <h2 data-i18n="bp.title">Tu tarjeta de embarque hacia ser TCP.</h2>
+      <p data-i18n="bp.body">Escribe tu nombre, genera tu tarjeta y compártela — el primer paso hacia tu nueva carrera empieza aquí.</p>
     </div>
     <div class="bp-generator reveal">
       <div class="bp-input-row">
-        <input type="text" id="bpName" placeholder="Escribe tu nombre" maxlength="22" autocomplete="off">
+        <input type="text" id="bpName" placeholder="Escribe tu nombre" data-i18n-placeholder="bp.placeholder" maxlength="22" autocomplete="off">
         <button type="button" class="btn btn-primary" id="bpDownloadBtn">
           <svg viewBox="0 0 24 24" style="width:15px;height:15px;transform:rotate(90deg);"><use href="#icon-plane"/></svg>
-          Descargar tarjeta
+          <span data-i18n="bp.download">Descargar tarjeta</span>
         </button>
       </div>
       <div class="bp-canvas-wrap">
         <canvas id="bpCanvas" width="1200" height="500"></canvas>
       </div>
-      <p class="bp-hint">Se descarga como imagen — puedes compartirla directamente en Instagram, WhatsApp o donde quieras.</p>
+      <p class="bp-hint" data-i18n="bp.hint">Se descarga como imagen — puedes compartirla directamente en Instagram, WhatsApp o donde quieras.</p>
     </div>
   </div>
 </section>
 
 <div class="route-divider" data-wp="2">
   <div class="route-inner">
-    <span class="route-label">WP02 · RUTA DE FORMACIÓN</span>
+    <span class="route-label" data-i18n="wp.02">WP02 · RUTA DE FORMACIÓN</span>
     <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-    <span class="route-dest">ELIGE TU PROGRAMA</span>
+    <span class="route-dest" data-i18n="wp.02dest">ELIGE TU PROGRAMA</span>
   </div>
 </div>
 
@@ -1070,45 +1089,45 @@ body.announce-closed{--announce-h:0px;}
 <section class="courses" id="cursos">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">NUESTROS CURSOS</span>
-      <h2>Dos programas, un mismo destino: volar.</h2>
-      <p>Formación oficial AESA según el Reglamento (UE) nº 290/2012, con prácticas reales en un avión de Iberia desde el primer mes.</p>
+      <span class="eyebrow" data-i18n="courses.eyebrow">NUESTROS CURSOS</span>
+      <h2 data-i18n="courses.title">Dos programas, un mismo destino: volar.</h2>
+      <p data-i18n="courses.subtitle">Formación oficial AESA según el Reglamento (UE) nº 290/2012, con prácticas reales en un avión de Iberia desde el primer mes.</p>
     </div>
     <div class="course-grid course-grid-2">
       <div class="pass reveal">
         <div class="pass-main">
           <span class="pass-code">TCP · 01</span>
-          <h3>Tripulante de Cabina de Pasajeros</h3>
-          <p>El programa completo: teoría oficial AESA, prácticas reales en un avión de Iberia y orientación laboral incluida.</p>
+          <h3 data-i18n="courses.tcp.name">Tripulante de Cabina de Pasajeros</h3>
+          <p data-i18n="courses.tcp.desc">El programa completo: teoría oficial AESA, prácticas reales en un avión de Iberia y orientación laboral incluida.</p>
           <ul class="pass-list">
-            <li>9 asignaturas oficiales AESA</li>
-            <li>Prácticas en un A300 de Iberia (Manises)</li>
-            <li>Prácticas en Realidad Virtual: incendios y evacuación</li>
-            <li>Certificado oficial AESA</li>
-            <li>Asesoramiento laboral hasta que vueles</li>
+            <li data-i18n="courses.tcp.li1">9 asignaturas oficiales AESA</li>
+            <li data-i18n="courses.tcp.li2">Prácticas en un A300 de Iberia (Manises)</li>
+            <li data-i18n="courses.tcp.li3">Prácticas en Realidad Virtual: incendios y evacuación</li>
+            <li data-i18n="courses.tcp.li4">Certificado oficial AESA</li>
+            <li data-i18n="courses.tcp.li5">Asesoramiento laboral hasta que vueles</li>
           </ul>
         </div>
         <div class="pass-tear">
-          <div class="pass-duration">DURACIÓN<b>9 semanas</b></div>
-          <button type="button" class="pass-link" data-course="tcp">Saber más <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></button>
+          <div class="pass-duration"><span data-i18n="courses.duration">DURACIÓN</span><b data-i18n="courses.tcp.weeks">9 semanas</b></div>
+          <button type="button" class="pass-link" data-course="tcp"><span data-i18n="courses.more">Saber más</span> <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></button>
         </div>
       </div>
       <div class="pass pass-featured reveal" style="transition-delay:.1s">
         <div class="pass-main">
           <span class="pass-code">TCP · EJECUTIVO</span>
-          <h3>TCP Ejecutivo</h3>
-          <p>El mismo programa oficial AESA, con formación exclusiva en servicio premium, protocolo VIP y aviación privada.</p>
+          <h3 data-i18n="courses.exec.name">TCP Ejecutivo</h3>
+          <p data-i18n="courses.exec.desc">El complemento para llevar tu formación de Cabin Crew a otro nivel y acceder a más oportunidades: servicio VIP, protocolo y aviación privada.</p>
           <ul class="pass-list">
-            <li>9 asignaturas oficiales AESA</li>
-            <li>Formación exclusiva en servicio VIP y jets privados</li>
-            <li>Prácticas reales en un A300 de Iberia</li>
-            <li>Prácticas en Realidad Virtual: incendios y evacuación</li>
-            <li>Certificado oficial AESA</li>
+            <li data-i18n="courses.exec.li1">4 asignaturas exclusivas TCP Ejecutivo</li>
+            <li>Silver Service Training</li>
+            <li>VIP Protocol &amp; Etiquette</li>
+            <li>Private Jet Operations</li>
+            <li>Premium Hospitality Experience</li>
           </ul>
         </div>
         <div class="pass-tear">
-          <div class="pass-duration">DURACIÓN<b>4 semanas</b></div>
-          <button type="button" class="pass-link" data-course="tcp-exp">Saber más <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></button>
+          <div class="pass-duration"><span data-i18n="courses.duration">DURACIÓN</span><b data-i18n="courses.exec.weeks">4 semanas</b></div>
+          <button type="button" class="pass-link" data-course="tcp-exp"><span data-i18n="courses.more">Saber más</span> <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></button>
         </div>
       </div>
     </div>
@@ -1117,9 +1136,9 @@ body.announce-closed{--announce-h:0px;}
 
 <div class="route-divider on-dark" data-wp="3">
   <div class="route-inner">
-    <span class="route-label">WP03 · VIDA EN LA ESCUELA</span>
+    <span class="route-label" data-i18n="wp.03">WP03 · VIDA EN LA ESCUELA</span>
     <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-    <span class="route-dest">MIRA POR LA VENTANILLA</span>
+    <span class="route-dest" data-i18n="wp.03dest">MIRA POR LA VENTANILLA</span>
   </div>
 </div>
 
@@ -1127,51 +1146,51 @@ body.announce-closed{--announce-h:0px;}
 <section class="gallery" id="galeria">
   <div class="wrap">
     <div class="section-head on-dark reveal">
-      <span class="eyebrow">NUESTRA ESCUELA</span>
-      <h2>Así es un día en Global Crew.</h2>
-      <p>Mira cómo es la escuela por dentro y descubre a algunos de los alumnos que ya están volando.</p>
+      <span class="eyebrow" data-i18n="gallery.eyebrow">NUESTRA ESCUELA</span>
+      <h2 data-i18n="gallery.title">Así es un día en Global Crew.</h2>
+      <p data-i18n="gallery.subtitle">Mira cómo es la escuela por dentro y descubre a algunos de los alumnos que ya están volando.</p>
     </div>
     <div class="slideshow">
       <div class="video-embed reveal" id="videoEmbed" data-video-id="3zQ7vnm3xwE">
         <img class="video-thumb" src="https://i.ytimg.com/vi/3zQ7vnm3xwE/hqdefault.jpg" alt="Vídeo de Global Crew Valencia" loading="lazy">
         <div class="video-play-btn"><svg viewBox="0 0 24 24" style="transform:rotate(90deg);"><use href="#icon-plane"/></svg></div>
-        <div class="video-fallback">¿No carga? <a href="https://www.youtube.com/watch?v=3zQ7vnm3xwE" target="_blank" rel="noopener">Ver vídeo en YouTube</a></div>
+        <div class="video-fallback"><span data-i18n="gallery.videoFallback">¿No carga?</span> <a href="https://www.youtube.com/watch?v=3zQ7vnm3xwE" target="_blank" rel="noopener" data-i18n="gallery.videoLink">Ver vídeo en YouTube</a></div>
       </div>
       <div class="alumni-carousel reveal">
         <button type="button" class="alumni-gallery-btn" id="alumniGalleryBtn" aria-label="Ver galería de todos los alumnos">
           <svg viewBox="0 0 24 24"><use href="#icon-gallery"/></svg>
         </button>
-        <span class="eyebrow" style="margin-bottom:6px;">ALUMNOS CONTRATADOS</span>
+        <span class="eyebrow" style="margin-bottom:6px;" data-i18n="alumni.eyebrow">ALUMNOS CONTRATADOS</span>
         <div class="alumni-track" id="alumniTrack">
           <div class="alumni-slide active">
             <div class="alumni-avatar">SL</div>
-            <p class="alumni-quote">"Entré sin saber nada del sector y hoy vuelo con Iberia. Las prácticas reales en el A300 marcaron la diferencia."</p>
-            <div class="alumni-who"><div class="alumni-who-text"><strong>Sara L.</strong><span>Ahora vuela con Iberia</span></div><span class="airline-mark airline-plane-badge" style="background:#D91023"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span></div>
+            <p class="alumni-quote" data-i18n="alumni.fallback1.quote">"Entré sin saber nada del sector y hoy vuelo con Iberia. Las prácticas reales en el A300 marcaron la diferencia."</p>
+            <div class="alumni-who"><div class="alumni-who-text"><strong>Sara L.</strong><span data-i18n="alumni.fallback1.airline">Ahora vuela con Iberia</span></div><span class="airline-mark airline-plane-badge" style="background:#D91023"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span></div>
           </div>
           <div class="alumni-slide">
             <div class="alumni-avatar">DM</div>
-            <p class="alumni-quote">"Apenas dos meses después de graduarme ya estaba volando de base en Valencia con Vueling."</p>
-            <div class="alumni-who"><div class="alumni-who-text"><strong>Daniel M.</strong><span>Ahora vuela con Vueling</span></div><span class="airline-mark airline-plane-badge" style="background:#FFCC00"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span></div>
+            <p class="alumni-quote" data-i18n="alumni.fallback2.quote">"Apenas dos meses después de graduarme ya estaba volando de base en Valencia con Vueling."</p>
+            <div class="alumni-who"><div class="alumni-who-text"><strong>Daniel M.</strong><span data-i18n="alumni.fallback2.airline">Ahora vuela con Vueling</span></div><span class="airline-mark airline-plane-badge" style="background:#FFCC00"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span></div>
           </div>
           <div class="alumni-slide">
             <div class="alumni-avatar">CR</div>
-            <p class="alumni-quote">"El acompañamiento hasta la entrevista fue clave. Hoy soy tripulante de cabina en Volotea."</p>
-            <div class="alumni-who"><div class="alumni-who-text"><strong>Carla R.</strong><span>Ahora vuela con Volotea</span></div><span class="airline-mark airline-plane-badge" style="background:#6D2077"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span></div>
+            <p class="alumni-quote" data-i18n="alumni.fallback3.quote">"El acompañamiento hasta la entrevista fue clave. Hoy soy tripulante de cabina en Volotea."</p>
+            <div class="alumni-who"><div class="alumni-who-text"><strong>Carla R.</strong><span data-i18n="alumni.fallback3.airline">Ahora vuela con Volotea</span></div><span class="airline-mark airline-plane-badge" style="background:#6D2077"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span></div>
           </div>
           <div class="alumni-slide">
             <div class="alumni-avatar">TB</div>
-            <p class="alumni-quote">"Superé el proceso de selección de Ryanair gracias al certificado oficial y a la preparación de entrevistas."</p>
-            <div class="alumni-who"><div class="alumni-who-text"><strong>Tomás B.</strong><span>Ahora vuela con Ryanair</span></div><span class="airline-mark airline-plane-badge" style="background:#073590"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span></div>
+            <p class="alumni-quote" data-i18n="alumni.fallback4.quote">"Superé el proceso de selección de Ryanair gracias al certificado oficial y a la preparación de entrevistas."</p>
+            <div class="alumni-who"><div class="alumni-who-text"><strong>Tomás B.</strong><span data-i18n="alumni.fallback4.airline">Ahora vuela con Ryanair</span></div><span class="airline-mark airline-plane-badge" style="background:#073590"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span></div>
           </div>
           <div class="alumni-slide">
             <div class="alumni-avatar">NP</div>
-            <p class="alumni-quote">"Hice el TCP Ejecutivo y en pocas semanas ya estaba volando con easyJet en base Valencia."</p>
-            <div class="alumni-who"><div class="alumni-who-text"><strong>Nuria P.</strong><span>Ahora vuela con easyJet</span></div><span class="airline-mark airline-plane-badge" style="background:#FF6600"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span></div>
+            <p class="alumni-quote" data-i18n="alumni.fallback5.quote">"Hice el TCP Ejecutivo y en pocas semanas ya estaba volando con easyJet en base Valencia."</p>
+            <div class="alumni-who"><div class="alumni-who-text"><strong>Nuria P.</strong><span data-i18n="alumni.fallback5.airline">Ahora vuela con easyJet</span></div><span class="airline-mark airline-plane-badge" style="background:#FF6600"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span></div>
           </div>
           <div class="alumni-slide">
             <div class="alumni-avatar">HG</div>
-            <p class="alumni-quote">"El programa intensivo y las prácticas oficiales AESA me llevaron directo a volar con World2Fly."</p>
-            <div class="alumni-who"><div class="alumni-who-text"><strong>Hugo G.</strong><span>Ahora vuela con World2Fly</span></div><span class="airline-mark airline-plane-badge" style="background:#0072CE"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span></div>
+            <p class="alumni-quote" data-i18n="alumni.fallback6.quote">"El programa intensivo y las prácticas oficiales AESA me llevaron directo a volar con World2Fly."</p>
+            <div class="alumni-who"><div class="alumni-who-text"><strong>Hugo G.</strong><span data-i18n="alumni.fallback6.airline">Ahora vuela con World2Fly</span></div><span class="airline-mark airline-plane-badge" style="background:#0072CE"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span></div>
           </div>
         </div>
         <div class="alumni-nav">
@@ -1188,7 +1207,7 @@ body.announce-closed{--announce-h:0px;}
 <div class="alumni-gallery-overlay" id="alumniGalleryOverlay">
   <div class="alumni-gallery-modal">
     <div class="alumni-gallery-head">
-      <span class="eyebrow">ALUMNOS CONTRATADOS</span>
+      <span class="eyebrow" data-i18n="alumni.eyebrow">ALUMNOS CONTRATADOS</span>
       <button type="button" class="alumni-gallery-close" id="alumniGalleryClose" aria-label="Cerrar">
         <svg viewBox="0 0 24 24"><use href="#icon-close"/></svg>
       </button>
@@ -1199,9 +1218,9 @@ body.announce-closed{--announce-h:0px;}
 
 <div class="route-divider on-dark" data-wp="4">
   <div class="route-inner">
-    <span class="route-label">WP04 · PRÁCTICAS REALES</span>
+    <span class="route-label" data-i18n="wp.04">WP04 · PRÁCTICAS REALES</span>
     <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-    <span class="route-dest">ASÍ ENTRENAMOS</span>
+    <span class="route-dest" data-i18n="wp.04dest">ASÍ ENTRENAMOS</span>
   </div>
 </div>
 
@@ -1209,26 +1228,26 @@ body.announce-closed{--announce-h:0px;}
 <section class="practicals-section">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">FORMACIÓN 100% PRÁCTICA</span>
-      <h2>No es teoría. Es entrenamiento real.</h2>
-      <p>Extintores reales, chalecos salvavidas, máscaras de oxígeno, señalización de emergencia... así son las prácticas oficiales AESA en Global Crew.</p>
+      <span class="eyebrow" data-i18n="practicals.eyebrow">FORMACIÓN 100% PRÁCTICA</span>
+      <h2 data-i18n="practicals.title">No es teoría. Es entrenamiento real.</h2>
+      <p data-i18n="practicals.subtitle">Extintores reales, chalecos salvavidas, máscaras de oxígeno, señalización de emergencia... así son las prácticas oficiales AESA en Global Crew.</p>
     </div>
     <div class="practicals-grid">
-      <div class="practicals-photo reveal"><img src="images/practicals-extintor.jpg" alt="Alumno practicando con extintor real" loading="lazy"><span class="practicals-caption">Extinción de incendios</span></div>
-      <div class="practicals-photo reveal" style="transition-delay:.05s"><img src="images/practicals-salvavidas.jpg" alt="Alumna con chaleco salvavidas" loading="lazy"><span class="practicals-caption">Supervivencia en el agua</span></div>
-      <div class="practicals-photo reveal" style="transition-delay:.1s"><img src="images/practicals-exit-sign.jpg" alt="Alumna con señal de salida de emergencia" style="object-position:top;" loading="lazy"><span class="practicals-caption">Señalización de emergencia</span></div>
-      <div class="practicals-photo reveal" style="transition-delay:.15s"><img src="images/practicals-oxigeno.jpg" alt="Alumno con máscara de oxígeno" loading="lazy"><span class="practicals-caption">Material de emergencia</span></div>
-      <div class="practicals-photo reveal" style="transition-delay:.2s"><img src="images/practicals-tarjeta.jpg" alt="Alumna explicando tarjeta de salidas de emergencia" loading="lazy"><span class="practicals-caption">Procedimientos de cabina</span></div>
-      <div class="practicals-photo reveal" style="transition-delay:.25s"><img src="images/practicals-avion.jpg" alt="Alumno con maqueta de avión" style="object-position:top;" loading="lazy"><span class="practicals-caption">Conocimientos de aviación</span></div>
+      <div class="practicals-photo reveal"><img src="images/practicals-extintor.jpg" alt="Alumno practicando con extintor real" loading="lazy"><span class="practicals-caption" data-i18n="practicals.c1">Extinción de incendios</span></div>
+      <div class="practicals-photo reveal" style="transition-delay:.05s"><img src="images/practicals-salvavidas.jpg" alt="Alumna con chaleco salvavidas" loading="lazy"><span class="practicals-caption" data-i18n="practicals.c2">Supervivencia en el agua</span></div>
+      <div class="practicals-photo reveal" style="transition-delay:.1s"><img src="images/practicals-exit-sign.jpg" alt="Alumna con señal de salida de emergencia" style="object-position:top;" loading="lazy"><span class="practicals-caption" data-i18n="practicals.c3">Señalización de emergencia</span></div>
+      <div class="practicals-photo reveal" style="transition-delay:.15s"><img src="images/practicals-oxigeno.jpg" alt="Alumno con máscara de oxígeno" loading="lazy"><span class="practicals-caption" data-i18n="practicals.c4">Material de emergencia</span></div>
+      <div class="practicals-photo reveal" style="transition-delay:.2s"><img src="images/practicals-tarjeta.jpg" alt="Alumna explicando tarjeta de salidas de emergencia" loading="lazy"><span class="practicals-caption" data-i18n="practicals.c5">Procedimientos de cabina</span></div>
+      <div class="practicals-photo reveal" style="transition-delay:.25s"><img src="images/practicals-avion.jpg" alt="Alumno con maqueta de avión" style="object-position:top;" loading="lazy"><span class="practicals-caption" data-i18n="practicals.c6">Conocimientos de aviación</span></div>
     </div>
   </div>
 </section>
 
 <div class="route-divider on-dark" data-wp="5">
   <div class="route-inner">
-    <span class="route-label">WP05 · ALREDEDOR DEL MUNDO</span>
+    <span class="route-label" data-i18n="wp.05">WP05 · ALREDEDOR DEL MUNDO</span>
     <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-    <span class="route-dest">MIRA HASTA DÓNDE LLEGAN</span>
+    <span class="route-dest" data-i18n="wp.05dest">MIRA HASTA DÓNDE LLEGAN</span>
   </div>
 </div>
 
@@ -1236,9 +1255,9 @@ body.announce-closed{--announce-h:0px;}
 <section class="world-map-section">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">NUESTROS ALUMNOS, POR EL MUNDO</span>
-      <h2>Desde Valencia hasta cualquier destino.</h2>
-      <p>Esto es solo una muestra de las aerolíneas en las que vuelan nuestros antiguos alumnos ahora mismo.</p>
+      <span class="eyebrow" data-i18n="map.eyebrow">NUESTROS ALUMNOS, POR EL MUNDO</span>
+      <h2 data-i18n="map.title">Desde Valencia hasta cualquier destino.</h2>
+      <p data-i18n="map.subtitle">Esto es solo una muestra de las aerolíneas en las que vuelan nuestros antiguos alumnos ahora mismo.</p>
     </div>
     <div class="world-map-card reveal" id="worldMapCard">
       <svg id="worldMapSvg" viewBox="0 0 1000 480" class="world-map-svg"></svg>
@@ -1249,9 +1268,9 @@ body.announce-closed{--announce-h:0px;}
 
 <div class="route-divider on-dark" data-wp="6">
   <div class="route-inner">
-    <span class="route-label">WP06 · TRIPULACIÓN DOCENTE</span>
+    <span class="route-label" data-i18n="wp.06">WP06 · TRIPULACIÓN DOCENTE</span>
     <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-    <span class="route-dest">CONOCE A TUS INSTRUCTORES</span>
+    <span class="route-dest" data-i18n="wp.06dest">CONOCE A TUS INSTRUCTORES</span>
   </div>
 </div>
 
@@ -1259,52 +1278,52 @@ body.announce-closed{--announce-h:0px;}
 <section class="team" id="equipo">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">NUESTRO EQUIPO</span>
-      <h2>Instructores que siguen volando.</h2>
-      <p>Profesionales en activo del sector aéreo, cada uno especializado en una parte distinta de tu formación.</p>
+      <span class="eyebrow" data-i18n="team.eyebrow">NUESTRO EQUIPO</span>
+      <h2 data-i18n="team.title">Instructores que siguen volando.</h2>
+      <p data-i18n="team.subtitle">Profesionales en activo del sector aéreo, cada uno especializado en una parte distinta de tu formación.</p>
     </div>
     <div class="team-grid">
       <div class="crew-card reveal">
         <img class="crew-photo" src="images/crew-nabila.jpg" alt="Nabila, instructora de Medicina Aeronáutica" loading="lazy">
         <h4>Nabila</h4>
-        <div class="role">Enfermera · Instructora</div>
-        <span class="crew-subject">Medicina aeronáutica y primeros auxilios</span>
-        <p class="crew-bio">Enfermera en activo. Enseña a los alumnos a administrar oxígeno, hacer RCP y actuar ante cualquier emergencia médica a bordo.</p>
+        <div class="role" data-i18n="team.nabila.role">Enfermera · Instructora</div>
+        <span class="crew-subject" data-i18n="team.nabila.subject">Medicina aeronáutica y primeros auxilios</span>
+        <p class="crew-bio" data-i18n="team.nabila.bio">Enfermera en activo. Enseña a los alumnos a administrar oxígeno, hacer RCP y actuar ante cualquier emergencia médica a bordo.</p>
       </div>
       <div class="crew-card reveal" style="transition-delay:.08s">
         <img class="crew-photo" src="images/crew-manuel.jpg" alt="Manuel, instructor de Conocimientos Generales de Aviación" loading="lazy">
         <h4>Manuel</h4>
-        <div class="role">Piloto · Instructor</div>
-        <span class="crew-subject">Conocimientos generales de aviación</span>
-        <p class="crew-bio">Piloto en activo. Acerca a los alumnos la realidad de la navegación aérea y el funcionamiento de una aeronave desde la cabina de mando.</p>
+        <div class="role" data-i18n="team.manuel.role">Piloto · Instructor</div>
+        <span class="crew-subject" data-i18n="team.manuel.subject">Conocimientos generales de aviación</span>
+        <p class="crew-bio" data-i18n="team.manuel.bio">Piloto en activo. Acerca a los alumnos la realidad de la navegación aérea y el funcionamiento de una aeronave desde la cabina de mando.</p>
       </div>
       <div class="crew-card reveal" style="transition-delay:.16s">
         <img class="crew-photo" src="images/crew-kike.jpg" alt="Kike, director de formación de Global Crew Valencia" loading="lazy">
         <h4>Kike</h4>
-        <div class="role">TCP en Iberia · Director de la escuela</div>
-        <span class="crew-subject">Preparación de entrevistas y orientación laboral</span>
-        <p class="crew-bio">TCP en Iberia. Como director de Global Crew, prepara a cada alumno de forma individual para sus entrevistas y le acompaña hasta verle volar.</p>
+        <div class="role" data-i18n="team.kike.role">TCP en Iberia · Director de la escuela</div>
+        <span class="crew-subject" data-i18n="team.kike.subject">Preparación de entrevistas y orientación laboral</span>
+        <p class="crew-bio" data-i18n="team.kike.bio">TCP en Iberia. Como director de Global Crew, prepara a cada alumno de forma individual para sus entrevistas y le acompaña hasta verle volar.</p>
       </div>
       <div class="crew-card reveal">
         <img class="crew-photo" src="images/crew-david.jpg" alt="David, instructor de Operación Normal y Emergencia" loading="lazy">
         <h4>David</h4>
-        <div class="role">Instructor</div>
-        <span class="crew-subject">ONE (Operación Normal y de Emergencia) y Fuego</span>
-        <p class="crew-bio">Enseña a los alumnos a actuar ante cualquier situación en cabina, desde la operación normal hasta la extinción de un fuego real.</p>
+        <div class="role" data-i18n="team.david.role">Instructor</div>
+        <span class="crew-subject" data-i18n="team.david.subject">ONE (Operación Normal y de Emergencia) y Fuego</span>
+        <p class="crew-bio" data-i18n="team.david.bio">Enseña a los alumnos a actuar ante cualquier situación en cabina, desde la operación normal hasta la extinción de un fuego real.</p>
       </div>
       <div class="crew-card reveal">
         <img class="crew-photo" src="images/crew-amparo.jpg" alt="Amparo, instructora de Mercancías Peligrosas" style="object-position:center 25%;" loading="lazy">
         <h4>Amparo</h4>
-        <div class="role">TCP en Air Nostrum · Instructora</div>
-        <span class="crew-subject">Mercancías Peligrosas</span>
-        <p class="crew-bio">TCP en activo en Air Nostrum. Enseña a identificar y gestionar mercancías peligrosas a bordo según la normativa AESA.</p>
+        <div class="role" data-i18n="team.amparo.role">TCP en Air Nostrum · Instructora</div>
+        <span class="crew-subject" data-i18n="team.amparo.subject">Mercancías Peligrosas</span>
+        <p class="crew-bio" data-i18n="team.amparo.bio">TCP en activo en Air Nostrum. Enseña a identificar y gestionar mercancías peligrosas a bordo según la normativa AESA.</p>
       </div>
       <div class="crew-card reveal">
         <img class="crew-photo" src="images/crew-alicia.jpg" alt="Alicia, instructora de CRM" loading="lazy">
         <h4>Alicia</h4>
-        <div class="role">Instructora</div>
-        <span class="crew-subject">CRM (Gestión de Recursos de la Tripulación)</span>
-        <p class="crew-bio">Enseña a coordinarse como equipo en cabina: comunicación, liderazgo y toma de decisiones conjunta ante cualquier situación.</p>
+        <div class="role" data-i18n="team.alicia.role">Instructora</div>
+        <span class="crew-subject" data-i18n="team.alicia.subject">CRM (Gestión de Recursos de la Tripulación)</span>
+        <p class="crew-bio" data-i18n="team.alicia.bio">Enseña a coordinarse como equipo en cabina: comunicación, liderazgo y toma de decisiones conjunta ante cualquier situación.</p>
       </div>
     </div>
   </div>
@@ -1312,9 +1331,9 @@ body.announce-closed{--announce-h:0px;}
 
 <div class="route-divider" data-wp="7">
   <div class="route-inner">
-    <span class="route-label">WP07 · RECONOCIMIENTO</span>
+    <span class="route-label" data-i18n="wp.07">WP07 · RECONOCIMIENTO</span>
     <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-    <span class="route-dest">RESPALDO OFICIAL</span>
+    <span class="route-dest" data-i18n="wp.07dest">RESPALDO OFICIAL</span>
   </div>
 </div>
 
@@ -1322,23 +1341,23 @@ body.announce-closed{--announce-h:0px;}
 <section class="accred">
   <div class="wrap accred-inner">
     <div class="accred-text reveal">
-      <span class="eyebrow" style="color:var(--navy-800);">ESCUELA HOMOLOGADA</span>
-      <h2 style="font-size:1.7rem;margin-top:12px;color:var(--navy-950);">Formación reconocida por las autoridades aéreas.</h2>
-      <p style="color:var(--ink-soft);margin-top:14px;font-size:.95rem;max-width:480px;">Global Crew TCP Training es un centro de formación de TCP autorizado por AESA y el Ministerio de Transportes, Movilidad y Agenda Urbana para impartir cursos oficiales de TCP según el Reglamento (UE) nº 290/2012.</p>
+      <span class="eyebrow" style="color:var(--navy-800);" data-i18n="accred.eyebrow">ESCUELA HOMOLOGADA</span>
+      <h2 style="font-size:1.7rem;margin-top:12px;color:var(--navy-950);" data-i18n="accred.title">Formación reconocida por las autoridades aéreas.</h2>
+      <p style="color:var(--ink-soft);margin-top:14px;font-size:.95rem;max-width:480px;" data-i18n="accred.body">Global Crew TCP Training es un centro de formación de TCP autorizado por AESA y el Ministerio de Transportes, Movilidad y Agenda Urbana para impartir cursos oficiales de TCP según el Reglamento (UE) nº 290/2012.</p>
     </div>
     <div class="accred-badges reveal" style="transition-delay:.1s">
       <div class="accred-logo"><img src="images/accred-ministerio.png" alt="Ministerio de Transportes, Movilidad y Agenda Urbana" loading="lazy"></div>
       <div class="accred-logo"><img src="images/accred-aesa.jpg" alt="AESA — Agencia Estatal de Seguridad Aérea" loading="lazy"></div>
-      <div class="badge"><svg viewBox="0 0 24 24"><use href="#icon-badge"/></svg>Normativa EASA</div>
+      <div class="badge"><svg viewBox="0 0 24 24"><use href="#icon-badge"/></svg><span data-i18n="accred.easa">Normativa EASA</span></div>
     </div>
   </div>
 </section>
 
 <div class="route-divider" data-wp="8">
   <div class="route-inner">
-    <span class="route-label">WP08 · DESTINO FINAL</span>
+    <span class="route-label" data-i18n="wp.08">WP08 · DESTINO FINAL</span>
     <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-    <span class="route-dest">TU CARRERA</span>
+    <span class="route-dest" data-i18n="wp.08dest">TU CARRERA</span>
   </div>
 </div>
 
@@ -1348,22 +1367,22 @@ body.announce-closed{--announce-h:0px;}
     <div class="ife-frame reveal">
       <div class="ife-topbar">
         <span class="ife-camera"></span>
-        <span class="ife-channel">GLOBAL CREW TV · CANAL TESTIMONIOS</span>
+        <span class="ife-channel" data-i18n="testi.channel">GLOBAL CREW TV · CANAL TESTIMONIOS</span>
         <span class="ife-signal"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span>
       </div>
       <div class="ife-screen">
         <div class="testi-track" id="testiTrack">
           <div class="testi active">
-            <p>“Entré sin saber nada del sector y salí con contrato en mano. Las prácticas reales en el avión marcaron la diferencia.”</p>
-            <div class="who">— Alumna, promoción TCP</div>
+            <p data-i18n="testi.q1">"Entré sin saber nada del sector y salí con contrato en mano. Las prácticas reales en el avión marcaron la diferencia."</p>
+            <div class="who" data-i18n="testi.a1">— Alumna, promoción TCP</div>
           </div>
           <div class="testi">
-            <p>“Los profesores siguen volando, así que todo lo que enseñan pasa por la realidad de una cabina, no solo por un libro.”</p>
-            <div class="who">— Alumno, TCP Ejecutivo</div>
+            <p data-i18n="testi.q2">"Los profesores siguen volando, así que todo lo que enseñan pasa por la realidad de una cabina, no solo por un libro."</p>
+            <div class="who" data-i18n="testi.a2">— Alumno, TCP Ejecutivo</div>
           </div>
           <div class="testi">
-            <p>“El acompañamiento hasta la entrevista fue clave. Me prepararon de forma individual hasta que conseguí volar.”</p>
-            <div class="who">— Alumno, promoción TCP</div>
+            <p data-i18n="testi.q3">"El acompañamiento hasta la entrevista fue clave. Me prepararon de forma individual hasta que conseguí volar."</p>
+            <div class="who" data-i18n="testi.a3">— Alumno, promoción TCP</div>
           </div>
         </div>
       </div>
@@ -1380,9 +1399,9 @@ body.announce-closed{--announce-h:0px;}
 
 <div class="route-divider" data-wp="9">
   <div class="route-inner">
-    <span class="route-label">WP09 · ANTES DE DESPEGAR</span>
+    <span class="route-label" data-i18n="wp.09">WP09 · ANTES DE DESPEGAR</span>
     <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-    <span class="route-dest">RESOLVEMOS TUS DUDAS</span>
+    <span class="route-dest" data-i18n="wp.09dest">RESOLVEMOS TUS DUDAS</span>
   </div>
 </div>
 
@@ -1390,24 +1409,24 @@ body.announce-closed{--announce-h:0px;}
 <section class="faq-section">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">PREGUNTAS FRECUENTES</span>
-      <h2>Lo que todo el mundo nos pregunta.</h2>
-      <p>Y si tu duda no está aquí, escríbenos por WhatsApp y te respondemos al momento.</p>
+      <span class="eyebrow" data-i18n="faq.eyebrow">PREGUNTAS FRECUENTES</span>
+      <h2 data-i18n="faq.title">Lo que todo el mundo nos pregunta.</h2>
+      <p data-i18n="faq.subtitle">Y si tu duda no está aquí, escríbenos por WhatsApp y te respondemos al momento.</p>
     </div>
     <div class="faq-list" id="faqList">
       <div class="faq-item reveal">
         <button type="button" class="faq-question">
-          <span>¿Qué os diferencia de otras escuelas TCP?</span>
+          <span data-i18n="faq.q1">¿Qué os diferencia de otras escuelas TCP?</span>
           <svg class="faq-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
         </button>
-        <div class="faq-answer"><p>Somos la primera escuela de España en incluir formación en Realidad Virtual para extinción de incendios y evacuación, además de las prácticas reales en un avión A300 de Iberia. Eso, junto al acompañamiento individual hasta que empiezas a volar, es lo que nos diferencia.</p></div>
+        <div class="faq-answer"><p data-i18n="faq.a1">Somos la primera escuela de España en incluir formación en Realidad Virtual para extinción de incendios y evacuación, además de las prácticas reales en un avión A300 de Iberia. Eso, junto al acompañamiento individual hasta que empiezas a volar, es lo que nos diferencia.</p></div>
       </div>
       <div class="faq-item reveal">
         <button type="button" class="faq-question">
-          <span>¿Necesito saber inglés para apuntarme?</span>
+          <span data-i18n="faq.q2">¿Necesito saber inglés para apuntarme?</span>
           <svg class="faq-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
         </button>
-        <div class="faq-answer"><p>No hace falta un nivel alto para empezar. Durante el curso trabajamos el inglés específico de la profesión (el que se usa a bordo), así que llegas preparado/a a las entrevistas aunque no partas de un nivel avanzado.</p></div>
+        <div class="faq-answer"><p data-i18n="faq.a2">No hace falta un nivel alto para empezar. Durante el curso trabajamos el inglés específico de la profesión (el que se usa a bordo), así que llegas preparado/a a las entrevistas aunque no partas de un nivel avanzado.</p></div>
       </div>
       <div class="faq-item reveal">
         <button type="button" class="faq-question">
@@ -1421,28 +1440,28 @@ body.announce-closed{--announce-h:0px;}
           <span>¿Hay algún límite de edad?</span>
           <svg class="faq-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
         </button>
-        <div class="faq-answer"><p>Para empezar el curso necesitas tener 18 años cumplidos. No hay una edad máxima: cada aerolínea tiene sus propios requisitos, y te ayudamos a identificar cuáles encajan mejor con tu perfil.</p></div>
+        <div class="faq-answer"><p data-i18n="faq.a3">Para empezar el curso necesitas tener 18 años cumplidos. No hay una edad máxima: cada aerolínea tiene sus propios requisitos, y te ayudamos a identificar cuáles encajan mejor con tu perfil.</p></div>
       </div>
       <div class="faq-item reveal">
         <button type="button" class="faq-question">
-          <span>¿Puedo financiar el curso?</span>
+          <span data-i18n="faq.q4">¿Puedo financiar el curso?</span>
           <svg class="faq-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
         </button>
-        <div class="faq-answer"><p>Sí, ofrecemos financiación hasta en 12 meses sin intereses. Lo hablamos contigo en la entrevista informativa para ajustarlo a tu situación.</p></div>
+        <div class="faq-answer"><p data-i18n="faq.a4">Sí, ofrecemos financiación hasta en 12 meses sin intereses. Lo hablamos contigo en la entrevista informativa para ajustarlo a tu situación.</p></div>
       </div>
       <div class="faq-item reveal">
         <button type="button" class="faq-question">
-          <span>¿De verdad ayudáis a conseguir trabajo al terminar?</span>
+          <span data-i18n="faq.q5">¿De verdad ayudáis a conseguir trabajo al terminar?</span>
           <svg class="faq-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
         </button>
-        <div class="faq-answer"><p>Sí. Incluye preparación de entrevista individual e ilimitada con nuestro director, TCP en Iberia, además de asesoramiento laboral continuo hasta que empieces a volar y acceso a procesos de selección reales.</p></div>
+        <div class="faq-answer"><p data-i18n="faq.a5">Sí. Incluye preparación de entrevista individual e ilimitada con nuestro director, TCP en Iberia, además de asesoramiento laboral continuo hasta que empieces a volar y acceso a procesos de selección reales.</p></div>
       </div>
       <div class="faq-item reveal">
         <button type="button" class="faq-question">
-          <span>¿Cuál es la diferencia entre el TCP normal y el TCP Ejecutivo?</span>
+          <span data-i18n="faq.q6">¿Cuál es la diferencia entre el TCP normal y el TCP Ejecutivo?</span>
           <svg class="faq-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
         </button>
-        <div class="faq-answer"><p>Ambos incluyen la misma formación oficial AESA. El TCP Ejecutivo es un complemento para llevar tu formación de TCP a otro nivel: añade 4 asignaturas exclusivas en servicio VIP, protocolo y aviación privada, y te abre acceso a más oportunidades dentro del sector.</p></div>
+        <div class="faq-answer"><p data-i18n="faq.a6">Ambos incluyen la misma formación oficial AESA. El TCP Ejecutivo es un complemento para llevar tu formación de TCP a otro nivel: añade 4 asignaturas exclusivas en servicio VIP, protocolo y aviación privada, y te abre acceso a más oportunidades dentro del sector.</p></div>
       </div>
     </div>
   </div>
@@ -1450,9 +1469,9 @@ body.announce-closed{--announce-h:0px;}
 
 <div class="route-divider" data-wp="10">
   <div class="route-inner">
-    <span class="route-label">WP10 · EMBARQUE INMEDIATO</span>
+    <span class="route-label" data-i18n="wp.10">WP10 · EMBARQUE INMEDIATO</span>
     <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-    <span class="route-dest">HABLEMOS</span>
+    <span class="route-dest" data-i18n="wp.10dest">HABLEMOS</span>
   </div>
 </div>
 
@@ -1460,42 +1479,42 @@ body.announce-closed{--announce-h:0px;}
 <section class="contact-section" id="contacto">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">CONTACTA CON NOSOTROS</span>
-      <h2>Habla con un profesor de Global Crew.</h2>
-      <p>Resuelve tus dudas sobre los cursos, el calendario de convocatorias o el proceso de admisión. Te contestamos en menos de 24 horas.</p>
+      <span class="eyebrow" data-i18n="contact.eyebrow">CONTACTA CON NOSOTROS</span>
+      <h2 data-i18n="contact.title">Habla con un profesor de Global Crew.</h2>
+      <p data-i18n="contact.subtitle">Resuelve tus dudas sobre los cursos, el calendario de convocatorias o el proceso de admisión. Te contestamos en menos de 24 horas.</p>
     </div>
     <div class="contact-grid">
       <form class="contact-form reveal" id="contactForm" action="https://formspree.io/f/xrewnjqk" method="POST">
         <input type="hidden" name="_subject" value="Nueva consulta — Global Crew Valencia">
         <div class="form-two">
           <div class="form-row">
-            <label for="cf-name">Nombre</label>
-            <input type="text" id="cf-name" name="name" placeholder="Tu nombre completo" required>
+            <label for="cf-name" data-i18n="contact.name">Nombre</label>
+            <input type="text" id="cf-name" name="name" placeholder="Tu nombre completo" data-i18n-placeholder="contact.namePh" required>
           </div>
           <div class="form-row">
-            <label for="cf-email">Email</label>
+            <label for="cf-email" data-i18n="contact.email">Email</label>
             <input type="email" id="cf-email" name="email" placeholder="tu@email.com" required>
           </div>
         </div>
         <div class="form-two">
           <div class="form-row">
-            <label for="cf-phone">Teléfono</label>
+            <label for="cf-phone" data-i18n="contact.phone">Teléfono</label>
             <input type="tel" id="cf-phone" name="phone" placeholder="+34 600 000 000">
           </div>
           <div class="form-row">
-            <label for="cf-course">Curso de interés</label>
+            <label for="cf-course" data-i18n="contact.course">Curso de interés</label>
             <select id="cf-course" name="course">
-              <option value="tcp">Tripulante de Cabina de Pasajeros</option>
-              <option value="tcp-exp">TCP Ejecutivo</option>
-              <option value="otro">Aún no lo sé</option>
+              <option value="tcp" data-i18n="contact.opt1">Tripulante de Cabina de Pasajeros</option>
+              <option value="tcp-exp" data-i18n="contact.opt2">TCP Ejecutivo</option>
+              <option value="otro" data-i18n="contact.opt3">Aún no lo sé</option>
             </select>
           </div>
         </div>
         <div class="form-row">
-          <label for="cf-message">Mensaje para el profesor</label>
-          <textarea id="cf-message" name="message" placeholder="Cuéntanos qué te gustaría saber sobre el curso, fechas o requisitos de acceso..." required></textarea>
+          <label for="cf-message" data-i18n="contact.message">Mensaje para el profesor</label>
+          <textarea id="cf-message" name="message" placeholder="Cuéntanos qué te gustaría saber sobre el curso, fechas o requisitos de acceso..." data-i18n-placeholder="contact.messagePh" required></textarea>
         </div>
-        <button type="submit" class="form-submit">Enviar mensaje <svg viewBox="0 0 24 24" style="width:15px;height:15px;transform:rotate(90deg);"><use href="#icon-plane"/></svg></button>
+        <button type="submit" class="form-submit"><span data-i18n="contact.submit">Enviar mensaje</span> <svg viewBox="0 0 24 24" style="width:15px;height:15px;transform:rotate(90deg);"><use href="#icon-plane"/></svg></button>
         <p class="form-note" id="formNote"></p>
       </form>
 
@@ -1510,7 +1529,7 @@ body.announce-closed{--announce-h:0px;}
           </iframe>
         </div>
         <div class="contact-info reveal">
-          <h4>Escuela Global Crew Valencia</h4>
+          <h4 data-i18n="contact.cardTitle">Escuela Global Crew Valencia</h4>
           <div class="contact-info-row">
             <svg viewBox="0 0 24 24" fill="none"><path d="M12 21S5 14.5 5 9.5C5 5.9 8.1 3 12 3S19 5.9 19 9.5C19 14.5 12 21 12 21Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="9.5" r="2.4" stroke="currentColor" stroke-width="1.6"/></svg>
             <span>Carrer de les Garrigues, 1, Puerta 1, Ciutat Vella, 46001 València</span>
@@ -1521,7 +1540,7 @@ body.announce-closed{--announce-h:0px;}
           </div>
           <div class="contact-info-row whatsapp-row">
             <svg viewBox="0 0 24 24"><use href="#icon-whatsapp"/></svg>
-            <span><a href="https://wa.me/34696186558?text=Hola%2C%20me%20gustar%C3%ADa%20informaci%C3%B3n%20sobre%20los%20cursos%20de%20Global%20Crew" target="_blank" rel="noopener">Escríbenos por WhatsApp</a></span>
+            <span><a href="https://wa.me/34696186558?text=Hola%2C%20me%20gustar%C3%ADa%20informaci%C3%B3n%20sobre%20los%20cursos%20de%20Global%20Crew" target="_blank" rel="noopener" data-i18n="contact.whatsapp">Escríbenos por WhatsApp</a></span>
           </div>
           <div class="contact-info-row">
             <svg viewBox="0 0 24 24" fill="none"><path d="M4 6H20V18H4V6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 7L12 13L20 7" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
@@ -1529,7 +1548,7 @@ body.announce-closed{--announce-h:0px;}
           </div>
           <div class="contact-info-row">
             <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7V12L15 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-            <span>Lunes a viernes, 9:00 – 18:00</span>
+            <span data-i18n="contact.hours">Lunes a viernes, 9:00 – 18:00</span>
           </div>
         </div>
       </div>
@@ -1547,32 +1566,32 @@ body.announce-closed{--announce-h:0px;}
       <div class="footer-brand">
         <a href="#inicio" class="logo">
           <span class="logo-mark"><img src="images/logo-nav.png" alt="Global Crew Valencia"></span>
-          <span class="logo-text">GLOBAL CREW<span>ESCUELA DE TRIPULANTES · VALENCIA</span></span>
+          <span class="logo-text">GLOBAL CREW<span data-i18n="nav.tagline">ESCUELA DE TRIPULANTES · VALENCIA</span></span>
         </a>
-        <p>Formación oficial AESA para tripulantes de cabina de pasajeros. Tu vocación, hecha profesión.</p>
+        <p data-i18n="footer.brandBio">Formación oficial AESA para tripulantes de cabina de pasajeros. Tu vocación, hecha profesión.</p>
         <div class="footer-social">
-          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><use href="#icon-ig"/></svg></a>
-          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><use href="#icon-li"/></svg></a>
-          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24"><use href="#icon-tt"/></svg></a>
+          <a href="https://www.instagram.com/globalcrewtcp/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><use href="#icon-ig"/></svg></a>
+          <a href="https://www.linkedin.com/company/global-crew-tcp/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><use href="#icon-li"/></svg></a>
+          <a href="https://www.tiktok.com/@globalcrewvalencia" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24"><use href="#icon-tt"/></svg></a>
         </div>
       </div>
       <div>
-        <h4>Cursos</h4>
+        <h4 data-i18n="footer.coursesTitle">Cursos</h4>
         <ul>
-          <li><a href="#cursos">Tripulante de Cabina de Pasajeros</a></li>
-          <li><a href="#cursos">TCP Ejecutivo</a></li>
+          <li><a href="#cursos" data-i18n="footer.course1">Tripulante de Cabina de Pasajeros</a></li>
+          <li><a href="#cursos" data-i18n="footer.course2">TCP Ejecutivo</a></li>
         </ul>
       </div>
       <div>
-        <h4>Escuela</h4>
+        <h4 data-i18n="footer.schoolTitle">Escuela</h4>
         <ul>
-          <li><a href="#galeria">La escuela</a></li>
-          <li><a href="#equipo">Instructores</a></li>
-          <li><a href="#">Preguntas frecuentes</a></li>
+          <li><a href="#galeria" data-i18n="nav.school">La escuela</a></li>
+          <li><a href="#equipo" data-i18n="nav.team">Instructores</a></li>
+          <li><a href="#" data-i18n="footer.faq">Preguntas frecuentes</a></li>
         </ul>
       </div>
       <div>
-        <h4>Contacto</h4>
+        <h4 data-i18n="footer.contactTitle">Contacto</h4>
         <ul>
           <li><a href="mailto:info@globalcrewvalencia.com">info@globalcrewvalencia.com</a></li>
           <li><a href="tel:+34696186558">+34 696 186 558</a></li>
@@ -1581,8 +1600,8 @@ body.announce-closed{--announce-h:0px;}
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 Global Crew Valencia · Escuela de Tripulantes.</span>
-      <span><a href="#">Privacidad</a> · <a href="#">Cookies</a> · <a href="#">Aviso legal</a></span>
+      <span data-i18n="footer.copyright">© 2026 Global Crew Valencia · Escuela de Tripulantes.</span>
+      <span><a href="privacidad.html" data-i18n="footer.privacy">Privacidad</a> · <a href="cookies.html" data-i18n="footer.cookies">Cookies</a> · <a href="aviso-legal.html" data-i18n="footer.legal">Aviso legal</a></span>
     </div>
   </div>
 </footer>
@@ -1597,7 +1616,8 @@ body.announce-closed{--announce-h:0px;}
 
 <script>
 /* ===================== COURSE DATA + MODAL ===================== */
-const courseData = {
+const COURSE_DATA = {
+es: {
   'tcp': {
     code: 'TCP · 01',
     title: 'Tripulante de Cabina de Pasajeros',
@@ -1654,8 +1674,8 @@ const courseData = {
   'tcp-exp': {
     code: 'TCP · EJECUTIVO',
     title: 'TCP Ejecutivo',
-    tagline: 'La formación más completa para trabajar como TCP Ejecutivo y alcanzar el nivel más alto de la profesión: el segmento VIP y la aviación privada de lujo.',
-    meta: ['4 semanas', 'Presencial · Valencia', 'Certificado oficial AESA'],
+    tagline: 'El complemento para llevar tu formación de Cabin Crew a otro nivel y acceder a más oportunidades: servicio VIP, protocolo y aviación privada.',
+    meta: ['4 semanas', 'Presencial · Valencia', 'Complemento a tu formación TCP'],
     blocks: [
       {
         heading: '4 asignaturas exclusivas TCP Ejecutivo',
@@ -1671,21 +1691,104 @@ const courseData = {
         items: [
           'Un perfil que te diferencia: pocos TCP en España tienen esta formación específica en servicio VIP y aviación privada',
           'Acceso a un segmento con mayor exigencia, mejores condiciones y una demanda creciente de perfiles especializados',
-          'Prácticas en Realidad Virtual de extinción de incendios y evacuación — somos la primera escuela de España en incluirlas',
-          'Grupos muy reducidos para maximizar las prácticas y la atención personalizada',
+          'Grupos muy reducidos para maximizar la atención personalizada',
           'Preparación de entrevista individual, ilimitada hasta que vueles',
-          'Certificado oficial AESA idéntico al del programa completo',
           'Asesoramiento laboral continuo hasta verte volar'
         ]
       }
     ]
   }
+},
+en: {
+  'tcp': {
+    code: 'TCP · 01',
+    title: 'Cabin Crew Attendant',
+    tagline: 'The complete programme: from zero to an official AESA certificate, with real practicals on an Iberia A300 aircraft and support until you start flying.',
+    meta: ['9 weeks', 'On-site · Valencia', 'Official AESA certificate', '0% financing up to 12 months'],
+    blocks: [
+      {
+        heading: 'Official AESA subjects',
+        items: [
+          'Passenger assistance and cabin surveillance',
+          'Human factors in aviation and CRM',
+          'General aviation knowledge',
+          'Air regulations and institutions',
+          'Aviation medicine and first aid',
+          'Dangerous goods',
+          'General aspects of aviation security',
+          'Fire and smoke fighting training',
+          'Survival'
+        ]
+      },
+      {
+        heading: '4 exclusive Global Crew subjects',
+        items: [
+          'Image and protocol in the Cabin Crew profession: body language, first impressions and onboard hierarchy',
+          'English for Cabin Crew: the jargon and vocabulary used onboard every day',
+          'Cabin Crew interview preparation and simulation, one-on-one and unlimited until you start flying',
+          'CV workshop focused on getting you selected by airlines sooner'
+        ]
+      },
+      {
+        heading: 'Official AESA practicals',
+        items: [
+          'First aid: oxygen, CPR and the Heimlich manoeuvre',
+          'Putting out a real fire in an aircraft oven',
+          'Emergency equipment and cabin procedures',
+          'Land and sea survival, with pool exercises using life vests and life rafts',
+          'Evacuation and service practicals on an Iberia A300 aircraft, at Manises airport',
+          'Virtual Reality practicals for fire fighting and evacuation — we are the first school in Spain to include them'
+        ]
+      },
+      {
+        heading: 'What else your course includes',
+        items: [
+          'English training throughout the course',
+          'One-on-one interview preparation with our school director, an Iberia Cabin Crew member',
+          'Ongoing career guidance until you start flying, with access to real selection processes',
+          'Branded uniform and suitcase from day one',
+          'Course materials included',
+          'Financing up to 12 months, interest-free'
+        ]
+      }
+    ]
+  },
+  'tcp-exp': {
+    code: 'TCP · EXECUTIVE',
+    title: 'Executive Cabin Crew',
+    tagline: 'The add-on to take your Cabin Crew training to the next level and access more opportunities: VIP service, protocol and private aviation.',
+    meta: ['4 weeks', 'On-site · Valencia', 'Complement to your Cabin Crew training'],
+    blocks: [
+      {
+        heading: '4 exclusive Executive Cabin Crew subjects',
+        items: [
+          'Silver Service Training: the level of service expected by the world\'s most exclusive passengers',
+          'VIP Protocol & Etiquette: protocol, discretion and behaviour standards that set an Executive Cabin Crew member apart',
+          'Private Jet Operations: how private aviation works — flight types, crew, FBOs, handling and VIP operations',
+          'Premium Hospitality Experience: turn every flight into a luxury experience through attention to detail and personalised service'
+        ]
+      },
+      {
+        heading: 'Why choose Executive Cabin Crew',
+        items: [
+          'A profile that sets you apart: few Cabin Crew members in Spain have this specific training in VIP service and private aviation',
+          'Access to a more demanding segment, with better conditions and growing demand for specialised profiles',
+          'Very small groups for more personalised attention',
+          'One-on-one interview preparation, unlimited until you start flying',
+          'Ongoing career guidance until you start flying'
+        ]
+      }
+    ]
+  }
+}
 };
+let courseModalLang = 'es';
 
 function openCourseModal(key) {
-  const c = courseData[key];
+  const c = COURSE_DATA[courseModalLang][key];
   if (!c) return;
   const content = document.getElementById('courseModalContent');
+  const infoLabel = courseModalLang === 'en' ? 'Ask for information' : 'Pedir información';
   const blocksHtml = c.blocks.map(b => `
     <div class="course-modal-block">
       <h4>${b.heading}</h4>
@@ -1699,7 +1802,7 @@ function openCourseModal(key) {
     <div class="course-modal-meta">${c.meta.map(m => `<span>${m}</span>`).join('')}</div>
     ${blocksHtml}
     <div class="course-modal-cta">
-      <a href="#contacto" class="btn btn-dark" style="padding:12px 22px;font-size:.85rem;">Pedir información</a>
+      <a href="#contacto" class="btn btn-dark" style="padding:12px 22px;font-size:.85rem;">${infoLabel}</a>
     </div>
   `;
   const overlay = document.getElementById('courseModalOverlay');
@@ -1735,6 +1838,296 @@ if (announceClose) {
     document.body.classList.add('announce-closed');
   });
 }
+
+/* ===================== I18N (ES / EN) ===================== */
+const I18N = {
+es: {
+  'nav.tagline': 'ESCUELA DE TRIPULANTES · VALENCIA',
+  'nav.courses': 'Cursos', 'nav.school': 'La escuela', 'nav.team': 'Instructores',
+  'nav.quiz': 'Descubre tu perfil', 'nav.contact': 'Contacto', 'nav.talk': 'Hablemos',
+  'announce.prefix': 'PRÓXIMO CURSO:', 'announce.suffix': '— plazas limitadas, reserva ya la tuya',
+  'hero.eyebrow': 'CENTRO HOMOLOGADO AESA · TCP',
+  'hero.vrBadge': 'Primera escuela de España con formación en Realidad Virtual: extinción de incendios y evacuación',
+  'hero.title': 'Tu carrera <em>despega</em> aquí.',
+  'hero.lede': 'Formamos tripulantes de cabina de pasajeros con formación oficial AESA, prácticas reales en un avión de Iberia, instructores en activo y un plan de estudios pensado para que vueles con una aerolínea, no solo para aprobar un examen.',
+  'hero.ctaCourses': 'Ver los cursos', 'hero.ctaCall': 'Reservar una llamada',
+  'hero.metaYears': 'años formando TCP', 'hero.metaJobs': 'inserción laboral', 'hero.metaWeeks': 'semanas, curso completo',
+  'hero.scroll': 'DESLIZA',
+  'wp.01': 'WP01 · EMBARQUE', 'wp.01dest': 'TU PUNTO DE PARTIDA',
+  'wp.02': 'WP02 · RUTA DE FORMACIÓN', 'wp.02dest': 'ELIGE TU PROGRAMA',
+  'wp.03': 'WP03 · VIDA EN LA ESCUELA', 'wp.03dest': 'MIRA POR LA VENTANILLA',
+  'wp.04': 'WP04 · PRÁCTICAS REALES', 'wp.04dest': 'ASÍ ENTRENAMOS',
+  'wp.05': 'WP05 · ALREDEDOR DEL MUNDO', 'wp.05dest': 'MIRA HASTA DÓNDE LLEGAN',
+  'wp.06': 'WP06 · TRIPULACIÓN DOCENTE', 'wp.06dest': 'CONOCE A TUS INSTRUCTORES',
+  'wp.07': 'WP07 · RECONOCIMIENTO', 'wp.07dest': 'RESPALDO OFICIAL',
+  'wp.08': 'WP08 · DESTINO FINAL', 'wp.08dest': 'TU CARRERA',
+  'wp.09': 'WP09 · ANTES DE DESPEGAR', 'wp.09dest': 'RESOLVEMOS TUS DUDAS',
+  'wp.10': 'WP10 · EMBARQUE INMEDIATO', 'wp.10dest': 'HABLEMOS',
+  'stats.years': 'Años formando TCP', 'stats.students': 'Alumnos formados',
+  'stats.employability': 'Empleabilidad', 'stats.execWeeks': 'Semanas, TCP Ejecutivo',
+  'stats.tagline': 'La escuela TCP de Valencia con más alumnos volando',
+  'testPromo.eyebrow': 'TEST RÁPIDO · 1 MINUTO',
+  'testPromo.title': '¿Tienes lo que hace falta para ser Cabin Crew?',
+  'testPromo.body': 'Responde 6 preguntas y despega: descubre tu perfil de tripulante mientras el avión va tomando pista en tiempo real.',
+  'testPromo.cta': 'Descubre tu perfil como Cabin Crew',
+  'bp.eyebrow': 'PARA COMPARTIR', 'bp.title': 'Tu tarjeta de embarque hacia ser TCP.',
+  'bp.body': 'Escribe tu nombre, genera tu tarjeta y compártela — el primer paso hacia tu nueva carrera empieza aquí.',
+  'bp.placeholder': 'Escribe tu nombre', 'bp.download': 'Descargar tarjeta',
+  'bp.hint': 'Se descarga como imagen — puedes compartirla directamente en Instagram, WhatsApp o donde quieras.',
+  'courses.eyebrow': 'NUESTROS CURSOS', 'courses.title': 'Dos programas, un mismo destino: volar.',
+  'courses.subtitle': 'Formación oficial AESA según el Reglamento (UE) nº 290/2012, con prácticas reales en un avión de Iberia desde el primer mes.',
+  'courses.tcp.name': 'Tripulante de Cabina de Pasajeros',
+  'courses.tcp.desc': 'El programa completo: teoría oficial AESA, prácticas reales en un avión de Iberia y orientación laboral incluida.',
+  'courses.tcp.li1': '9 asignaturas oficiales AESA', 'courses.tcp.li2': 'Prácticas en un A300 de Iberia (Manises)',
+  'courses.tcp.li3': 'Prácticas en Realidad Virtual: incendios y evacuación', 'courses.tcp.li4': 'Certificado oficial AESA',
+  'courses.tcp.li5': 'Asesoramiento laboral hasta que vueles',
+  'courses.duration': 'DURACIÓN', 'courses.tcp.weeks': '9 semanas', 'courses.more': 'Saber más',
+  'courses.exec.name': 'TCP Ejecutivo',
+  'courses.exec.desc': 'El complemento para llevar tu formación de Cabin Crew a otro nivel y acceder a más oportunidades: servicio VIP, protocolo y aviación privada.',
+  'courses.exec.li1': '4 asignaturas exclusivas TCP Ejecutivo', 'courses.exec.weeks': '4 semanas',
+  'gallery.eyebrow': 'NUESTRA ESCUELA', 'gallery.title': 'Así es un día en Global Crew.',
+  'gallery.subtitle': 'Mira cómo es la escuela por dentro y descubre a algunos de los alumnos que ya están volando.',
+  'gallery.videoFallback': '¿No carga?', 'gallery.videoLink': 'Ver vídeo en YouTube',
+  'alumni.eyebrow': 'ALUMNOS CONTRATADOS',
+  'alumni.fallback1.quote': '"Entré sin saber nada del sector y hoy vuelo con Iberia. Las prácticas reales en el A300 marcaron la diferencia."',
+  'alumni.fallback1.airline': 'Ahora vuela con Iberia',
+  'alumni.fallback2.quote': '"Apenas dos meses después de graduarme ya estaba volando de base en Valencia con Vueling."',
+  'alumni.fallback2.airline': 'Ahora vuela con Vueling',
+  'alumni.fallback3.quote': '"El acompañamiento hasta la entrevista fue clave. Hoy soy tripulante de cabina en Volotea."',
+  'alumni.fallback3.airline': 'Ahora vuela con Volotea',
+  'alumni.fallback4.quote': '"Superé el proceso de selección de Ryanair gracias al certificado oficial y a la preparación de entrevistas."',
+  'alumni.fallback4.airline': 'Ahora vuela con Ryanair',
+  'alumni.fallback5.quote': '"Hice el TCP Ejecutivo y en pocas semanas ya estaba volando con easyJet en base Valencia."',
+  'alumni.fallback5.airline': 'Ahora vuela con easyJet',
+  'alumni.fallback6.quote': '"El programa intensivo y las prácticas oficiales AESA me llevaron directo a volar con World2Fly."',
+  'alumni.fallback6.airline': 'Ahora vuela con World2Fly',
+  'practicals.eyebrow': 'FORMACIÓN 100% PRÁCTICA', 'practicals.title': 'No es teoría. Es entrenamiento real.',
+  'practicals.subtitle': 'Extintores reales, chalecos salvavidas, máscaras de oxígeno, señalización de emergencia... así son las prácticas oficiales AESA en Global Crew.',
+  'practicals.c1': 'Extinción de incendios', 'practicals.c2': 'Supervivencia en el agua',
+  'practicals.c3': 'Señalización de emergencia', 'practicals.c4': 'Material de emergencia',
+  'practicals.c5': 'Procedimientos de cabina', 'practicals.c6': 'Conocimientos de aviación',
+  'map.eyebrow': 'NUESTROS ALUMNOS, POR EL MUNDO', 'map.title': 'Desde Valencia hasta cualquier destino.',
+  'map.subtitle': 'Esto es solo una muestra de las aerolíneas en las que vuelan nuestros antiguos alumnos ahora mismo.',
+  'team.eyebrow': 'NUESTRO EQUIPO', 'team.title': 'Instructores que siguen volando.',
+  'team.subtitle': 'Profesionales en activo del sector aéreo, cada uno especializado en una parte distinta de tu formación.',
+  'team.nabila.role': 'Enfermera · Instructora', 'team.nabila.subject': 'Medicina aeronáutica y primeros auxilios',
+  'team.nabila.bio': 'Enfermera en activo. Enseña a los alumnos a administrar oxígeno, hacer RCP y actuar ante cualquier emergencia médica a bordo.',
+  'team.manuel.role': 'Piloto · Instructor', 'team.manuel.subject': 'Conocimientos generales de aviación',
+  'team.manuel.bio': 'Piloto en activo. Acerca a los alumnos la realidad de la navegación aérea y el funcionamiento de una aeronave desde la cabina de mando.',
+  'team.kike.role': 'TCP en Iberia · Director de la escuela', 'team.kike.subject': 'Preparación de entrevistas y orientación laboral',
+  'team.kike.bio': 'TCP en Iberia. Como director de Global Crew, prepara a cada alumno de forma individual para sus entrevistas y le acompaña hasta verle volar.',
+  'team.david.role': 'Instructor', 'team.david.subject': 'ONE (Operación Normal y de Emergencia) y Fuego',
+  'team.david.bio': 'Enseña a los alumnos a actuar ante cualquier situación en cabina, desde la operación normal hasta la extinción de un fuego real.',
+  'team.amparo.role': 'TCP en Air Nostrum · Instructora', 'team.amparo.subject': 'Mercancías Peligrosas',
+  'team.amparo.bio': 'TCP en activo en Air Nostrum. Enseña a identificar y gestionar mercancías peligrosas a bordo según la normativa AESA.',
+  'team.alicia.role': 'Instructora', 'team.alicia.subject': 'CRM (Gestión de Recursos de la Tripulación)',
+  'team.alicia.bio': 'Enseña a coordinarse como equipo en cabina: comunicación, liderazgo y toma de decisiones conjunta ante cualquier situación.',
+  'accred.eyebrow': 'ESCUELA HOMOLOGADA', 'accred.title': 'Formación reconocida por las autoridades aéreas.',
+  'accred.body': 'Global Crew TCP Training es un centro de formación de TCP autorizado por AESA y el Ministerio de Transportes, Movilidad y Agenda Urbana para impartir cursos oficiales de TCP según el Reglamento (UE) nº 290/2012.',
+  'accred.easa': 'Normativa EASA',
+  'testi.channel': 'GLOBAL CREW TV · CANAL TESTIMONIOS',
+  'testi.q1': '"Entré sin saber nada del sector y salí con contrato en mano. Las prácticas reales en el avión marcaron la diferencia."',
+  'testi.a1': '— Alumna, promoción TCP',
+  'testi.q2': '"Los profesores siguen volando, así que todo lo que enseñan pasa por la realidad de una cabina, no solo por un libro."',
+  'testi.a2': '— Alumno, TCP Ejecutivo',
+  'testi.q3': '"El acompañamiento hasta la entrevista fue clave. Me prepararon de forma individual hasta que conseguí volar."',
+  'testi.a3': '— Alumno, promoción TCP',
+  'faq.eyebrow': 'PREGUNTAS FRECUENTES', 'faq.title': 'Lo que todo el mundo nos pregunta.',
+  'faq.subtitle': 'Y si tu duda no está aquí, escríbenos por WhatsApp y te respondemos al momento.',
+  'faq.q1': '¿Qué os diferencia de otras escuelas TCP?',
+  'faq.a1': 'Somos la primera escuela de España en incluir formación en Realidad Virtual para extinción de incendios y evacuación, además de las prácticas reales en un avión A300 de Iberia. Eso, junto al acompañamiento individual hasta que empiezas a volar, es lo que nos diferencia.',
+  'faq.q2': '¿Necesito saber inglés para apuntarme?',
+  'faq.a2': 'No hace falta un nivel alto para empezar. Durante el curso trabajamos el inglés específico de la profesión (el que se usa a bordo), así que llegas preparado/a a las entrevistas aunque no partas de un nivel avanzado.',
+  'faq.q3': '¿Hay algún límite de edad?',
+  'faq.a3': 'Para empezar el curso necesitas tener 18 años cumplidos. No hay una edad máxima: cada aerolínea tiene sus propios requisitos, y te ayudamos a identificar cuáles encajan mejor con tu perfil.',
+  'faq.q4': '¿Puedo financiar el curso?',
+  'faq.a4': 'Sí, ofrecemos financiación hasta en 12 meses sin intereses. Lo hablamos contigo en la entrevista informativa para ajustarlo a tu situación.',
+  'faq.q5': '¿De verdad ayudáis a conseguir trabajo al terminar?',
+  'faq.a5': 'Sí. Incluye preparación de entrevista individual e ilimitada con nuestro director, TCP en Iberia, además de asesoramiento laboral continuo hasta que empieces a volar y acceso a procesos de selección reales.',
+  'faq.q6': '¿Cuál es la diferencia entre el TCP normal y el TCP Ejecutivo?',
+  'faq.a6': 'Ambos incluyen la misma formación oficial AESA. El TCP Ejecutivo es un complemento para llevar tu formación de TCP a otro nivel: añade 4 asignaturas exclusivas en servicio VIP, protocolo y aviación privada, y te abre acceso a más oportunidades dentro del sector.',
+  'contact.eyebrow': 'CONTACTA CON NOSOTROS', 'contact.title': 'Habla con un profesor de Global Crew.',
+  'contact.subtitle': 'Resuelve tus dudas sobre los cursos, el calendario de convocatorias o el proceso de admisión. Te contestamos en menos de 24 horas.',
+  'contact.name': 'Nombre', 'contact.namePh': 'Tu nombre completo', 'contact.email': 'Email',
+  'contact.phone': 'Teléfono', 'contact.course': 'Curso de interés',
+  'contact.opt1': 'Tripulante de Cabina de Pasajeros', 'contact.opt2': 'TCP Ejecutivo', 'contact.opt3': 'Aún no lo sé',
+  'contact.message': 'Mensaje para el profesor',
+  'contact.messagePh': 'Cuéntanos qué te gustaría saber sobre el curso, fechas o requisitos de acceso...',
+  'contact.submit': 'Enviar mensaje', 'contact.cardTitle': 'Escuela Global Crew Valencia',
+  'contact.whatsapp': 'Escríbenos por WhatsApp', 'contact.hours': 'Lunes a viernes, 9:00 – 18:00',
+  'footer.brandBio': 'Formación oficial AESA para tripulantes de cabina de pasajeros. Tu vocación, hecha profesión.',
+  'footer.coursesTitle': 'Cursos', 'footer.course1': 'Tripulante de Cabina de Pasajeros', 'footer.course2': 'TCP Ejecutivo',
+  'footer.schoolTitle': 'Escuela', 'footer.faq': 'Preguntas frecuentes', 'footer.contactTitle': 'Contacto',
+  'footer.copyright': '© 2026 Global Crew Valencia · Escuela de Tripulantes.',
+  'footer.privacy': 'Privacidad', 'footer.cookies': 'Cookies', 'footer.legal': 'Aviso legal',
+  'bp.canvasName': 'TU NOMBRE AQUÍ', 'bp.passenger': 'PASAJERO', 'bp.origin': 'ORIGEN',
+  'bp.destination': 'DESTINO', 'bp.destValue': 'TU FUTURO COMO TCP',
+  'bp.flight': 'VUELO', 'bp.gate': 'PUERTA', 'bp.seat': 'ASIENTO', 'bp.intake': 'CONVOCATORIA'
+},
+en: {
+  'nav.tagline': 'CABIN CREW SCHOOL · VALENCIA',
+  'nav.courses': 'Courses', 'nav.school': 'The school', 'nav.team': 'Instructors',
+  'nav.quiz': 'Discover your profile', 'nav.contact': 'Contact', 'nav.talk': "Let's talk",
+  'announce.prefix': 'NEXT INTAKE:', 'announce.suffix': '— limited seats, reserve yours now',
+  'hero.eyebrow': 'AESA-CERTIFIED CENTRE · CABIN CREW',
+  'hero.vrBadge': 'The first school in Spain with Virtual Reality training: fire fighting and evacuation',
+  'hero.title': 'Your career <em>takes off</em> here.',
+  'hero.lede': 'We train cabin crew members with official AESA certification, real practicals on an Iberia aircraft, active-duty instructors and a curriculum designed to get you flying with an airline, not just to pass an exam.',
+  'hero.ctaCourses': 'See the courses', 'hero.ctaCall': 'Book a call',
+  'hero.metaYears': 'years training Cabin Crew', 'hero.metaJobs': 'job placement rate', 'hero.metaWeeks': 'weeks, full course',
+  'hero.scroll': 'SCROLL',
+  'wp.01': 'WP01 · BOARDING', 'wp.01dest': 'YOUR STARTING POINT',
+  'wp.02': 'WP02 · TRAINING ROUTE', 'wp.02dest': 'CHOOSE YOUR PROGRAMME',
+  'wp.03': 'WP03 · LIFE AT THE SCHOOL', 'wp.03dest': 'LOOK OUT THE WINDOW',
+  'wp.04': 'WP04 · REAL PRACTICALS', 'wp.04dest': 'THIS IS HOW WE TRAIN',
+  'wp.05': 'WP05 · AROUND THE WORLD', 'wp.05dest': 'SEE HOW FAR THEY GO',
+  'wp.06': 'WP06 · TEACHING CREW', 'wp.06dest': 'MEET YOUR INSTRUCTORS',
+  'wp.07': 'WP07 · RECOGNITION', 'wp.07dest': 'OFFICIAL BACKING',
+  'wp.08': 'WP08 · FINAL DESTINATION', 'wp.08dest': 'YOUR CAREER',
+  'wp.09': 'WP09 · BEFORE TAKEOFF', 'wp.09dest': 'WE ANSWER YOUR QUESTIONS',
+  'wp.10': 'WP10 · IMMEDIATE BOARDING', 'wp.10dest': "LET'S TALK",
+  'stats.years': 'Years training Cabin Crew', 'stats.students': 'Students trained',
+  'stats.employability': 'Employability', 'stats.execWeeks': 'Weeks, Executive Cabin Crew',
+  'stats.tagline': 'The Cabin Crew school in Valencia with the most students flying',
+  'testPromo.eyebrow': 'QUICK TEST · 1 MINUTE',
+  'testPromo.title': 'Do you have what it takes to be Cabin Crew?',
+  'testPromo.body': 'Answer 6 questions and take off: discover your crew profile while the plane taxis down the runway in real time.',
+  'testPromo.cta': 'Discover your Cabin Crew profile',
+  'bp.eyebrow': 'SHARE IT', 'bp.title': 'Your boarding pass towards becoming Cabin Crew.',
+  'bp.body': "Type your name, generate your pass and share it — the first step towards your new career starts here.",
+  'bp.placeholder': 'Type your name', 'bp.download': 'Download pass',
+  'bp.hint': 'It downloads as an image — you can share it directly on Instagram, WhatsApp or wherever you like.',
+  'courses.eyebrow': 'OUR COURSES', 'courses.title': 'Two programmes, one destination: flying.',
+  'courses.subtitle': 'Official AESA training under Regulation (EU) No 290/2012, with real practicals on an Iberia aircraft from month one.',
+  'courses.tcp.name': 'Cabin Crew Attendant',
+  'courses.tcp.desc': 'The complete programme: official AESA theory, real practicals on an Iberia aircraft, and career guidance included.',
+  'courses.tcp.li1': '9 official AESA subjects', 'courses.tcp.li2': 'Practicals on an Iberia A300 (Manises)',
+  'courses.tcp.li3': 'Virtual Reality practicals: fire and evacuation', 'courses.tcp.li4': 'Official AESA certificate',
+  'courses.tcp.li5': 'Career guidance until you start flying',
+  'courses.duration': 'DURATION', 'courses.tcp.weeks': '9 weeks', 'courses.more': 'Learn more',
+  'courses.exec.name': 'Executive Cabin Crew',
+  'courses.exec.desc': 'The add-on to take your Cabin Crew training to the next level and access more opportunities: VIP service, protocol and private aviation.',
+  'courses.exec.li1': '4 exclusive Executive Cabin Crew subjects', 'courses.exec.weeks': '4 weeks',
+  'gallery.eyebrow': 'OUR SCHOOL', 'gallery.title': 'A day at Global Crew.',
+  'gallery.subtitle': 'See what the school looks like inside and meet some of the students who are already flying.',
+  'gallery.videoFallback': "Won't load?", 'gallery.videoLink': 'Watch the video on YouTube',
+  'alumni.eyebrow': 'HIRED STUDENTS',
+  'alumni.fallback1.quote': '"I joined knowing nothing about the industry and now I fly with Iberia. The real practicals on the A300 made the difference."',
+  'alumni.fallback1.airline': 'Now flying with Iberia',
+  'alumni.fallback2.quote': '"Barely two months after graduating I was already flying out of the Valencia base with Vueling."',
+  'alumni.fallback2.airline': 'Now flying with Vueling',
+  'alumni.fallback3.quote': '"The support all the way to the interview was key. Today I\'m cabin crew at Volotea."',
+  'alumni.fallback3.airline': 'Now flying with Volotea',
+  'alumni.fallback4.quote': '"I passed Ryanair\'s selection process thanks to the official certificate and the interview prep."',
+  'alumni.fallback4.airline': 'Now flying with Ryanair',
+  'alumni.fallback5.quote': '"I did Executive Cabin Crew and within a few weeks I was already flying with easyJet out of the Valencia base."',
+  'alumni.fallback5.airline': 'Now flying with easyJet',
+  'alumni.fallback6.quote': '"The intensive programme and the official AESA practicals took me straight to flying with World2Fly."',
+  'alumni.fallback6.airline': 'Now flying with World2Fly',
+  'practicals.eyebrow': '100% HANDS-ON TRAINING', 'practicals.title': "It's not theory. It's real training.",
+  'practicals.subtitle': "Real fire extinguishers, life vests, oxygen masks, emergency signage... that's what official AESA practicals look like at Global Crew.",
+  'practicals.c1': 'Fire fighting', 'practicals.c2': 'Water survival',
+  'practicals.c3': 'Emergency signage', 'practicals.c4': 'Emergency equipment',
+  'practicals.c5': 'Cabin procedures', 'practicals.c6': 'Aviation knowledge',
+  'map.eyebrow': 'OUR STUDENTS, AROUND THE WORLD', 'map.title': 'From Valencia to any destination.',
+  'map.subtitle': "This is just a sample of the airlines our former students are flying with right now.",
+  'team.eyebrow': 'OUR TEAM', 'team.title': 'Instructors who still fly.',
+  'team.subtitle': 'Active professionals in the aviation industry, each specialised in a different part of your training.',
+  'team.nabila.role': 'Nurse · Instructor', 'team.nabila.subject': 'Aviation medicine and first aid',
+  'team.nabila.bio': 'Active nurse. Teaches students to administer oxygen, perform CPR and respond to any medical emergency on board.',
+  'team.manuel.role': 'Pilot · Instructor', 'team.manuel.subject': 'General aviation knowledge',
+  'team.manuel.bio': 'Active pilot. Brings students closer to the reality of air navigation and how an aircraft works, from the flight deck.',
+  'team.kike.role': 'Iberia Cabin Crew · School Director', 'team.kike.subject': 'Interview preparation and career guidance',
+  'team.kike.bio': "Iberia Cabin Crew member. As Global Crew's director, he prepares every student individually for their interviews and supports them until they're flying.",
+  'team.david.role': 'Instructor', 'team.david.subject': 'Normal & Emergency Operations and Fire',
+  'team.david.bio': 'Teaches students how to respond to any situation in the cabin, from normal operations to putting out a real fire.',
+  'team.amparo.role': 'Air Nostrum Cabin Crew · Instructor', 'team.amparo.subject': 'Dangerous Goods',
+  'team.amparo.bio': 'Active Cabin Crew member at Air Nostrum. Teaches how to identify and handle dangerous goods on board under AESA regulations.',
+  'team.alicia.role': 'Instructor', 'team.alicia.subject': 'CRM (Crew Resource Management)',
+  'team.alicia.bio': 'Teaches how to work as a crew in the cabin: communication, leadership and joint decision-making in any situation.',
+  'accred.eyebrow': 'CERTIFIED SCHOOL', 'accred.title': 'Training recognised by the air authorities.',
+  'accred.body': 'Global Crew TCP Training is a Cabin Crew training centre authorised by AESA and the Spanish Ministry of Transport, Mobility and Urban Agenda to deliver official Cabin Crew courses under Regulation (EU) No 290/2012.',
+  'accred.easa': 'EASA regulations',
+  'testi.channel': 'GLOBAL CREW TV · TESTIMONIALS CHANNEL',
+  'testi.q1': '"I joined knowing nothing about the industry and left with a contract in hand. The real practicals on the aircraft made the difference."',
+  'testi.a1': '— Student, Cabin Crew class',
+  'testi.q2': "\"The teachers are still flying, so everything they teach comes from the reality of a cabin, not just a book.\"",
+  'testi.a2': '— Student, Executive Cabin Crew',
+  'testi.q3': '"The support all the way to the interview was key. They prepared me individually until I got to fly."',
+  'testi.a3': '— Student, Cabin Crew class',
+  'faq.eyebrow': 'FREQUENTLY ASKED QUESTIONS', 'faq.title': 'What everyone asks us.',
+  'faq.subtitle': "And if your question isn't here, message us on WhatsApp and we'll answer right away.",
+  'faq.q1': 'What sets you apart from other Cabin Crew schools?',
+  'faq.a1': 'We are the first school in Spain to include Virtual Reality training for fire fighting and evacuation, on top of real practicals on an Iberia A300 aircraft. That, together with one-on-one support until you start flying, is what sets us apart.',
+  'faq.q2': 'Do I need to know English to sign up?',
+  'faq.a2': "You don't need an advanced level to start. During the course we work on the English specific to the profession (the kind used on board), so you'll arrive at interviews prepared even without starting from an advanced level.",
+  'faq.q3': 'Is there an age limit?',
+  'faq.a3': "You need to be 18 to start the course. There's no maximum age: each airline has its own requirements, and we help you identify which ones best match your profile.",
+  'faq.q4': 'Can I finance the course?',
+  'faq.a4': 'Yes, we offer financing over up to 12 months, interest-free. We discuss it with you at the info interview to fit your situation.',
+  'faq.q5': 'Do you really help find a job afterwards?',
+  'faq.a5': 'Yes. It includes one-on-one, unlimited interview preparation with our director, an Iberia Cabin Crew member, plus ongoing career guidance until you start flying and access to real selection processes.',
+  'faq.q6': "What's the difference between regular Cabin Crew and Executive Cabin Crew?",
+  'faq.a6': 'Both include the same official AESA training. Executive Cabin Crew is an add-on that takes your Cabin Crew training to the next level: it adds 4 exclusive subjects in VIP service, protocol and private aviation, opening up access to more opportunities within the industry.',
+  'contact.eyebrow': 'GET IN TOUCH', 'contact.title': 'Talk to a Global Crew instructor.',
+  'contact.subtitle': "Get your questions answered about the courses, intake dates or the admissions process. We reply within 24 hours.",
+  'contact.name': 'Name', 'contact.namePh': 'Your full name', 'contact.email': 'Email',
+  'contact.phone': 'Phone', 'contact.course': 'Course of interest',
+  'contact.opt1': 'Cabin Crew Attendant', 'contact.opt2': 'Executive Cabin Crew', 'contact.opt3': "I don't know yet",
+  'contact.message': 'Message for the instructor',
+  'contact.messagePh': "Tell us what you'd like to know about the course, dates or entry requirements...",
+  'contact.submit': 'Send message', 'contact.cardTitle': 'Global Crew Valencia School',
+  'contact.whatsapp': 'Message us on WhatsApp', 'contact.hours': 'Monday to Friday, 9:00 AM – 6:00 PM',
+  'footer.brandBio': 'Official AESA training for cabin crew attendants. Your calling, made a profession.',
+  'footer.coursesTitle': 'Courses', 'footer.course1': 'Cabin Crew Attendant', 'footer.course2': 'Executive Cabin Crew',
+  'footer.schoolTitle': 'School', 'footer.faq': 'FAQ', 'footer.contactTitle': 'Contact',
+  'footer.copyright': '© 2026 Global Crew Valencia · Cabin Crew School.',
+  'footer.privacy': 'Privacy', 'footer.cookies': 'Cookies', 'footer.legal': 'Legal notice',
+  'bp.canvasName': 'YOUR NAME HERE', 'bp.passenger': 'PASSENGER', 'bp.origin': 'ORIGIN',
+  'bp.destination': 'DESTINATION', 'bp.destValue': 'YOUR FUTURE AS CABIN CREW',
+  'bp.flight': 'FLIGHT', 'bp.gate': 'GATE', 'bp.seat': 'SEAT', 'bp.intake': 'INTAKE'
+}
+};
+
+let currentLang = localStorage.getItem('gcLang') || 'es';
+
+function applyLanguage(lang) {
+  currentLang = lang;
+  courseModalLang = lang;
+  document.documentElement.lang = lang;
+  localStorage.setItem('gcLang', lang);
+
+  document.querySelectorAll('[data-i18n]').forEach((el) => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang][key] !== undefined) el.textContent = I18N[lang][key];
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach((el) => {
+    const key = el.getAttribute('data-i18n-html');
+    if (I18N[lang][key] !== undefined) el.innerHTML = I18N[lang][key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (I18N[lang][key] !== undefined) el.setAttribute('placeholder', I18N[lang][key]);
+  });
+
+  document.querySelectorAll('.lang-toggle .lang-opt').forEach((el) => {
+    el.classList.toggle('active', el.dataset.lang === lang);
+  });
+
+  // Redraw dynamic content that isn't driven by data-i18n
+  if (typeof drawBoardingPass === 'function') drawBoardingPass();
+  if (typeof reRenderAlumniAndTestimonials === 'function') reRenderAlumniAndTestimonials();
+}
+
+function setupLangToggle() {
+  document.querySelectorAll('.lang-toggle').forEach((toggle) => {
+    toggle.addEventListener('click', () => {
+      applyLanguage(currentLang === 'es' ? 'en' : 'es');
+    });
+  });
+}
+setupLangToggle();
+applyLanguage(currentLang);
 
 /* ===================== NAV SCROLL & MOBILE MENU ===================== */
 const nav = document.getElementById('siteNav');
@@ -2079,11 +2472,11 @@ function initAlumniCarousel() {
 
 let alumniGalleryData = [];
 
-(async function loadAlumniFromBlob() {
+async function loadAlumniFromBlob(lang) {
   const alumniTrack = document.getElementById('alumniTrack');
   if (!alumniTrack) return;
   try {
-    const res = await fetch('/api/alumni');
+    const res = await fetch(`/api/alumni?lang=${lang || 'es'}`);
     if (!res.ok) throw new Error('alumni API not available');
     const data = await res.json();
     if (data.alumni && data.alumni.length) {
@@ -2098,14 +2491,16 @@ let alumniGalleryData = [];
       // Build gallery data from the built-in fallback slides already in the DOM
       alumniGalleryData = [...alumniTrack.querySelectorAll('.alumni-slide')].map((slide) => ({
         name: slide.querySelector('.alumni-who-text strong')?.textContent || '',
-        airline: (slide.querySelector('.alumni-who-text span')?.textContent || '').replace('Ahora vuela con ', ''),
+        airline: (slide.querySelector('.alumni-who-text span')?.textContent || '').replace(/^(Ahora vuela con|Now flying with)\s*/, ''),
         photoUrl: slide.querySelector('.alumni-photo')?.getAttribute('src') || null,
         initials: slide.querySelector('.alumni-avatar')?.textContent || ''
       }));
     }
+    alumniGalleryShown = ALUMNI_GALLERY_BATCH;
     renderAlumniGallery();
   }
-})();
+}
+loadAlumniFromBlob(currentLang);
 
 const ALUMNI_GALLERY_BATCH = 12;
 let alumniGalleryShown = ALUMNI_GALLERY_BATCH;
@@ -2219,7 +2614,7 @@ if (bpCanvas) {
 
   drawBoardingPass = function () {
     const rawName = (document.getElementById('bpName').value || '').trim();
-    const name = rawName ? rawName.toUpperCase() : 'TU NOMBRE AQUÍ';
+    const name = rawName ? rawName.toUpperCase() : I18N[currentLang]['bp.canvasName'];
     const flightNum = 'GC' + seededFlightNum(rawName || 'globalcrew');
 
     ctx.clearRect(0, 0, W, H);
@@ -2273,7 +2668,7 @@ if (bpCanvas) {
     ctx.fillText('GLOBAL CREW', 56, 60);
     ctx.fillStyle = '#D6D2CD';
     ctx.font = '500 12px "IBM Plex Mono", monospace';
-    ctx.fillText('ESCUELA DE TRIPULANTES · VALENCIA', 56, 78);
+    ctx.fillText(I18N[currentLang]['nav.tagline'], 56, 78);
 
     ctx.textAlign = 'right';
     ctx.fillStyle = 'rgba(247,241,236,0.6)';
@@ -2284,7 +2679,7 @@ if (bpCanvas) {
     // ---- Passenger ----
     ctx.fillStyle = '#D6D2CD';
     ctx.font = '600 11px "IBM Plex Mono", monospace';
-    ctx.fillText('PASAJERO', 56, 150);
+    ctx.fillText(I18N[currentLang]['bp.passenger'], 56, 150);
     ctx.fillStyle = '#F7F1EC';
     let nameSize = 48;
     ctx.font = `700 ${nameSize}px "Space Grotesk", sans-serif`;
@@ -2298,12 +2693,12 @@ if (bpCanvas) {
     const rowY = 250;
     ctx.fillStyle = '#D6D2CD';
     ctx.font = '600 11px "IBM Plex Mono", monospace';
-    ctx.fillText('ORIGEN', 56, rowY);
-    ctx.fillText('DESTINO', 300, rowY);
+    ctx.fillText(I18N[currentLang]['bp.origin'], 56, rowY);
+    ctx.fillText(I18N[currentLang]['bp.destination'], 300, rowY);
     ctx.fillStyle = '#F7F1EC';
     ctx.font = '700 26px "Space Grotesk", sans-serif';
     ctx.fillText('VALENCIA (VLC)', 56, rowY + 34);
-    ctx.fillText('TU FUTURO COMO TCP', 300, rowY + 34);
+    ctx.fillText(I18N[currentLang]['bp.destValue'], 300, rowY + 34);
 
     // plane icon between origin/destination
     ctx.save();
@@ -2320,10 +2715,10 @@ if (bpCanvas) {
     // ---- Bottom meta row ----
     const metaY = 350;
     const cols = [
-      ['VUELO', flightNum],
-      ['PUERTA', '07'],
-      ['ASIENTO', '1A'],
-      ['CONVOCATORIA', formatMonthYear(bpCourseDate)]
+      [I18N[currentLang]['bp.flight'], flightNum],
+      [I18N[currentLang]['bp.gate'], '07'],
+      [I18N[currentLang]['bp.seat'], '1A'],
+      [I18N[currentLang]['bp.intake'], formatMonthYear(bpCourseDate)]
     ];
     let cx = 56;
     cols.forEach(([label, value], i) => {
@@ -2351,7 +2746,7 @@ if (bpCanvas) {
 
     ctx.fillStyle = 'rgba(247,241,236,0.6)';
     ctx.font = '600 10px "IBM Plex Mono", monospace';
-    ctx.fillText('VUELO', 0, -40);
+    ctx.fillText(I18N[currentLang]['bp.flight'], 0, -40);
     ctx.fillStyle = '#F7F1EC';
     ctx.font = '700 18px "Space Grotesk", sans-serif';
     ctx.fillText(flightNum, 0, -14);
@@ -2529,9 +2924,9 @@ requestAnimationFrame(tickScrub);
 
 initTestisCarousel();
 
-(async function loadTestimoniosFromBlob() {
+async function loadTestimoniosFromBlob(lang) {
   try {
-    const res = await fetch('/api/testimonios');
+    const res = await fetch(`/api/testimonios?lang=${lang || 'es'}`);
     if (!res.ok) throw new Error('testimonios API not available');
     const data = await res.json();
     if (data.testimonials && data.testimonials.length) {
@@ -2541,7 +2936,13 @@ initTestisCarousel();
   } catch (err) {
     // No API available — keep the built-in example testimonials.
   }
-})();
+}
+loadTestimoniosFromBlob(currentLang);
+
+function reRenderAlumniAndTestimonials() {
+  loadAlumniFromBlob(currentLang);
+  loadTestimoniosFromBlob(currentLang);
+}
 </script>
 </body>
 </html>
