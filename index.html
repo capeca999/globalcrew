@@ -321,7 +321,16 @@ body.announce-closed{--announce-h:0px;}
 }
 
 /* ===================== STATS ===================== */
-.stats{background:var(--cream);padding:90px 0 40px;}
+.stats{background:var(--cream);padding:90px 0 40px;position:relative;overflow:hidden;}
+.bg-word{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:var(--ff-display);font-weight:700;
+  font-size:clamp(5rem,22vw,16rem);letter-spacing:-.02em;
+  color:var(--navy-800);opacity:.05;
+  white-space:nowrap;pointer-events:none;z-index:0;line-height:1;
+  user-select:none;
+}
+.stats .wrap{position:relative;z-index:1;}
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;}
 .stat-card{
   border:1px solid var(--line);border-radius:var(--radius-md);padding:28px 22px;
@@ -1015,6 +1024,7 @@ body.announce-closed{--announce-h:0px;}
 
 <!-- ============ STATS ============ -->
 <section class="stats">
+  <span class="bg-word" aria-hidden="true" data-i18n="watermark.stats">VUELA</span>
   <div class="wrap">
     <div class="stats-grid">
       <div class="stat-card reveal">
@@ -1962,7 +1972,8 @@ es: {
   'footer.privacy': 'Privacidad', 'footer.cookies': 'Cookies', 'footer.legal': 'Aviso legal',
   'bp.canvasName': 'TU NOMBRE AQUÍ', 'bp.passenger': 'PASAJERO', 'bp.origin': 'ORIGEN',
   'bp.destination': 'DESTINO', 'bp.destValue': 'TU FUTURO COMO TCP',
-  'bp.flight': 'VUELO', 'bp.gate': 'PUERTA', 'bp.seat': 'ASIENTO', 'bp.intake': 'CONVOCATORIA'
+  'bp.flight': 'VUELO', 'bp.gate': 'PUERTA', 'bp.seat': 'ASIENTO', 'bp.intake': 'CONVOCATORIA',
+  'watermark.stats': 'VUELA'
 },
 en: {
   'nav.tagline': 'CABIN CREW SCHOOL · VALENCIA',
@@ -2085,7 +2096,8 @@ en: {
   'footer.privacy': 'Privacy', 'footer.cookies': 'Cookies', 'footer.legal': 'Legal notice',
   'bp.canvasName': 'YOUR NAME HERE', 'bp.passenger': 'PASSENGER', 'bp.origin': 'ORIGIN',
   'bp.destination': 'DESTINATION', 'bp.destValue': 'YOUR FUTURE AS CABIN CREW',
-  'bp.flight': 'FLIGHT', 'bp.gate': 'GATE', 'bp.seat': 'SEAT', 'bp.intake': 'INTAKE'
+  'bp.flight': 'FLIGHT', 'bp.gate': 'GATE', 'bp.seat': 'SEAT', 'bp.intake': 'INTAKE',
+  'watermark.stats': 'FLY'
 }
 };
 
