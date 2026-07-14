@@ -101,10 +101,10 @@
         /* ===================== ANNOUNCEMENT BAR ===================== */
         :root{--announce-h:44px;}
         .announce-bar{
-            position:fixed;top:0;left:0;right:0;z-index:110;height:var(--announce-h);
+            position:fixed;top:0;left:0;right:0;z-index:110;min-height:var(--announce-h);
             background:linear-gradient(90deg,var(--steel-dark),var(--navy-800) 60%,var(--steel-dark));
             display:flex;align-items:center;justify-content:center;gap:10px;
-            padding:0 48px 0 16px;text-align:center;
+            padding:8px 48px 8px 16px;text-align:center;
         }
         .announce-bar a{
             font-family:var(--ff-mono);font-size:.76rem;letter-spacing:.04em;color:var(--cream);
@@ -124,7 +124,8 @@
         body.announce-closed .announce-bar{display:none;}
         body.announce-closed{--announce-h:0px;}
         @media (max-width:560px){
-            .announce-bar{padding:0 40px 0 10px;}
+            :root{--announce-h:68px;}
+            .announce-bar{padding:8px 40px 8px 10px;}
             .announce-bar a{font-size:.68rem;gap:6px;}
         }
 
@@ -460,7 +461,7 @@
             border-radius:var(--radius-lg);border:1px solid var(--line-light);
             background:rgba(247,241,236,.05);padding:30px 28px;
         }
-        .alumni-track{position:relative;min-height:300px;}
+        .alumni-track{position:relative;min-height:300px;transition:min-height .35s var(--ease);}
         .alumni-slide{
             position:absolute;inset:0;opacity:0;pointer-events:none;
             transition:opacity .6s var(--ease);display:flex;flex-direction:column;align-items:flex-start;
@@ -2506,10 +2507,28 @@
         ).join('');
         const alumniDots = alumniDotsWrap.querySelectorAll('button');
 
+        function resizeAlumniTrack() {
+            const active = alumniTrack.querySelector('.alumni-slide.active');
+            if (!active) return;
+            // .alumni-slide is absolutely positioned (for the crossfade), so it
+            // can't report its own natural content height directly — measure
+            // via a hidden static clone instead, then size the track to match.
+            const clone = active.cloneNode(true);
+            clone.style.position = 'static';
+            clone.style.opacity = '1';
+            clone.style.visibility = 'hidden';
+            clone.style.pointerEvents = 'none';
+            alumniTrack.appendChild(clone);
+            const h = clone.offsetHeight;
+            alumniTrack.removeChild(clone);
+            alumniTrack.style.minHeight = Math.max(h, 220) + 'px';
+        }
+
         function showAlumni(i) {
             alumniIndex = (i + alumniSlides.length) % alumniSlides.length;
             alumniSlides.forEach((s, idx) => s.classList.toggle('active', idx === alumniIndex));
             alumniDots.forEach((d, idx) => d.classList.toggle('active', idx === alumniIndex));
+            resizeAlumniTrack();
         }
 
         function resetAlumniAutoplay() {
@@ -2527,6 +2546,8 @@
         alumniCarousel.addEventListener('mouseenter', () => clearInterval(alumniTimer));
         alumniCarousel.addEventListener('mouseleave', resetAlumniAutoplay);
 
+        resizeAlumniTrack();
+        window.addEventListener('resize', resizeAlumniTrack);
         resetAlumniAutoplay();
     }
 
@@ -2616,6 +2637,10 @@
 
     if (bpCanvas) {
         const ctx = bpCanvas.getContext('2d');
+
+        const bpQrImage = new Image();
+        bpQrImage.src = 'data:image/png;base64,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';
+        bpQrImage.onload = () => { if (typeof drawBoardingPass === 'function') drawBoardingPass(); };
 
         function seededFlightNum(str) {
             let hash = 0;
@@ -2761,23 +2786,22 @@
 
             ctx.fillStyle = 'rgba(247,241,236,0.6)';
             ctx.font = '600 10px "IBM Plex Mono", monospace';
-            ctx.fillText(I18N[currentLang]['bp.flight'], 0, -40);
+            ctx.fillText(I18N[currentLang]['bp.flight'], 0, -70);
             ctx.fillStyle = '#F7F1EC';
             ctx.font = '700 18px "Space Grotesk", sans-serif';
-            ctx.fillText(flightNum, 0, -14);
+            ctx.fillText(flightNum, 0, -44);
 
-            ctx.textAlign = 'left';
-            const barY = 40;
-            let barX = stubCenter - 110;
-            const seed = seededFlightNum(name);
-            for (let i = 0; i < 34; i++) {
-                const w = ((seed * (i + 3)) % 4) + 1;
-                if (i % 2 === 0) {
-                    ctx.fillStyle = 'rgba(247,241,236,0.75)';
-                    ctx.fillRect(barX, barY, w, 46);
-                }
-                barX += w + 2;
+            // QR code — links to globalcrewtcp.com
+            if (bpQrImage.complete && bpQrImage.naturalWidth) {
+                const qrSize = 96;
+                ctx.fillStyle = '#F7F1EC';
+                roundRect(-qrSize / 2 - 8, -18, qrSize + 16, qrSize + 16, 8);
+                ctx.fill();
+                ctx.drawImage(bpQrImage, -qrSize / 2, -10, qrSize, qrSize);
             }
+            ctx.fillStyle = 'rgba(247,241,236,0.55)';
+            ctx.font = '500 9px "IBM Plex Mono", monospace';
+            ctx.fillText('globalcrewtcp.com', 0, 106);
             ctx.restore();
         }
 
@@ -2909,27 +2933,19 @@
 
             ctx.fillStyle = 'rgba(247,241,236,0.6)';
             ctx.font = '600 11px "IBM Plex Mono", monospace';
-            ctx.fillText(I18N[currentLang]['bp.flight'] + ' · ' + flightNum, W / 2, stubCenterY + 12);
+            ctx.fillText(I18N[currentLang]['bp.flight'] + ' · ' + flightNum, W / 2, stubCenterY + 10);
 
-            const seed = seededFlightNum(name);
-            const barCount = 36;
-            let totalW = 0;
-            const widths = [];
-            for (let i = 0; i < barCount; i++) {
-                const w = ((seed * (i + 3)) % 4) + 1;
-                widths.push(w);
-                totalW += w + 2;
+            // QR code — links to globalcrewtcp.com
+            if (bpQrImage.complete && bpQrImage.naturalWidth) {
+                const qrSize = 84;
+                ctx.fillStyle = '#F7F1EC';
+                roundRect(W / 2 - qrSize / 2 - 8, stubCenterY + 26, qrSize + 16, qrSize + 16, 8);
+                ctx.fill();
+                ctx.drawImage(bpQrImage, W / 2 - qrSize / 2, stubCenterY + 34, qrSize, qrSize);
             }
-            let barX = W / 2 - totalW / 2;
-            const barY = stubCenterY + 30;
-            ctx.textAlign = 'left';
-            widths.forEach((w, i) => {
-                if (i % 2 === 0) {
-                    ctx.fillStyle = 'rgba(247,241,236,0.75)';
-                    ctx.fillRect(barX, barY, w, 44);
-                }
-                barX += w + 2;
-            });
+            ctx.fillStyle = 'rgba(247,241,236,0.55)';
+            ctx.font = '500 10px "IBM Plex Mono", monospace';
+            ctx.fillText('globalcrewtcp.com', W / 2, stubCenterY + 148);
             ctx.restore();
         }
 
