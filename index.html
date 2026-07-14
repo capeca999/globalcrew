@@ -2383,7 +2383,7 @@ if (videoEmbed) {
   // Blob-powered API — every alumnus whose photo is named
   // "Nombre, Aerolinea, Ciudad.jpg" adds their own dot automatically,
   // with no lookup table to keep updated in the code.
-  fetch('/api/alumni')
+  fetch('/api/home-data?lang=es')
     .then((res) => (res.ok ? res.json() : Promise.reject()))
     .then((data) => {
       const withCity = (data.alumni || []).filter((a) => a.cityLat != null && a.cityLon != null);
@@ -2485,35 +2485,16 @@ function initAlumniCarousel() {
 
 let alumniGalleryData = [];
 
-async function loadAlumniFromBlob(lang) {
+function buildAlumniFallbackFromDOM() {
   const alumniTrack = document.getElementById('alumniTrack');
-  if (!alumniTrack) return;
-  try {
-    const res = await fetch(`/api/alumni?lang=${lang || 'es'}`);
-    if (!res.ok) throw new Error('alumni API not available');
-    const data = await res.json();
-    if (data.alumni && data.alumni.length) {
-      alumniTrack.innerHTML = data.alumni.map(alumniSlideHTML).join('');
-      alumniGalleryData = data.alumni;
-    }
-  } catch (err) {
-    // No API available (e.g. hosted outside Vercel) — keep the built-in examples below.
-  } finally {
-    initAlumniCarousel();
-    if (!alumniGalleryData.length) {
-      // Build gallery data from the built-in fallback slides already in the DOM
-      alumniGalleryData = [...alumniTrack.querySelectorAll('.alumni-slide')].map((slide) => ({
-        name: slide.querySelector('.alumni-who-text strong')?.textContent || '',
-        airline: (slide.querySelector('.alumni-who-text span')?.textContent || '').replace(/^(Ahora vuela con|Now flying with)\s*/, ''),
-        photoUrl: slide.querySelector('.alumni-photo')?.getAttribute('src') || null,
-        initials: slide.querySelector('.alumni-avatar')?.textContent || ''
-      }));
-    }
-    alumniGalleryShown = ALUMNI_GALLERY_BATCH;
-    renderAlumniGallery();
-  }
+  if (!alumniTrack) return [];
+  return [...alumniTrack.querySelectorAll('.alumni-slide')].map((slide) => ({
+    name: slide.querySelector('.alumni-who-text strong')?.textContent || '',
+    airline: (slide.querySelector('.alumni-who-text span')?.textContent || '').replace(/^(Ahora vuela con|Now flying with)\s*/, ''),
+    photoUrl: slide.querySelector('.alumni-photo')?.getAttribute('src') || null,
+    initials: slide.querySelector('.alumni-avatar')?.textContent || ''
+  }));
 }
-loadAlumniFromBlob(currentLang);
 
 const ALUMNI_GALLERY_BATCH = 12;
 let alumniGalleryShown = ALUMNI_GALLERY_BATCH;
@@ -2582,24 +2563,6 @@ function formatMonthYear(text) {
   }
   return text; // couldn't find a clear month+year — show the raw text as a fallback
 }
-
-async function loadNextCourseDate(lang) {
-  const el = document.getElementById('nextCourseDate');
-  try {
-    const res = await fetch(`/api/proximo-curso?lang=${lang || 'es'}`);
-    if (!res.ok) throw new Error('proximo-curso API not available');
-    const data = await res.json();
-    if (data.text) {
-      bpCourseDate = data.text;
-      if (el) el.textContent = data.text;
-    }
-  } catch (err) {
-    // Keep the default date already in the HTML.
-  } finally {
-    if (typeof drawBoardingPass === 'function') drawBoardingPass();
-  }
-}
-loadNextCourseDate(currentLang);
 
 /* ===================== BOARDING PASS GENERATOR ===================== */
 const bpCanvas = document.getElementById('bpCanvas');
@@ -2937,25 +2900,42 @@ requestAnimationFrame(tickScrub);
 
 initTestisCarousel();
 
-async function loadTestimoniosFromBlob(lang) {
+/* ===================== ONE COMBINED FETCH FOR ALL BLOB DATA ===================== */
+async function loadHomeDataFromBlob(lang) {
+  const alumniTrack = document.getElementById('alumniTrack');
+  const courseEl = document.getElementById('nextCourseDate');
+
   try {
-    const res = await fetch(`/api/testimonios?lang=${lang || 'es'}`);
-    if (!res.ok) throw new Error('testimonios API not available');
+    const res = await fetch(`/api/home-data?lang=${lang || 'es'}`);
+    if (!res.ok) throw new Error('home-data API not available');
     const data = await res.json();
+
+    if (alumniTrack && data.alumni && data.alumni.length) {
+      alumniTrack.innerHTML = data.alumni.map(alumniSlideHTML).join('');
+      alumniGalleryData = data.alumni;
+    }
     if (data.testimonials && data.testimonials.length) {
       document.getElementById('testiTrack').innerHTML = data.testimonials.map(testiHTML).join('');
-      initTestisCarousel();
+    }
+    if (data.nextCourseText) {
+      bpCourseDate = data.nextCourseText;
+      if (courseEl) courseEl.textContent = data.nextCourseText;
     }
   } catch (err) {
-    // No API available — keep the built-in example testimonials.
+    // No API available (e.g. hosted outside Vercel) — keep the built-in examples already in the HTML.
+  } finally {
+    initAlumniCarousel();
+    initTestisCarousel();
+    if (!alumniGalleryData.length) alumniGalleryData = buildAlumniFallbackFromDOM();
+    alumniGalleryShown = ALUMNI_GALLERY_BATCH;
+    renderAlumniGallery();
+    if (typeof drawBoardingPass === 'function') drawBoardingPass();
   }
 }
-loadTestimoniosFromBlob(currentLang);
+loadHomeDataFromBlob(currentLang);
 
 function reRenderAlumniAndTestimonials() {
-  loadAlumniFromBlob(currentLang);
-  loadTestimoniosFromBlob(currentLang);
-  if (typeof loadNextCourseDate === 'function') loadNextCourseDate(currentLang);
+  loadHomeDataFromBlob(currentLang);
 }
 </script>
 </body>

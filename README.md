@@ -1,11 +1,16 @@
 # Global Crew Valencia — web + Blob dinámico
 
-Esta carpeta es un proyecto de Vercel (no un simple HTML suelto): incluye tres
-funciones de servidor (`/api/alumni`, `/api/proximo-curso` y `/api/blob-image`)
-que leen directamente de tu Blob Store `globalcrew` para rellenar:
+Esta carpeta es un proyecto de Vercel (no un simple HTML suelto): incluye
+funciones de servidor que leen directamente de tu Blob Store `globalcrew`
+para rellenar la web:
 
-- El carrusel "Alumnos contratados" (fotos + citas).
-- El texto "PRÓXIMO CURSO" de la barra superior.
+- `/api/home-data` — la función principal: en **una sola llamada** trae el
+  carrusel de "Alumnos contratados", los testimonios y el texto de
+  "PRÓXIMO CURSO" a la vez (optimizado para gastar lo mínimo posible de tu
+  cuota gratuita de Vercel — mira el punto 6 más abajo).
+- `/api/blob-image` — sirve cada foto de forma individual y segura.
+- `/api/cities.js` — la base de datos de casi 200 ciudades del mundo para
+  el mapa (no es una función, es un archivo de datos que usa `home-data`).
 
 Tu store es de tipo **privado con autenticación OIDC** (por eso tu proyecto
 tiene las variables `BLOB_STORE_ID` y `BLOB_WEBHOOK_PUBLIC_KEY`, en vez de un
@@ -128,7 +133,31 @@ archivo con el mismo contenido pero terminado en `.en.txt` — ej.
 inglesa de la web se sigue mostrando el texto en español hasta que lo
 añadas.
 
-## 5. Si algún día alojas esto fuera de Vercel (WordPress, hosting normal...)
+## 5. Cómo está optimizado para gastar poca cuota de Vercel
+
+Todo lo dinámico (alumnos, testimonios y próximo curso) se trae con **una
+sola llamada** a `/api/home-data`, que hace **una única `list()`** al Blob
+Store entero y reparte los resultados. Antes eran 3 funciones separadas
+con 4 `list()` en total — ahora es 1.
+
+Además, la respuesta se guarda en caché **1 hora** (antes eran 5 minutos).
+Esto significa que, salga a cambiar lo que salga en el Blob, puede tardar
+hasta 1 hora en verse reflejado en la web — a cambio, tu cuota gratuita de
+Vercel apenas se entera de que existe. Si alguna vez subes algo y quieres
+verlo ya mismo sin esperar, entra en modo incógnito o añade
+`?debug=1` a `/api/home-data` para forzar una lectura fresca al comprobarlo
+(aunque la web en sí seguirá usando la versión en caché hasta que expire).
+
+Para comprobar en cualquier momento qué está leyendo exactamente del Blob
+(qué archivos encuentra, con qué se empareja cada foto, etc.), abre:
+
+```
+https://tudominio.vercel.app/api/home-data?debug=1&lang=es
+```
+
+(cambia `lang=es` por `lang=en` para ver el resultado en inglés).
+
+## 6. Si algún día alojas esto fuera de Vercel (WordPress, hosting normal...)
 
 Las funciones `/api/*` no existirán ahí, así que el carrusel y la fecha
 usarán automáticamente el contenido de ejemplo que ya está escrito dentro
