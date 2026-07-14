@@ -122,7 +122,13 @@ OCTUBRE 2026
 Si subes varios archivos, se usa el más reciente. Borra o sustituye el
 archivo cuando cambie la convocatoria.
 
-## 4. Si algún día alojas esto fuera de Vercel (WordPress, hosting normal...)
+**¿Y en inglés?** Igual que con los alumnos y los testimonios: sube otro
+archivo con el mismo contenido pero terminado en `.en.txt` — ej.
+`octubre.en.txt` con dentro `OCTOBER 2026`. Si no lo subes, en la versión
+inglesa de la web se sigue mostrando el texto en español hasta que lo
+añadas.
+
+## 5. Si algún día alojas esto fuera de Vercel (WordPress, hosting normal...)
 
 Las funciones `/api/*` no existirán ahí, así que el carrusel y la fecha
 usarán automáticamente el contenido de ejemplo que ya está escrito dentro

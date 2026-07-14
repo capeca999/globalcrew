@@ -2571,10 +2571,10 @@ function formatMonthYear(text) {
   return text; // couldn't find a clear month+year — show the raw text as a fallback
 }
 
-(async function loadNextCourseDate() {
+async function loadNextCourseDate(lang) {
   const el = document.getElementById('nextCourseDate');
   try {
-    const res = await fetch('/api/proximo-curso');
+    const res = await fetch(`/api/proximo-curso?lang=${lang || 'es'}`);
     if (!res.ok) throw new Error('proximo-curso API not available');
     const data = await res.json();
     if (data.text) {
@@ -2586,7 +2586,8 @@ function formatMonthYear(text) {
   } finally {
     if (typeof drawBoardingPass === 'function') drawBoardingPass();
   }
-})();
+}
+loadNextCourseDate(currentLang);
 
 /* ===================== BOARDING PASS GENERATOR ===================== */
 const bpCanvas = document.getElementById('bpCanvas');
@@ -2942,6 +2943,7 @@ loadTestimoniosFromBlob(currentLang);
 function reRenderAlumniAndTestimonials() {
   loadAlumniFromBlob(currentLang);
   loadTestimoniosFromBlob(currentLang);
+  if (typeof loadNextCourseDate === 'function') loadNextCourseDate(currentLang);
 }
 </script>
 </body>
