@@ -2851,40 +2851,40 @@
 
             ctx.textBaseline = 'alphabetic';
             ctx.fillStyle = 'rgba(247,241,236,0.85)';
-            ctx.font = '700 22px "Space Grotesk", sans-serif';
-            ctx.fillText('GLOBAL CREW', PAD, 76);
+            ctx.font = '700 26px "Space Grotesk", sans-serif';
+            ctx.fillText('GLOBAL CREW', PAD, 78);
             ctx.fillStyle = '#D6D2CD';
-            ctx.font = '500 14px "IBM Plex Mono", monospace';
-            ctx.fillText(I18N[currentLang]['nav.tagline'], PAD, 98);
+            ctx.font = '500 16px "IBM Plex Mono", monospace';
+            ctx.fillText(I18N[currentLang]['nav.tagline'], PAD, 102);
 
             ctx.textAlign = 'right';
             ctx.fillStyle = 'rgba(247,241,236,0.6)';
-            ctx.font = '500 13px "IBM Plex Mono", monospace';
-            ctx.fillText('BOARDING PASS', W - PAD, 76);
+            ctx.font = '500 15px "IBM Plex Mono", monospace';
+            ctx.fillText('BOARDING PASS', W - PAD, 78);
             ctx.textAlign = 'left';
 
             ctx.fillStyle = '#D6D2CD';
-            ctx.font = '600 14px "IBM Plex Mono", monospace';
-            ctx.fillText(I18N[currentLang]['bp.passenger'], PAD, 200);
+            ctx.font = '600 16px "IBM Plex Mono", monospace';
+            ctx.fillText(I18N[currentLang]['bp.passenger'], PAD, 208);
             ctx.fillStyle = '#F7F1EC';
-            let nameSize = 58;
+            let nameSize = 64;
             ctx.font = `700 ${nameSize}px "Space Grotesk", sans-serif`;
-            while (ctx.measureText(name).width > (W - PAD * 2) && nameSize > 28) {
+            while (ctx.measureText(name).width > (W - PAD * 2) && nameSize > 30) {
                 nameSize -= 2;
                 ctx.font = `700 ${nameSize}px "Space Grotesk", sans-serif`;
             }
-            ctx.fillText(name, PAD, 200 + nameSize * 0.95);
+            ctx.fillText(name, PAD, 208 + nameSize * 0.95);
 
-            const originY = 340;
+            const originY = 356;
             ctx.fillStyle = '#D6D2CD';
-            ctx.font = '600 14px "IBM Plex Mono", monospace';
+            ctx.font = '600 16px "IBM Plex Mono", monospace';
             ctx.fillText(I18N[currentLang]['bp.origin'], PAD, originY);
             ctx.fillStyle = '#F7F1EC';
-            ctx.font = '700 32px "Space Grotesk", sans-serif';
-            ctx.fillText('VALENCIA (VLC)', PAD, originY + 42);
+            ctx.font = '700 36px "Space Grotesk", sans-serif';
+            ctx.fillText('VALENCIA (VLC)', PAD, originY + 46);
 
             ctx.save();
-            ctx.translate(PAD + 16, originY + 96);
+            ctx.translate(PAD + 16, originY + 104);
             ctx.fillStyle = '#D6D2CD';
             ctx.beginPath();
             ctx.moveTo(0, -13); ctx.lineTo(4.5, -3.5); ctx.lineTo(14, 0); ctx.lineTo(4.5, 3.5);
@@ -2893,59 +2893,59 @@
             ctx.fill();
             ctx.restore();
 
-            const destY = originY + 160;
+            const destY = originY + 172;
             ctx.fillStyle = '#D6D2CD';
-            ctx.font = '600 14px "IBM Plex Mono", monospace';
+            ctx.font = '600 16px "IBM Plex Mono", monospace';
             ctx.fillText(I18N[currentLang]['bp.destination'], PAD, destY);
             ctx.fillStyle = '#F7F1EC';
-            ctx.font = '700 28px "Space Grotesk", sans-serif';
-            ctx.fillText(I18N[currentLang]['bp.destValue'], PAD, destY + 38);
+            ctx.font = '700 32px "Space Grotesk", sans-serif';
+            ctx.fillText(I18N[currentLang]['bp.destValue'], PAD, destY + 42);
 
             const metaRows = [
                 [[I18N[currentLang]['bp.flight'], flightNum], [I18N[currentLang]['bp.gate'], '07']],
                 [[I18N[currentLang]['bp.seat'], '1A'], [I18N[currentLang]['bp.intake'], formatMonthYear(bpCourseDate)]]
             ];
-            let metaY = destY + 100;
+            let metaY = destY + 108;
             metaRows.forEach((row) => {
                 let mx = PAD;
                 row.forEach(([label, value]) => {
                     ctx.fillStyle = '#D6D2CD';
-                    ctx.font = '600 12px "IBM Plex Mono", monospace';
+                    ctx.font = '600 14px "IBM Plex Mono", monospace';
                     ctx.fillText(label, mx, metaY);
                     ctx.fillStyle = '#F7F1EC';
-                    ctx.font = '700 22px "Space Grotesk", sans-serif';
-                    ctx.fillText(value, mx, metaY + 30);
+                    ctx.font = '700 26px "Space Grotesk", sans-serif';
+                    ctx.fillText(value, mx, metaY + 34);
                     mx += (W - PAD * 2) / 2;
                 });
-                metaY += 92;
+                metaY += 100;
             });
 
             const stubCenterY = PERF_Y + (H - PERF_Y) / 2;
             ctx.save();
             ctx.textAlign = 'center';
             ctx.fillStyle = 'rgba(247,241,236,0.6)';
-            ctx.font = '600 13px "IBM Plex Mono", monospace';
-            ctx.fillText('TCP', W / 2, stubCenterY - 55);
+            ctx.font = '600 15px "IBM Plex Mono", monospace';
+            ctx.fillText('TCP', W / 2, stubCenterY - 122);
             ctx.fillStyle = '#F7F1EC';
-            ctx.font = '700 24px "Space Grotesk", sans-serif';
+            ctx.font = '700 28px "Space Grotesk", sans-serif';
             let stubName = name.length > 18 ? name.slice(0, 17) + '…' : name;
-            ctx.fillText(stubName, W / 2, stubCenterY - 20);
+            ctx.fillText(stubName, W / 2, stubCenterY - 86);
 
             ctx.fillStyle = 'rgba(247,241,236,0.6)';
-            ctx.font = '600 11px "IBM Plex Mono", monospace';
-            ctx.fillText(I18N[currentLang]['bp.flight'] + ' · ' + flightNum, W / 2, stubCenterY + 10);
+            ctx.font = '600 13px "IBM Plex Mono", monospace';
+            ctx.fillText(I18N[currentLang]['bp.flight'] + ' · ' + flightNum, W / 2, stubCenterY - 52);
 
             // QR code — links to globalcrewtcp.com
             if (bpQrImage.complete && bpQrImage.naturalWidth) {
-                const qrSize = 84;
+                const qrSize = 152;
                 ctx.fillStyle = '#F7F1EC';
-                roundRect(W / 2 - qrSize / 2 - 8, stubCenterY + 26, qrSize + 16, qrSize + 16, 8);
+                roundRect(W / 2 - qrSize / 2 - 10, stubCenterY - 18, qrSize + 20, qrSize + 20, 10);
                 ctx.fill();
-                ctx.drawImage(bpQrImage, W / 2 - qrSize / 2, stubCenterY + 34, qrSize, qrSize);
+                ctx.drawImage(bpQrImage, W / 2 - qrSize / 2, stubCenterY - 8, qrSize, qrSize);
             }
-            ctx.fillStyle = 'rgba(247,241,236,0.55)';
-            ctx.font = '500 10px "IBM Plex Mono", monospace';
-            ctx.fillText('globalcrewtcp.com', W / 2, stubCenterY + 148);
+            ctx.fillStyle = 'rgba(247,241,236,0.6)';
+            ctx.font = '500 13px "IBM Plex Mono", monospace';
+            ctx.fillText('globalcrewtcp.com', W / 2, stubCenterY + 158);
             ctx.restore();
         }
 
