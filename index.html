@@ -2920,32 +2920,34 @@
                 metaY += 100;
             });
 
-            const stubCenterY = PERF_Y + (H - PERF_Y) / 2;
+            const stubTop = PERF_Y + 26;
             ctx.save();
             ctx.textAlign = 'center';
             ctx.fillStyle = 'rgba(247,241,236,0.6)';
             ctx.font = '600 15px "IBM Plex Mono", monospace';
-            ctx.fillText('TCP', W / 2, stubCenterY - 122);
+            ctx.fillText('TCP', W / 2, stubTop);
             ctx.fillStyle = '#F7F1EC';
             ctx.font = '700 28px "Space Grotesk", sans-serif';
             let stubName = name.length > 18 ? name.slice(0, 17) + '…' : name;
-            ctx.fillText(stubName, W / 2, stubCenterY - 86);
+            ctx.fillText(stubName, W / 2, stubTop + 36);
 
             ctx.fillStyle = 'rgba(247,241,236,0.6)';
             ctx.font = '600 13px "IBM Plex Mono", monospace';
-            ctx.fillText(I18N[currentLang]['bp.flight'] + ' · ' + flightNum, W / 2, stubCenterY - 52);
+            ctx.fillText(I18N[currentLang]['bp.flight'] + ' · ' + flightNum, W / 2, stubTop + 66);
 
             // QR code — links to globalcrewtcp.com
+            const qrSize = 132;
+            const qrBoxTop = stubTop + 88;
+            const qrBoxSize = qrSize + 20;
             if (bpQrImage.complete && bpQrImage.naturalWidth) {
-                const qrSize = 152;
                 ctx.fillStyle = '#F7F1EC';
-                roundRect(W / 2 - qrSize / 2 - 10, stubCenterY - 18, qrSize + 20, qrSize + 20, 10);
+                roundRect(W / 2 - qrBoxSize / 2, qrBoxTop, qrBoxSize, qrBoxSize, 10);
                 ctx.fill();
-                ctx.drawImage(bpQrImage, W / 2 - qrSize / 2, stubCenterY - 8, qrSize, qrSize);
+                ctx.drawImage(bpQrImage, W / 2 - qrSize / 2, qrBoxTop + 10, qrSize, qrSize);
             }
-            ctx.fillStyle = 'rgba(247,241,236,0.6)';
-            ctx.font = '500 13px "IBM Plex Mono", monospace';
-            ctx.fillText('globalcrewtcp.com', W / 2, stubCenterY + 158);
+            ctx.fillStyle = 'rgba(247,241,236,0.75)';
+            ctx.font = '600 13px "IBM Plex Mono", monospace';
+            ctx.fillText('globalcrewtcp.com', W / 2, qrBoxTop + qrBoxSize + 26);
             ctx.restore();
         }
 
