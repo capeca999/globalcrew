@@ -513,47 +513,62 @@
         .airline-plane-badge svg{width:24px;height:24px;color:#fff;transform:rotate(90deg);}
         .alumni-nav{display:flex;align-items:center;justify-content:space-between;margin-top:22px;}
 
-        /* ===================== WINDOW PHOTO ALBUM (auto, no tap needed) ===================== */
-        .window-album{margin-top:26px;}
-        .window-album-head{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
-        .window-album-head svg{width:14px;height:14px;color:var(--steel-light);transform:rotate(90deg);flex-shrink:0;}
-        .window-album-head span{
+        /* ===================== SCHOOL GALLERY (large slideshow, prev/next) ===================== */
+        .school-gallery{margin-top:26px;}
+        .school-gallery-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;}
+        .school-gallery-label{display:flex;align-items:center;gap:8px;}
+        .school-gallery-label svg{width:14px;height:14px;color:var(--steel-light);transform:rotate(90deg);flex-shrink:0;}
+        .school-gallery-label span{
             font-family:var(--ff-mono);font-size:.72rem;letter-spacing:.08em;color:var(--steel-light);
             text-transform:uppercase;
         }
-        .window-album-wrap{
-            position:relative;overflow:hidden;border-radius:var(--radius-lg);
-            background:linear-gradient(180deg,#2a2320,#1c1715);padding:30px 0;
-            -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
-            mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+        .school-gallery-count{font-family:var(--ff-mono);font-size:.72rem;color:rgba(247,241,236,.5);}
+        .school-gallery-stage{
+            position:relative;border-radius:var(--radius-lg);overflow:hidden;
+            aspect-ratio:16/9;background:#12100f;
+            box-shadow:0 30px 60px -26px rgba(0,0,0,.55);
         }
-        .window-album-track{display:flex;gap:22px;width:max-content;animation:windowScroll 26s linear infinite;}
-        .window-album-wrap:hover .window-album-track,
-        .window-album-wrap:active .window-album-track{animation-play-state:paused;}
-        @keyframes windowScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
-        .plane-window{flex:0 0 auto;width:126px;}
-        .plane-window-frame{
-            position:relative;width:126px;height:162px;
-            border-radius:50% 50% 46% 46% / 58% 58% 42% 42%;
-            overflow:hidden;background:#0e0c0b;
-            box-shadow:0 0 0 7px #EFEBE8,0 0 0 10px #B9B2AB,0 16px 26px -12px rgba(0,0,0,.5),inset 0 0 20px rgba(0,0,0,.4);
+        .school-gallery-track{display:flex;height:100%;transition:transform .6s var(--ease);}
+        .school-gallery-slide{flex:0 0 100%;height:100%;position:relative;}
+        .school-gallery-slide img{
+            width:100%;height:100%;object-fit:cover;display:block;
+            transform:scale(1.06);transition:transform 7s linear;
         }
-        .plane-window-frame img{width:100%;height:100%;object-fit:cover;display:block;}
-        .plane-window-frame::after{
-            content:'';position:absolute;top:9%;left:12%;width:34%;height:26%;
-            background:linear-gradient(135deg,rgba(255,255,255,.4),rgba(255,255,255,0) 70%);
-            border-radius:50%;pointer-events:none;
+        .school-gallery-slide.active img{transform:scale(1);}
+        .school-gallery-slide::after{
+            content:'';position:absolute;inset:0;
+            background:linear-gradient(0deg,rgba(0,0,0,.68),transparent 42%);pointer-events:none;
         }
-        .plane-window-cap{
-            display:block;text-align:center;margin-top:10px;font-family:var(--ff-mono);font-size:.62rem;
-            letter-spacing:.05em;color:rgba(247,241,236,.5);
+        .school-gallery-cap{
+            position:absolute;left:22px;right:22px;bottom:18px;color:#fff;
+            font-family:var(--ff-display);font-weight:600;font-size:1.05rem;
         }
+        .school-gallery-mark{
+            position:absolute;top:16px;left:20px;display:flex;align-items:center;gap:6px;
+            font-family:var(--ff-mono);font-size:.66rem;letter-spacing:.08em;color:rgba(247,241,236,.8);
+            text-transform:uppercase;
+        }
+        .school-gallery-mark svg{width:12px;height:12px;transform:rotate(90deg);}
+        .school-gallery-arrow{
+            position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;
+            background:rgba(18,16,15,.55);backdrop-filter:blur(4px);color:#fff;
+            display:flex;align-items:center;justify-content:center;transition:background .25s,transform .25s;
+        }
+        .school-gallery-arrow svg{width:19px;height:19px;}
+        .school-gallery-arrow:hover{background:rgba(228,87,46,.85);}
+        .school-gallery-arrow.prev{left:16px;}
+        .school-gallery-arrow.next{right:16px;}
+        .school-gallery-dots{display:flex;justify-content:center;gap:7px;margin-top:16px;}
+        .school-gallery-dots button{width:7px;height:7px;border-radius:50%;background:var(--line);transition:background .25s,width .25s;}
+        .school-gallery-dots button.active{background:var(--coral);width:20px;border-radius:4px;}
         @media (max-width:560px){
-            .plane-window{width:104px;}
-            .plane-window-frame{width:104px;height:136px;box-shadow:0 0 0 6px #EFEBE8,0 0 0 8px #B9B2AB,0 14px 22px -12px rgba(0,0,0,.5),inset 0 0 16px rgba(0,0,0,.4);}
+            .school-gallery-stage{aspect-ratio:4/3;}
+            .school-gallery-arrow{width:38px;height:38px;}
+            .school-gallery-arrow svg{width:16px;height:16px;}
+            .school-gallery-cap{font-size:.92rem;}
         }
         @media (prefers-reduced-motion:reduce){
-            .window-album-track{animation:none;}
+            .school-gallery-slide img,.school-gallery-track{transition:none;}
         }
 
         /* ===================== ALUMNI GALLERY BUTTON + MODAL ===================== */
@@ -1358,79 +1373,61 @@
             </div>
         </div>
 
-        <div class="window-album reveal">
-            <div class="window-album-head">
-                <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
-                <span data-i18n="windowAlbum.label">MIRA POR LA VENTANILLA</span>
+        <div class="school-gallery reveal">
+            <div class="school-gallery-head">
+                <div class="school-gallery-label">
+                    <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                    <span data-i18n="schoolGallery.label">ÁLBUM DE LA ESCUELA</span>
+                </div>
+                <span class="school-gallery-count"><span id="schoolGalleryCurrent">1</span>/<span id="schoolGalleryTotal">8</span></span>
             </div>
-            <div class="window-album-wrap">
-                <div class="window-album-track" id="windowAlbumTrack">
-                    <div class="plane-window">
-                        <div class="plane-window-frame"><img src="images/practicals-extintor.jpg" alt="Alumno practicando con extintor real" loading="lazy"></div>
-                        <span class="plane-window-cap" data-i18n="practicals.c1">Extinción de incendios</span>
+            <div class="school-gallery-stage" id="schoolGalleryStage">
+                <div class="school-gallery-track" id="schoolGalleryTrack">
+                    <div class="school-gallery-slide active">
+                        <img src="images/practicals-extintor.jpg" alt="Alumno practicando con extintor real" loading="lazy">
+                        <span class="school-gallery-mark"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>GLOBAL CREW</span>
+                        <span class="school-gallery-cap" data-i18n="practicals.c1">Extinción de incendios</span>
                     </div>
-                    <div class="plane-window">
-                        <div class="plane-window-frame"><img src="images/practicals-salvavidas.jpg" alt="Alumna con chaleco salvavidas" loading="lazy"></div>
-                        <span class="plane-window-cap" data-i18n="practicals.c2">Supervivencia en el agua</span>
+                    <div class="school-gallery-slide">
+                        <img src="images/practicals-salvavidas.jpg" alt="Alumna con chaleco salvavidas" loading="lazy">
+                        <span class="school-gallery-mark"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>GLOBAL CREW</span>
+                        <span class="school-gallery-cap" data-i18n="practicals.c2">Supervivencia en el agua</span>
                     </div>
-                    <div class="plane-window">
-                        <div class="plane-window-frame"><img src="images/practicals-exit-sign.jpg" alt="Alumna con señal de salida de emergencia" style="object-position:top;" loading="lazy"></div>
-                        <span class="plane-window-cap" data-i18n="practicals.c3">Señalización de emergencia</span>
+                    <div class="school-gallery-slide">
+                        <img src="images/practicals-exit-sign.jpg" alt="Alumna con señal de salida de emergencia" style="object-position:top;" loading="lazy">
+                        <span class="school-gallery-mark"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>GLOBAL CREW</span>
+                        <span class="school-gallery-cap" data-i18n="practicals.c3">Señalización de emergencia</span>
                     </div>
-                    <div class="plane-window">
-                        <div class="plane-window-frame"><img src="images/practicals-oxigeno.jpg" alt="Alumno con máscara de oxígeno" loading="lazy"></div>
-                        <span class="plane-window-cap" data-i18n="practicals.c4">Material de emergencia</span>
+                    <div class="school-gallery-slide">
+                        <img src="images/practicals-oxigeno.jpg" alt="Alumno con máscara de oxígeno" loading="lazy">
+                        <span class="school-gallery-mark"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>GLOBAL CREW</span>
+                        <span class="school-gallery-cap" data-i18n="practicals.c4">Material de emergencia</span>
                     </div>
-                    <div class="plane-window">
-                        <div class="plane-window-frame"><img src="images/practicals-tarjeta.jpg" alt="Alumna explicando tarjeta de salidas de emergencia" loading="lazy"></div>
-                        <span class="plane-window-cap" data-i18n="practicals.c5">Procedimientos de cabina</span>
+                    <div class="school-gallery-slide">
+                        <img src="images/practicals-tarjeta.jpg" alt="Alumna explicando tarjeta de salidas de emergencia" loading="lazy">
+                        <span class="school-gallery-mark"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>GLOBAL CREW</span>
+                        <span class="school-gallery-cap" data-i18n="practicals.c5">Procedimientos de cabina</span>
                     </div>
-                    <div class="plane-window">
-                        <div class="plane-window-frame"><img src="images/practicals-avion.jpg" alt="Alumno con maqueta de avión" style="object-position:top;" loading="lazy"></div>
-                        <span class="plane-window-cap" data-i18n="practicals.c6">Conocimientos de aviación</span>
+                    <div class="school-gallery-slide">
+                        <img src="images/practicals-avion.jpg" alt="Alumno con maqueta de avión" style="object-position:top;" loading="lazy">
+                        <span class="school-gallery-mark"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>GLOBAL CREW</span>
+                        <span class="school-gallery-cap" data-i18n="practicals.c6">Conocimientos de aviación</span>
                     </div>
-                    <div class="plane-window">
-                        <div class="plane-window-frame"><img src="images/footer-group.jpg" alt="Equipo y alumnos de Global Crew Valencia" loading="lazy"></div>
-                        <span class="plane-window-cap" data-i18n="windowAlbum.c7">Nuestro equipo</span>
+                    <div class="school-gallery-slide">
+                        <img src="images/footer-group.jpg" alt="Equipo y alumnos de Global Crew Valencia" loading="lazy">
+                        <span class="school-gallery-mark"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>GLOBAL CREW</span>
+                        <span class="school-gallery-cap" data-i18n="windowAlbum.c7">Nuestro equipo</span>
                     </div>
-                    <div class="plane-window">
-                        <div class="plane-window-frame"><img src="images/crew-manuel.jpg" alt="Manuel, instructor de Conocimientos Generales de Aviación" loading="lazy"></div>
-                        <span class="plane-window-cap" data-i18n="windowAlbum.c8">Instructores en activo</span>
-                    </div>
-                    <div class="plane-window" aria-hidden="true">
-                        <div class="plane-window-frame"><img src="images/practicals-extintor.jpg" alt="" loading="lazy"></div>
-                        <span class="plane-window-cap" data-i18n="practicals.c1">Extinción de incendios</span>
-                    </div>
-                    <div class="plane-window" aria-hidden="true">
-                        <div class="plane-window-frame"><img src="images/practicals-salvavidas.jpg" alt="" loading="lazy"></div>
-                        <span class="plane-window-cap" data-i18n="practicals.c2">Supervivencia en el agua</span>
-                    </div>
-                    <div class="plane-window" aria-hidden="true">
-                        <div class="plane-window-frame"><img src="images/practicals-exit-sign.jpg" alt="" style="object-position:top;" loading="lazy"></div>
-                        <span class="plane-window-cap" data-i18n="practicals.c3">Señalización de emergencia</span>
-                    </div>
-                    <div class="plane-window" aria-hidden="true">
-                        <div class="plane-window-frame"><img src="images/practicals-oxigeno.jpg" alt="" loading="lazy"></div>
-                        <span class="plane-window-cap" data-i18n="practicals.c4">Material de emergencia</span>
-                    </div>
-                    <div class="plane-window" aria-hidden="true">
-                        <div class="plane-window-frame"><img src="images/practicals-tarjeta.jpg" alt="" loading="lazy"></div>
-                        <span class="plane-window-cap" data-i18n="practicals.c5">Procedimientos de cabina</span>
-                    </div>
-                    <div class="plane-window" aria-hidden="true">
-                        <div class="plane-window-frame"><img src="images/practicals-avion.jpg" alt="" style="object-position:top;" loading="lazy"></div>
-                        <span class="plane-window-cap" data-i18n="practicals.c6">Conocimientos de aviación</span>
-                    </div>
-                    <div class="plane-window" aria-hidden="true">
-                        <div class="plane-window-frame"><img src="images/footer-group.jpg" alt="" loading="lazy"></div>
-                        <span class="plane-window-cap" data-i18n="windowAlbum.c7">Nuestro equipo</span>
-                    </div>
-                    <div class="plane-window" aria-hidden="true">
-                        <div class="plane-window-frame"><img src="images/crew-manuel.jpg" alt="" loading="lazy"></div>
-                        <span class="plane-window-cap" data-i18n="windowAlbum.c8">Instructores en activo</span>
+                    <div class="school-gallery-slide">
+                        <img src="images/crew-manuel.jpg" alt="Manuel, instructor de Conocimientos Generales de Aviación" loading="lazy">
+                        <span class="school-gallery-mark"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>GLOBAL CREW</span>
+                        <span class="school-gallery-cap" data-i18n="windowAlbum.c8">Instructores en activo</span>
                     </div>
                 </div>
+                <button type="button" class="school-gallery-arrow prev" id="schoolGalleryPrev" aria-label="Anterior"><svg viewBox="0 0 24 24"><use href="#icon-chevron-l"/></svg></button>
+                <button type="button" class="school-gallery-arrow next" id="schoolGalleryNext" aria-label="Siguiente"><svg viewBox="0 0 24 24"><use href="#icon-chevron-r"/></svg></button>
             </div>
+            <div class="school-gallery-dots" id="schoolGalleryDots"></div>
         </div>
     </div>
 </section>
@@ -2173,7 +2170,7 @@
             'gallery.eyebrow': 'NUESTRA ESCUELA', 'gallery.title': 'Así es un día en Global Crew.',
             'gallery.subtitle': 'Mira cómo es la escuela por dentro y descubre a algunos de los alumnos que ya están volando.',
             'gallery.videoFallback': '¿No carga?', 'gallery.videoLink': 'Ver vídeo en YouTube',
-            'windowAlbum.label': 'MIRA POR LA VENTANILLA', 'windowAlbum.c7': 'Nuestro equipo', 'windowAlbum.c8': 'Instructores en activo',
+            'schoolGallery.label': 'ÁLBUM DE LA ESCUELA', 'windowAlbum.c7': 'Nuestro equipo', 'windowAlbum.c8': 'Instructores en activo',
             'alumni.eyebrow': 'ALUMNOS CONTRATADOS',
             'alumni.fallback1.quote': '"Entré sin saber nada del sector y hoy vuelo con Iberia. Las prácticas reales en el A300 marcaron la diferencia."',
             'alumni.fallback1.airline': 'Ahora vuela con Iberia',
@@ -2309,7 +2306,7 @@
             'gallery.eyebrow': 'OUR SCHOOL', 'gallery.title': 'A day at Global Crew.',
             'gallery.subtitle': 'See what the school looks like inside and meet some of the students who are already flying.',
             'gallery.videoFallback': "Won't load?", 'gallery.videoLink': 'Watch the video on YouTube',
-            'windowAlbum.label': 'LOOK OUT THE WINDOW', 'windowAlbum.c7': 'Our team', 'windowAlbum.c8': 'Active instructors',
+            'schoolGallery.label': 'SCHOOL ALBUM', 'windowAlbum.c7': 'Our team', 'windowAlbum.c8': 'Active instructors',
             'alumni.eyebrow': 'HIRED STUDENTS',
             'alumni.fallback1.quote': '"I joined knowing nothing about the industry and now I fly with Iberia. The real practicals on the A300 made the difference."',
             'alumni.fallback1.airline': 'Now flying with Iberia',
@@ -2878,6 +2875,73 @@
             if (e.key === 'Escape') closeAlumniGallery();
         });
     }
+
+    /* ===================== SCHOOL GALLERY (large slideshow, prev/next) ===================== */
+    (function initSchoolGallery() {
+        const stage = document.getElementById('schoolGalleryStage');
+        const track = document.getElementById('schoolGalleryTrack');
+        const dotsWrap = document.getElementById('schoolGalleryDots');
+        const currentEl = document.getElementById('schoolGalleryCurrent');
+        const totalEl = document.getElementById('schoolGalleryTotal');
+        const prevBtn = document.getElementById('schoolGalleryPrev');
+        const nextBtn = document.getElementById('schoolGalleryNext');
+        if (!stage || !track) return;
+
+        const slides = [...track.querySelectorAll('.school-gallery-slide')];
+        const total = slides.length;
+        let index = 0;
+        let autoplay = null;
+        const AUTOPLAY_MS = 5500;
+
+        if (totalEl) totalEl.textContent = total;
+        dotsWrap.innerHTML = slides.map((_, i) => `<button type="button" data-i="${i}" aria-label="Foto ${i + 1}" class="${i === 0 ? 'active' : ''}"></button>`).join('');
+        const dots = [...dotsWrap.querySelectorAll('button')];
+
+        function render() {
+            track.style.transform = `translateX(-${index * 100}%)`;
+            slides.forEach((s, i) => s.classList.toggle('active', i === index));
+            dots.forEach((d, i) => d.classList.toggle('active', i === index));
+            if (currentEl) currentEl.textContent = index + 1;
+        }
+
+        function goTo(i) {
+            index = (i + total) % total;
+            render();
+        }
+        function next() { goTo(index + 1); }
+        function prev() { goTo(index - 1); }
+
+        function restartAutoplay() {
+            clearInterval(autoplay);
+            autoplay = setInterval(next, AUTOPLAY_MS);
+        }
+
+        prevBtn.addEventListener('click', () => { prev(); restartAutoplay(); });
+        nextBtn.addEventListener('click', () => { next(); restartAutoplay(); });
+        dots.forEach((d) => d.addEventListener('click', () => { goTo(parseInt(d.dataset.i, 10)); restartAutoplay(); }));
+
+        stage.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') { prev(); restartAutoplay(); }
+            if (e.key === 'ArrowRight') { next(); restartAutoplay(); }
+        });
+        stage.setAttribute('tabindex', '0');
+
+        // Touch / mouse swipe
+        let dragStartX = null;
+        stage.addEventListener('pointerdown', (e) => { dragStartX = e.clientX; });
+        stage.addEventListener('pointerup', (e) => {
+            if (dragStartX == null) return;
+            const dx = e.clientX - dragStartX;
+            if (Math.abs(dx) > 40) { dx < 0 ? next() : prev(); restartAutoplay(); }
+            dragStartX = null;
+        });
+
+        stage.addEventListener('mouseenter', () => clearInterval(autoplay));
+        stage.addEventListener('mouseleave', restartAutoplay);
+
+        render();
+        restartAutoplay();
+    })();
 
     /* ===================== NEXT COURSE DATE (from Blob) ===================== */
     let bpCourseDate = 'SEPTIEMBRE 2026';
