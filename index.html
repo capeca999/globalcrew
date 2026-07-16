@@ -114,6 +114,15 @@
             font-family:var(--ff-display);font-weight:700;letter-spacing:.06em;color:var(--steel-light);
         }
         .announce-bar svg{width:15px;height:15px;color:var(--steel-light);transform:rotate(90deg);flex-shrink:0;}
+        .hl-flash{
+            display:inline-block;background:var(--coral);color:var(--navy-950);
+            padding:1px 9px;border-radius:6px;font-weight:700;
+            animation:hlPulse 1.8s ease-in-out infinite;
+        }
+        @keyframes hlPulse{
+            0%,100%{box-shadow:0 0 0 0 rgba(228,87,46,.55);}
+            50%{box-shadow:0 0 0 6px rgba(228,87,46,0);}
+        }
         .announce-close{
             position:absolute;right:14px;top:50%;transform:translateY(-50%);
             width:24px;height:24px;border-radius:50%;color:rgba(247,241,236,.7);
@@ -419,6 +428,21 @@
         .pass-featured .pass-link{color:#fff;}
         .pass-featured .pass-link svg{color:#9FDCE8;}
         .pass-featured:hover{box-shadow:0 30px 60px -22px rgba(0,117,140,.55);}
+
+        /* Red course card (TCP normal) — same brand red as the logo */
+        .pass-red{background:var(--navy-950);border-color:var(--navy-950);}
+        .pass-red .pass-code{color:var(--coral);}
+        .pass-red .pass-main h3{color:#fff;}
+        .pass-red .pass-main p{color:rgba(255,255,255,.82);}
+        .pass-red .pass-list li{color:#fff;}
+        .pass-red .pass-list li::before{background:var(--coral);}
+        .pass-red .pass-tear{background:rgba(0,0,0,.18);border-top:1px dashed rgba(255,255,255,.25);}
+        .pass-red .pass-tear::before,.pass-red .pass-tear::after{background:var(--cream);}
+        .pass-red .pass-duration{color:rgba(255,255,255,.75);}
+        .pass-red .pass-duration b{color:#fff;}
+        .pass-red .pass-link{color:#fff;}
+        .pass-red .pass-link svg{color:var(--coral);}
+        .pass-red:hover{box-shadow:0 30px 60px -22px rgba(61,9,16,.55);}
 
         /* ===================== GALLERY / VIDEO + ALUMNI CAROUSEL ===================== */
         .gallery{background:var(--navy-950);padding:100px 0;color:var(--cream);position:relative;overflow:hidden;}
@@ -1075,8 +1099,8 @@
                 <div class="stat-label" data-i18n="stats.employability">Empleabilidad</div>
             </div>
             <div class="stat-card reveal" style="transition-delay:.3s">
-                <div class="stat-num"><span data-count="4">0</span></div>
-                <div class="stat-label" data-i18n="stats.execWeeks">Semanas, TCP Ejecutivo</div>
+                <div class="stat-num"><span data-count="1">0</span></div>
+                <div class="stat-label" data-i18n="stats.execWeeks">Semana, TCP Ejecutivo</div>
             </div>
         </div>
         <p class="stats-tagline reveal" style="transition-delay:.4s"><svg viewBox="0 0 24 24" style="width:15px;height:15px;transform:rotate(90deg);vertical-align:-2px;margin-right:6px;"><use href="#icon-plane"/></svg><span data-i18n="stats.tagline">La escuela TCP de Valencia con más alumnos volando</span></p>
@@ -1139,7 +1163,7 @@
             <p data-i18n="courses.subtitle">Formación oficial AESA según el Reglamento (UE) nº 290/2012, con prácticas reales en un avión de Iberia desde el primer mes.</p>
         </div>
         <div class="course-grid course-grid-2">
-            <div class="pass reveal">
+            <div class="pass pass-red reveal">
                 <div class="pass-main">
                     <span class="pass-code">TCP · 01</span>
                     <h3 data-i18n="courses.tcp.name">Tripulante de Cabina de Pasajeros</h3>
@@ -1171,7 +1195,7 @@
                     </ul>
                 </div>
                 <div class="pass-tear">
-                    <div class="pass-duration"><span data-i18n="courses.duration">DURACIÓN</span><b data-i18n="courses.exec.weeks">4 semanas</b></div>
+                    <div class="pass-duration"><span data-i18n="courses.duration">DURACIÓN</span><b data-i18n="courses.exec.weeks">1 semana</b></div>
                     <button type="button" class="pass-link" data-course="tcp-exp"><span data-i18n="courses.more">Saber más</span> <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></button>
                 </div>
             </div>
@@ -1329,25 +1353,25 @@
         </div>
         <div class="team-grid">
             <div class="crew-card reveal">
+                <img class="crew-photo" src="images/crew-kike.jpg" alt="Kike, director de formación de Global Crew Valencia" loading="lazy">
+                <h4>Kike</h4>
+                <div class="role" data-i18n="team.kike.role">TCP en Iberia · Director de la escuela</div>
+                <span class="crew-subject" data-i18n="team.kike.subject">Preparación de entrevistas y orientación laboral</span>
+                <p class="crew-bio" data-i18n="team.kike.bio">TCP en Iberia. Como director de Global Crew, prepara a cada alumno de forma individual para sus entrevistas y le acompaña hasta verle volar.</p>
+            </div>
+            <div class="crew-card reveal" style="transition-delay:.08s">
                 <img class="crew-photo" src="images/crew-nabila.jpg" alt="Nabila, instructora de Medicina Aeronáutica" loading="lazy">
                 <h4>Nabila</h4>
                 <div class="role" data-i18n="team.nabila.role">Enfermera · Instructora</div>
                 <span class="crew-subject" data-i18n="team.nabila.subject">Medicina aeronáutica y primeros auxilios</span>
                 <p class="crew-bio" data-i18n="team.nabila.bio">Enfermera en activo. Enseña a los alumnos a administrar oxígeno, hacer RCP y actuar ante cualquier emergencia médica a bordo.</p>
             </div>
-            <div class="crew-card reveal" style="transition-delay:.08s">
+            <div class="crew-card reveal" style="transition-delay:.16s">
                 <img class="crew-photo" src="images/crew-manuel.jpg" alt="Manuel, instructor de Conocimientos Generales de Aviación" loading="lazy">
                 <h4>Manuel</h4>
                 <div class="role" data-i18n="team.manuel.role">Piloto · Instructor</div>
                 <span class="crew-subject" data-i18n="team.manuel.subject">Conocimientos generales de aviación</span>
                 <p class="crew-bio" data-i18n="team.manuel.bio">Piloto en activo. Acerca a los alumnos la realidad de la navegación aérea y el funcionamiento de una aeronave desde la cabina de mando.</p>
-            </div>
-            <div class="crew-card reveal" style="transition-delay:.16s">
-                <img class="crew-photo" src="images/crew-kike.jpg" alt="Kike, director de formación de Global Crew Valencia" loading="lazy">
-                <h4>Kike</h4>
-                <div class="role" data-i18n="team.kike.role">TCP en Iberia · Director de la escuela</div>
-                <span class="crew-subject" data-i18n="team.kike.subject">Preparación de entrevistas y orientación laboral</span>
-                <p class="crew-bio" data-i18n="team.kike.bio">TCP en Iberia. Como director de Global Crew, prepara a cada alumno de forma individual para sus entrevistas y le acompaña hasta verle volar.</p>
             </div>
             <div class="crew-card reveal">
                 <img class="crew-photo" src="images/crew-david.jpg" alt="David, instructor de Operación Normal y Emergencia" loading="lazy">
@@ -1720,7 +1744,7 @@
                 code: 'TCP · EJECUTIVO',
                 title: 'TCP Ejecutivo',
                 tagline: 'El complemento para llevar tu formación de Cabin Crew a otro nivel y acceder a más oportunidades: servicio VIP, protocolo y aviación privada.',
-                meta: ['4 semanas', 'Presencial · Valencia', 'Complemento a tu formación TCP'],
+                meta: ['1 semana', 'Presencial · Valencia', 'Complemento a tu formación TCP'],
                 blocks: [
                     {
                         heading: '4 asignaturas exclusivas TCP Ejecutivo',
@@ -1802,7 +1826,7 @@
                 code: 'TCP · EXECUTIVE',
                 title: 'Executive Cabin Crew',
                 tagline: 'The add-on to take your Cabin Crew training to the next level and access more opportunities: VIP service, protocol and private aviation.',
-                meta: ['4 weeks', 'On-site · Valencia', 'Complement to your Cabin Crew training'],
+                meta: ['1 week', 'On-site · Valencia', 'Complement to your Cabin Crew training'],
                 blocks: [
                     {
                         heading: '4 exclusive Executive Cabin Crew subjects',
@@ -1884,6 +1908,16 @@
         });
     }
 
+    // Turns *word* into an eye-catching highlighted badge. Escapes HTML first
+    // since this text can come from the CMS/API, then wraps *marked* segments.
+    function highlightStars(text) {
+        const escaped = String(text == null ? '' : text)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return escaped.replace(/\*(.+?)\*/g, '<span class="hl-flash">$1</span>');
+    }
+    const nextCourseEl = document.getElementById('nextCourseDate');
+    if (nextCourseEl) nextCourseEl.innerHTML = highlightStars(nextCourseEl.textContent);
+
     /* ===================== I18N (ES / EN) ===================== */
     const I18N = {
         es: {
@@ -1909,7 +1943,7 @@
             'wp.09': 'WP09 · ANTES DE DESPEGAR', 'wp.09dest': 'RESOLVEMOS TUS DUDAS',
             'wp.10': 'WP10 · EMBARQUE INMEDIATO', 'wp.10dest': 'HABLEMOS',
             'stats.years': 'Años formando TCP', 'stats.students': 'Alumnos formados',
-            'stats.employability': 'Empleabilidad', 'stats.execWeeks': 'Semanas, TCP Ejecutivo',
+            'stats.employability': 'Empleabilidad', 'stats.execWeeks': 'Semana, TCP Ejecutivo',
             'stats.tagline': 'La escuela TCP de Valencia con más alumnos volando',
             'testPromo.eyebrow': 'TEST RÁPIDO · 1 MINUTO',
             'testPromo.title': '¿Tienes lo que hace falta para ser Cabin Crew?',
@@ -1929,7 +1963,7 @@
             'courses.duration': 'DURACIÓN', 'courses.tcp.weeks': '9 semanas', 'courses.more': 'Saber más',
             'courses.exec.name': 'TCP Ejecutivo',
             'courses.exec.desc': 'El complemento para llevar tu formación de Cabin Crew a otro nivel y acceder a más oportunidades: servicio VIP, protocolo y aviación privada.',
-            'courses.exec.li1': '4 asignaturas exclusivas TCP Ejecutivo', 'courses.exec.weeks': '4 semanas',
+            'courses.exec.li1': '4 asignaturas exclusivas TCP Ejecutivo', 'courses.exec.weeks': '1 semana',
             'gallery.eyebrow': 'NUESTRA ESCUELA', 'gallery.title': 'Así es un día en Global Crew.',
             'gallery.subtitle': 'Mira cómo es la escuela por dentro y descubre a algunos de los alumnos que ya están volando.',
             'gallery.videoFallback': '¿No carga?', 'gallery.videoLink': 'Ver vídeo en YouTube',
@@ -2033,7 +2067,7 @@
             'wp.09': 'WP09 · BEFORE TAKEOFF', 'wp.09dest': 'WE ANSWER YOUR QUESTIONS',
             'wp.10': 'WP10 · IMMEDIATE BOARDING', 'wp.10dest': "LET'S TALK",
             'stats.years': 'Years training Cabin Crew', 'stats.students': 'Students trained',
-            'stats.employability': 'Employability', 'stats.execWeeks': 'Weeks, Executive Cabin Crew',
+            'stats.employability': 'Employability', 'stats.execWeeks': 'Week, Executive Cabin Crew',
             'stats.tagline': 'The Cabin Crew school in Valencia with the most students flying',
             'testPromo.eyebrow': 'QUICK TEST · 1 MINUTE',
             'testPromo.title': 'Do you have what it takes to be Cabin Crew?',
@@ -2053,7 +2087,7 @@
             'courses.duration': 'DURATION', 'courses.tcp.weeks': '9 weeks', 'courses.more': 'Learn more',
             'courses.exec.name': 'Executive Cabin Crew',
             'courses.exec.desc': 'The add-on to take your Cabin Crew training to the next level and access more opportunities: VIP service, protocol and private aviation.',
-            'courses.exec.li1': '4 exclusive Executive Cabin Crew subjects', 'courses.exec.weeks': '4 weeks',
+            'courses.exec.li1': '4 exclusive Executive Cabin Crew subjects', 'courses.exec.weeks': '1 week',
             'gallery.eyebrow': 'OUR SCHOOL', 'gallery.title': 'A day at Global Crew.',
             'gallery.subtitle': 'See what the school looks like inside and meet some of the students who are already flying.',
             'gallery.videoFallback': "Won't load?", 'gallery.videoLink': 'Watch the video on YouTube',
@@ -3153,7 +3187,7 @@
             }
             if (data.nextCourseText) {
                 bpCourseDate = data.nextCourseText;
-                if (courseEl) courseEl.textContent = data.nextCourseText;
+                if (courseEl) courseEl.innerHTML = highlightStars(data.nextCourseText);
             }
         } catch (err) {
             // No API available (e.g. hosted outside Vercel) — keep the built-in examples already in the HTML.
