@@ -513,6 +513,49 @@
         .airline-plane-badge svg{width:24px;height:24px;color:#fff;transform:rotate(90deg);}
         .alumni-nav{display:flex;align-items:center;justify-content:space-between;margin-top:22px;}
 
+        /* ===================== WINDOW PHOTO ALBUM (auto, no tap needed) ===================== */
+        .window-album{margin-top:26px;}
+        .window-album-head{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+        .window-album-head svg{width:14px;height:14px;color:var(--steel-light);transform:rotate(90deg);flex-shrink:0;}
+        .window-album-head span{
+            font-family:var(--ff-mono);font-size:.72rem;letter-spacing:.08em;color:var(--steel-light);
+            text-transform:uppercase;
+        }
+        .window-album-wrap{
+            position:relative;overflow:hidden;border-radius:var(--radius-lg);
+            background:linear-gradient(180deg,#2a2320,#1c1715);padding:30px 0;
+            -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+            mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+        }
+        .window-album-track{display:flex;gap:22px;width:max-content;animation:windowScroll 26s linear infinite;}
+        .window-album-wrap:hover .window-album-track,
+        .window-album-wrap:active .window-album-track{animation-play-state:paused;}
+        @keyframes windowScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+        .plane-window{flex:0 0 auto;width:126px;}
+        .plane-window-frame{
+            position:relative;width:126px;height:162px;
+            border-radius:50% 50% 46% 46% / 58% 58% 42% 42%;
+            overflow:hidden;background:#0e0c0b;
+            box-shadow:0 0 0 7px #EFEBE8,0 0 0 10px #B9B2AB,0 16px 26px -12px rgba(0,0,0,.5),inset 0 0 20px rgba(0,0,0,.4);
+        }
+        .plane-window-frame img{width:100%;height:100%;object-fit:cover;display:block;}
+        .plane-window-frame::after{
+            content:'';position:absolute;top:9%;left:12%;width:34%;height:26%;
+            background:linear-gradient(135deg,rgba(255,255,255,.4),rgba(255,255,255,0) 70%);
+            border-radius:50%;pointer-events:none;
+        }
+        .plane-window-cap{
+            display:block;text-align:center;margin-top:10px;font-family:var(--ff-mono);font-size:.62rem;
+            letter-spacing:.05em;color:rgba(247,241,236,.5);
+        }
+        @media (max-width:560px){
+            .plane-window{width:104px;}
+            .plane-window-frame{width:104px;height:136px;box-shadow:0 0 0 6px #EFEBE8,0 0 0 8px #B9B2AB,0 14px 22px -12px rgba(0,0,0,.5),inset 0 0 16px rgba(0,0,0,.4);}
+        }
+        @media (prefers-reduced-motion:reduce){
+            .window-album-track{animation:none;}
+        }
+
         /* ===================== ALUMNI GALLERY BUTTON + MODAL ===================== */
         .alumni-carousel{position:relative;}
         .alumni-gallery-btn{
@@ -850,6 +893,50 @@
             .testi p{font-size:1.1rem;}
         }
 
+        /* ===================== PRICING ===================== */
+        .pricing-section{background:var(--cream);padding:100px 0;}
+        .pricing-card{
+            max-width:560px;margin:0 auto;background:var(--navy-950);color:var(--cream);
+            border-radius:var(--radius-lg);padding:46px 40px 40px;position:relative;overflow:hidden;
+            box-shadow:0 40px 80px -30px rgba(61,9,16,.5);
+        }
+        .pricing-card::before{
+            content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;
+            background:radial-gradient(circle,rgba(228,87,46,.18),transparent 70%);pointer-events:none;
+        }
+        .pricing-kicker{
+            font-family:var(--ff-mono);font-size:.72rem;letter-spacing:.1em;color:var(--coral);
+            text-transform:uppercase;display:flex;align-items:center;gap:8px;position:relative;
+        }
+        .pricing-kicker svg{width:15px;height:15px;transform:rotate(90deg);}
+        .pricing-course-name{font-family:var(--ff-display);font-size:1.5rem;margin-top:12px;color:#fff;position:relative;}
+        .pricing-amount{font-family:var(--ff-display);font-weight:700;font-size:3.6rem;margin-top:16px;color:#fff;line-height:1;position:relative;}
+        .pricing-amount span{font-size:1.05rem;font-weight:500;color:rgba(247,241,236,.55);margin-left:8px;}
+        .pricing-includes-label{
+            font-family:var(--ff-mono);font-size:.72rem;letter-spacing:.08em;color:rgba(247,241,236,.55);
+            margin-top:32px;text-transform:uppercase;position:relative;
+        }
+        .pricing-list{margin-top:16px;display:flex;flex-direction:column;gap:13px;position:relative;}
+        .pricing-list li{display:flex;align-items:flex-start;gap:11px;font-size:.96rem;color:rgba(247,241,236,.94);}
+        .pricing-list li svg{width:18px;height:18px;color:var(--coral);flex-shrink:0;margin-top:1px;}
+        .pricing-divider{margin:32px 0 22px;border:none;border-top:1px dashed rgba(247,241,236,.25);position:relative;}
+        .pricing-deposit{font-family:var(--ff-mono);font-size:.86rem;color:rgba(247,241,236,.85);position:relative;}
+        .pricing-deposit b{color:#fff;}
+        .pricing-financing{font-size:.85rem;color:rgba(247,241,236,.58);margin-top:7px;position:relative;}
+        .pricing-cta{
+            margin-top:28px;display:inline-flex;align-items:center;gap:8px;background:var(--coral);color:var(--navy-950);
+            font-family:var(--ff-display);font-weight:700;font-size:.92rem;padding:14px 28px;border-radius:100px;
+            transition:transform .3s var(--ease);position:relative;
+        }
+        .pricing-cta svg{width:15px;height:15px;transform:rotate(90deg);transition:transform .35s var(--ease);}
+        .pricing-cta:hover{transform:translateY(-3px);}
+        .pricing-cta:hover svg{transform:rotate(90deg) translateY(-4px);}
+        .pricing-note{margin-top:20px;font-size:.82rem;color:rgba(247,241,236,.5);position:relative;}
+        @media (max-width:560px){
+            .pricing-card{padding:36px 26px 32px;}
+            .pricing-amount{font-size:2.9rem;}
+        }
+
         /* ===================== FAQ ===================== */
         .faq-section{background:var(--cream);padding:100px 0;}
         .faq-list{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
@@ -996,6 +1083,7 @@
     <symbol id="icon-star" viewBox="0 0 24 24"><path d="M12 2.5L14.8 9.1L22 9.7L16.5 14.3L18.2 21.3L12 17.4L5.8 21.3L7.5 14.3L2 9.7L9.2 9.1L12 2.5Z" fill="currentColor"/></symbol>
     <symbol id="icon-gallery" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="3" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="3" y="13" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="13" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/></symbol>
     <symbol id="icon-close" viewBox="0 0 24 24" fill="none"><path d="M5 5L19 19M19 5L5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24" fill="none"><path d="M5 12.5L9.5 17L19 6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="icon-ig" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor"/></symbol>
     <symbol id="icon-li" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M7 10V17M7 7V7.01M11 17V10M11 13C11 11 13 10 14.5 10.8C15.5 11.3 16 12.2 16 13.3V17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
     <symbol id="icon-tt" viewBox="0 0 24 24" fill="none"><path d="M16 3C16.3 5.5 18 7.2 20.5 7.5V10.5C18.7 10.5 17.2 9.9 16 8.9V15.5C16 18.5 13.5 21 10.5 21C7.5 21 5 18.5 5 15.5C5 12.5 7.5 10 10.5 10C10.8 10 11.1 10 11.4 10.1V13.2C11.1 13.1 10.8 13 10.5 13C9.1 13 8 14.1 8 15.5C8 16.9 9.1 18 10.5 18C11.9 18 13 16.9 13 15.5V3H16Z" stroke="currentColor" stroke-width="1.2" fill="currentColor"/></symbol>
@@ -1269,8 +1357,84 @@
                 </div>
             </div>
         </div>
+
+        <div class="window-album reveal">
+            <div class="window-album-head">
+                <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                <span data-i18n="windowAlbum.label">MIRA POR LA VENTANILLA</span>
+            </div>
+            <div class="window-album-wrap">
+                <div class="window-album-track" id="windowAlbumTrack">
+                    <div class="plane-window">
+                        <div class="plane-window-frame"><img src="images/practicals-extintor.jpg" alt="Alumno practicando con extintor real" loading="lazy"></div>
+                        <span class="plane-window-cap" data-i18n="practicals.c1">Extinción de incendios</span>
+                    </div>
+                    <div class="plane-window">
+                        <div class="plane-window-frame"><img src="images/practicals-salvavidas.jpg" alt="Alumna con chaleco salvavidas" loading="lazy"></div>
+                        <span class="plane-window-cap" data-i18n="practicals.c2">Supervivencia en el agua</span>
+                    </div>
+                    <div class="plane-window">
+                        <div class="plane-window-frame"><img src="images/practicals-exit-sign.jpg" alt="Alumna con señal de salida de emergencia" style="object-position:top;" loading="lazy"></div>
+                        <span class="plane-window-cap" data-i18n="practicals.c3">Señalización de emergencia</span>
+                    </div>
+                    <div class="plane-window">
+                        <div class="plane-window-frame"><img src="images/practicals-oxigeno.jpg" alt="Alumno con máscara de oxígeno" loading="lazy"></div>
+                        <span class="plane-window-cap" data-i18n="practicals.c4">Material de emergencia</span>
+                    </div>
+                    <div class="plane-window">
+                        <div class="plane-window-frame"><img src="images/practicals-tarjeta.jpg" alt="Alumna explicando tarjeta de salidas de emergencia" loading="lazy"></div>
+                        <span class="plane-window-cap" data-i18n="practicals.c5">Procedimientos de cabina</span>
+                    </div>
+                    <div class="plane-window">
+                        <div class="plane-window-frame"><img src="images/practicals-avion.jpg" alt="Alumno con maqueta de avión" style="object-position:top;" loading="lazy"></div>
+                        <span class="plane-window-cap" data-i18n="practicals.c6">Conocimientos de aviación</span>
+                    </div>
+                    <div class="plane-window">
+                        <div class="plane-window-frame"><img src="images/footer-group.jpg" alt="Equipo y alumnos de Global Crew Valencia" loading="lazy"></div>
+                        <span class="plane-window-cap" data-i18n="windowAlbum.c7">Nuestro equipo</span>
+                    </div>
+                    <div class="plane-window">
+                        <div class="plane-window-frame"><img src="images/crew-manuel.jpg" alt="Manuel, instructor de Conocimientos Generales de Aviación" loading="lazy"></div>
+                        <span class="plane-window-cap" data-i18n="windowAlbum.c8">Instructores en activo</span>
+                    </div>
+                    <div class="plane-window" aria-hidden="true">
+                        <div class="plane-window-frame"><img src="images/practicals-extintor.jpg" alt="" loading="lazy"></div>
+                        <span class="plane-window-cap" data-i18n="practicals.c1">Extinción de incendios</span>
+                    </div>
+                    <div class="plane-window" aria-hidden="true">
+                        <div class="plane-window-frame"><img src="images/practicals-salvavidas.jpg" alt="" loading="lazy"></div>
+                        <span class="plane-window-cap" data-i18n="practicals.c2">Supervivencia en el agua</span>
+                    </div>
+                    <div class="plane-window" aria-hidden="true">
+                        <div class="plane-window-frame"><img src="images/practicals-exit-sign.jpg" alt="" style="object-position:top;" loading="lazy"></div>
+                        <span class="plane-window-cap" data-i18n="practicals.c3">Señalización de emergencia</span>
+                    </div>
+                    <div class="plane-window" aria-hidden="true">
+                        <div class="plane-window-frame"><img src="images/practicals-oxigeno.jpg" alt="" loading="lazy"></div>
+                        <span class="plane-window-cap" data-i18n="practicals.c4">Material de emergencia</span>
+                    </div>
+                    <div class="plane-window" aria-hidden="true">
+                        <div class="plane-window-frame"><img src="images/practicals-tarjeta.jpg" alt="" loading="lazy"></div>
+                        <span class="plane-window-cap" data-i18n="practicals.c5">Procedimientos de cabina</span>
+                    </div>
+                    <div class="plane-window" aria-hidden="true">
+                        <div class="plane-window-frame"><img src="images/practicals-avion.jpg" alt="" style="object-position:top;" loading="lazy"></div>
+                        <span class="plane-window-cap" data-i18n="practicals.c6">Conocimientos de aviación</span>
+                    </div>
+                    <div class="plane-window" aria-hidden="true">
+                        <div class="plane-window-frame"><img src="images/footer-group.jpg" alt="" loading="lazy"></div>
+                        <span class="plane-window-cap" data-i18n="windowAlbum.c7">Nuestro equipo</span>
+                    </div>
+                    <div class="plane-window" aria-hidden="true">
+                        <div class="plane-window-frame"><img src="images/crew-manuel.jpg" alt="" loading="lazy"></div>
+                        <span class="plane-window-cap" data-i18n="windowAlbum.c8">Instructores en activo</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
+
 
 <!-- ============ ALUMNI FULL GALLERY MODAL ============ -->
 <div class="alumni-gallery-overlay" id="alumniGalleryOverlay">
@@ -1468,9 +1632,50 @@
 
 <div class="route-divider" data-wp="9">
     <div class="route-inner">
-        <span class="route-label" data-i18n="wp.09">WP09 · ANTES DE DESPEGAR</span>
+        <span class="route-label" data-i18n="wp.09">WP09 · TU INVERSIÓN</span>
         <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-        <span class="route-dest" data-i18n="wp.09dest">RESOLVEMOS TUS DUDAS</span>
+        <span class="route-dest" data-i18n="wp.09dest">LO QUE INCLUYE TU FORMACIÓN</span>
+    </div>
+</div>
+
+<!-- ============ PRICING ============ -->
+<section class="pricing-section">
+    <div class="wrap">
+        <div class="section-head reveal">
+            <span class="eyebrow" data-i18n="pricing.eyebrow">TU INVERSIÓN</span>
+            <h2 data-i18n="pricing.title">Antes de hablar de precio, mira todo lo que incluye.</h2>
+            <p data-i18n="pricing.subtitle">Formación oficial AESA, prácticas reales, preparación de entrevistas y acompañamiento hasta que empieces a volar — todo en un único programa.</p>
+        </div>
+        <div class="pricing-card reveal">
+            <div class="pricing-kicker">
+                <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                <span data-i18n="pricing.kicker">INVERSIÓN EN TU FUTURO</span>
+            </div>
+            <div class="pricing-course-name" data-i18n="pricing.courseName">Curso TCP homologado AESA</div>
+            <div class="pricing-amount">3.300&nbsp;€ <span data-i18n="pricing.vat">IVA incluido</span></div>
+            <div class="pricing-includes-label" data-i18n="pricing.includesLabel">INCLUYE</div>
+            <ul class="pricing-list">
+                <li><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg><span data-i18n="pricing.li1">Formación teórica y práctica oficial AESA</span></li>
+                <li><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg><span data-i18n="pricing.li2">Uniforme completo</span></li>
+                <li><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg><span data-i18n="pricing.li3">Simuladores de vuelo</span></li>
+                <li><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg><span data-i18n="pricing.li4">Preparación de entrevistas con aerolíneas</span></li>
+                <li><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg><span data-i18n="pricing.li5">Formación adicional exclusiva de Global Crew</span></li>
+                <li><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg><span data-i18n="pricing.li6">Acompañamiento laboral incluso después de empezar a volar</span></li>
+            </ul>
+            <hr class="pricing-divider">
+            <div class="pricing-deposit"><span data-i18n="pricing.depositLabel">Reserva de plaza:</span> <b data-i18n="pricing.depositAmount">300 €</b></div>
+            <p class="pricing-financing" data-i18n="pricing.financing">Financiación hasta 12 meses sin intereses.</p>
+            <a href="#contacto" class="pricing-cta"><span data-i18n="pricing.cta">Habla con un profesor</span> <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></a>
+            <p class="pricing-note" data-i18n="pricing.execNote">¿Te interesa el TCP Ejecutivo? Pregúntanos por el precio de este complemento.</p>
+        </div>
+    </div>
+</section>
+
+<div class="route-divider" data-wp="10">
+    <div class="route-inner">
+        <span class="route-label" data-i18n="wp.10">WP10 · ANTES DE DESPEGAR</span>
+        <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
+        <span class="route-dest" data-i18n="wp.10dest">RESOLVEMOS TUS DUDAS</span>
     </div>
 </div>
 
@@ -1536,11 +1741,11 @@
     </div>
 </section>
 
-<div class="route-divider" data-wp="10">
+<div class="route-divider" data-wp="11">
     <div class="route-inner">
-        <span class="route-label" data-i18n="wp.10">WP10 · EMBARQUE INMEDIATO</span>
+        <span class="route-label" data-i18n="wp.11">WP11 · EMBARQUE INMEDIATO</span>
         <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-        <span class="route-dest" data-i18n="wp.10dest">HABLEMOS</span>
+        <span class="route-dest" data-i18n="wp.11dest">HABLEMOS</span>
     </div>
 </div>
 
@@ -1940,8 +2145,9 @@
             'wp.06': 'WP06 · TRIPULACIÓN DOCENTE', 'wp.06dest': 'CONOCE A TUS INSTRUCTORES',
             'wp.07': 'WP07 · RECONOCIMIENTO', 'wp.07dest': 'RESPALDO OFICIAL',
             'wp.08': 'WP08 · DESTINO FINAL', 'wp.08dest': 'TU CARRERA',
-            'wp.09': 'WP09 · ANTES DE DESPEGAR', 'wp.09dest': 'RESOLVEMOS TUS DUDAS',
-            'wp.10': 'WP10 · EMBARQUE INMEDIATO', 'wp.10dest': 'HABLEMOS',
+            'wp.09': 'WP09 · TU INVERSIÓN', 'wp.09dest': 'LO QUE INCLUYE TU FORMACIÓN',
+            'wp.10': 'WP10 · ANTES DE DESPEGAR', 'wp.10dest': 'RESOLVEMOS TUS DUDAS',
+            'wp.11': 'WP11 · EMBARQUE INMEDIATO', 'wp.11dest': 'HABLEMOS',
             'stats.years': 'Años formando TCP', 'stats.students': 'Alumnos formados',
             'stats.employability': 'Empleabilidad', 'stats.execWeeks': 'Semana, TCP Ejecutivo',
             'stats.tagline': 'La escuela TCP de Valencia con más alumnos volando',
@@ -1967,6 +2173,7 @@
             'gallery.eyebrow': 'NUESTRA ESCUELA', 'gallery.title': 'Así es un día en Global Crew.',
             'gallery.subtitle': 'Mira cómo es la escuela por dentro y descubre a algunos de los alumnos que ya están volando.',
             'gallery.videoFallback': '¿No carga?', 'gallery.videoLink': 'Ver vídeo en YouTube',
+            'windowAlbum.label': 'MIRA POR LA VENTANILLA', 'windowAlbum.c7': 'Nuestro equipo', 'windowAlbum.c8': 'Instructores en activo',
             'alumni.eyebrow': 'ALUMNOS CONTRATADOS',
             'alumni.fallback1.quote': '"Entré sin saber nada del sector y hoy vuelo con Iberia. Las prácticas reales en el A300 marcaron la diferencia."',
             'alumni.fallback1.airline': 'Ahora vuela con Iberia',
@@ -2011,6 +2218,16 @@
             'testi.a2': '— Alumno, TCP Ejecutivo',
             'testi.q3': '"El acompañamiento hasta la entrevista fue clave. Me prepararon de forma individual hasta que conseguí volar."',
             'testi.a3': '— Alumno, promoción TCP',
+            'pricing.eyebrow': 'TU INVERSIÓN', 'pricing.title': 'Antes de hablar de precio, mira todo lo que incluye.',
+            'pricing.subtitle': 'Formación oficial AESA, prácticas reales, preparación de entrevistas y acompañamiento hasta que empieces a volar — todo en un único programa.',
+            'pricing.kicker': 'INVERSIÓN EN TU FUTURO', 'pricing.courseName': 'Curso TCP homologado AESA', 'pricing.vat': 'IVA incluido',
+            'pricing.includesLabel': 'INCLUYE',
+            'pricing.li1': 'Formación teórica y práctica oficial AESA', 'pricing.li2': 'Uniforme completo',
+            'pricing.li3': 'Simuladores de vuelo', 'pricing.li4': 'Preparación de entrevistas con aerolíneas',
+            'pricing.li5': 'Formación adicional exclusiva de Global Crew', 'pricing.li6': 'Acompañamiento laboral incluso después de empezar a volar',
+            'pricing.depositLabel': 'Reserva de plaza:', 'pricing.depositAmount': '300 €',
+            'pricing.financing': 'Financiación hasta 12 meses sin intereses.', 'pricing.cta': 'Habla con un profesor',
+            'pricing.execNote': '¿Te interesa el TCP Ejecutivo? Pregúntanos por el precio de este complemento.',
             'faq.eyebrow': 'PREGUNTAS FRECUENTES', 'faq.title': 'Lo que todo el mundo nos pregunta.',
             'faq.subtitle': 'Y si tu duda no está aquí, escríbenos por WhatsApp y te respondemos al momento.',
             'faq.q1': '¿Qué os diferencia de otras escuelas TCP?',
@@ -2064,8 +2281,9 @@
             'wp.06': 'WP06 · TEACHING CREW', 'wp.06dest': 'MEET YOUR INSTRUCTORS',
             'wp.07': 'WP07 · RECOGNITION', 'wp.07dest': 'OFFICIAL BACKING',
             'wp.08': 'WP08 · FINAL DESTINATION', 'wp.08dest': 'YOUR CAREER',
-            'wp.09': 'WP09 · BEFORE TAKEOFF', 'wp.09dest': 'WE ANSWER YOUR QUESTIONS',
-            'wp.10': 'WP10 · IMMEDIATE BOARDING', 'wp.10dest': "LET'S TALK",
+            'wp.09': 'WP09 · YOUR INVESTMENT', 'wp.09dest': "WHAT'S INCLUDED",
+            'wp.10': 'WP10 · BEFORE TAKEOFF', 'wp.10dest': 'WE ANSWER YOUR QUESTIONS',
+            'wp.11': 'WP11 · IMMEDIATE BOARDING', 'wp.11dest': "LET'S TALK",
             'stats.years': 'Years training Cabin Crew', 'stats.students': 'Students trained',
             'stats.employability': 'Employability', 'stats.execWeeks': 'Week, Executive Cabin Crew',
             'stats.tagline': 'The Cabin Crew school in Valencia with the most students flying',
@@ -2091,6 +2309,7 @@
             'gallery.eyebrow': 'OUR SCHOOL', 'gallery.title': 'A day at Global Crew.',
             'gallery.subtitle': 'See what the school looks like inside and meet some of the students who are already flying.',
             'gallery.videoFallback': "Won't load?", 'gallery.videoLink': 'Watch the video on YouTube',
+            'windowAlbum.label': 'LOOK OUT THE WINDOW', 'windowAlbum.c7': 'Our team', 'windowAlbum.c8': 'Active instructors',
             'alumni.eyebrow': 'HIRED STUDENTS',
             'alumni.fallback1.quote': '"I joined knowing nothing about the industry and now I fly with Iberia. The real practicals on the A300 made the difference."',
             'alumni.fallback1.airline': 'Now flying with Iberia',
@@ -2135,6 +2354,16 @@
             'testi.a2': '— Student, Executive Cabin Crew',
             'testi.q3': '"The support all the way to the interview was key. They prepared me individually until I got to fly."',
             'testi.a3': '— Student, Cabin Crew class',
+            'pricing.eyebrow': 'YOUR INVESTMENT', 'pricing.title': "Before we talk price, here's everything it includes.",
+            'pricing.subtitle': 'Official AESA training, real hands-on practice, interview preparation and support until you\'re flying — all in one programme.',
+            'pricing.kicker': 'AN INVESTMENT IN YOUR FUTURE', 'pricing.courseName': 'AESA-approved Cabin Crew course', 'pricing.vat': 'VAT included',
+            'pricing.includesLabel': "WHAT'S INCLUDED",
+            'pricing.li1': 'Official AESA theoretical and practical training', 'pricing.li2': 'Full uniform',
+            'pricing.li3': 'Flight simulators', 'pricing.li4': 'Interview preparation with airlines',
+            'pricing.li5': "Exclusive additional training from Global Crew", 'pricing.li6': "Career support even after you start flying",
+            'pricing.depositLabel': 'Deposit to reserve your seat:', 'pricing.depositAmount': '€300',
+            'pricing.financing': 'Financing available for up to 12 months, interest-free.', 'pricing.cta': 'Talk to a teacher',
+            'pricing.execNote': 'Interested in Executive Cabin Crew? Ask us about the price of this add-on.',
             'faq.eyebrow': 'FREQUENTLY ASKED QUESTIONS', 'faq.title': 'What everyone asks us.',
             'faq.subtitle': "And if your question isn't here, message us on WhatsApp and we'll answer right away.",
             'faq.q1': 'What sets you apart from other Cabin Crew schools?',
