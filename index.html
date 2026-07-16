@@ -456,8 +456,8 @@
         }
         .video-embed{
             position:relative;border-radius:var(--radius-lg);overflow:hidden;
-            width:100%;min-width:0;aspect-ratio:16/9;background:#000;border:1px solid var(--line-light);
-            cursor:pointer;align-self:start;
+            width:100%;min-width:0;background:#000;border:1px solid var(--line-light);
+            cursor:pointer;
         }
         .video-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
         .video-embed .video-thumb{
@@ -997,6 +997,7 @@
             .stats-grid{grid-template-columns:repeat(2,1fr);}
             .course-grid{grid-template-columns:1fr;}
             .slideshow{grid-template-columns:1fr;}
+            .video-embed{aspect-ratio:16/9;}
             .team-grid{grid-template-columns:repeat(2,1fr);}
             .footer-grid{grid-template-columns:1fr 1fr;}
             .accred-inner{flex-direction:column;align-items:flex-start;}
