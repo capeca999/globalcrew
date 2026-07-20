@@ -156,7 +156,7 @@
         }
         .logo-mark img{width:100%;height:100%;object-fit:cover;display:block;}
         .logo-text{font-family:var(--ff-display);font-weight:700;font-size:1.15rem;letter-spacing:.02em;line-height:1;}
-        .logo-text span{display:block;font-family:var(--ff-mono);font-size:.6rem;letter-spacing:.18em;color:var(--steel);font-weight:500;margin-top:3px;}
+        .logo-text span{display:block;font-family:var(--ff-mono);font-size:.6rem;letter-spacing:.18em;color:var(--steel);font-weight:500;margin-top:3px;white-space:nowrap;}
         .nav-links{display:flex;align-items:center;gap:34px;}
         .nav-links a{color:rgba(247,244,236,.82);font-size:.92rem;font-weight:500;position:relative;padding:4px 0;}
         .nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--steel);transition:width .3s var(--ease);}
@@ -188,8 +188,14 @@
             background:linear-gradient(180deg,#3D0910 0%,#750C1B 45%,#A8324A 78%,#8C2A3F 100%);
             overflow:hidden;padding-top:calc(110px + var(--announce-h));transition:padding-top .3s var(--ease);
         }
-        .hero::before{ /* stars/dust */
+        .hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden;}
+        .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center 30%;}
+        .hero-bg::after{
             content:'';position:absolute;inset:0;
+            background:linear-gradient(180deg,rgba(61,9,16,.72) 0%,rgba(61,9,16,.5) 32%,rgba(23,6,10,.55) 60%,rgba(11,3,5,.88) 100%);
+        }
+        .hero::before{ /* stars/dust */
+            content:'';position:absolute;inset:0;z-index:1;
             background-image:radial-gradient(1px 1px at 20% 20%, rgba(255,255,255,.5) 0, transparent 60%),
             radial-gradient(1px 1px at 75% 15%, rgba(255,255,255,.4) 0, transparent 60%),
             radial-gradient(1.5px 1.5px at 60% 35%, rgba(255,255,255,.3) 0, transparent 60%),
@@ -375,6 +381,10 @@
             letter-spacing:.04em;color:var(--navy-800);
         }
         .stats-tagline svg{color:var(--steel);}
+        .stats-subtag{
+            text-align:center;margin-top:8px;font-family:var(--ff-mono);font-size:.68rem;
+            letter-spacing:.02em;color:var(--ink-soft);
+        }
 
         /* ===================== COURSES — boarding pass cards ===================== */
         .courses{background:var(--cream);padding:60px 0 100px;}
@@ -410,6 +420,8 @@
         .pass-tear::after{right:-9px;}
         .pass-duration{font-family:var(--ff-mono);font-size:.72rem;color:var(--ink-soft);}
         .pass-duration b{display:block;font-family:var(--ff-display);font-size:1rem;color:var(--navy-950);}
+        .pass-price{font-family:var(--ff-mono);font-size:.72rem;color:var(--ink-soft);text-align:center;}
+        .pass-price b{display:block;font-family:var(--ff-display);font-weight:700;font-size:1.25rem;color:var(--navy-950);}
         .pass-link{font-family:var(--ff-display);font-weight:600;font-size:.85rem;color:var(--navy-800);display:flex;align-items:center;gap:6px;}
         .pass-link svg{width:15px;height:15px;color:var(--steel);transition:transform .35s var(--ease);transform:rotate(90deg);}
         .pass:hover .pass-link svg{transform:rotate(90deg) translateY(-6px);}
@@ -425,6 +437,8 @@
         .pass-featured .pass-tear::before,.pass-featured .pass-tear::after{background:var(--cream);}
         .pass-featured .pass-duration{color:rgba(255,255,255,.75);}
         .pass-featured .pass-duration b{color:#fff;}
+        .pass-featured .pass-price{color:rgba(255,255,255,.75);}
+        .pass-featured .pass-price b{color:#fff;}
         .pass-featured .pass-link{color:#fff;}
         .pass-featured .pass-link svg{color:#9FDCE8;}
         .pass-featured:hover{box-shadow:0 30px 60px -22px rgba(0,117,140,.55);}
@@ -440,9 +454,16 @@
         .pass-red .pass-tear::before,.pass-red .pass-tear::after{background:var(--cream);}
         .pass-red .pass-duration{color:rgba(255,255,255,.75);}
         .pass-red .pass-duration b{color:#fff;}
+        .pass-red .pass-price{color:rgba(255,255,255,.75);}
+        .pass-red .pass-price b{color:var(--coral);}
         .pass-red .pass-link{color:#fff;}
         .pass-red .pass-link svg{color:var(--coral);}
         .pass-red:hover{box-shadow:0 30px 60px -22px rgba(61,9,16,.55);}
+        @media (max-width:400px){
+            .pass-tear{padding:16px 16px;gap:8px;}
+            .pass-price b,.pass-duration b{font-size:.95rem;}
+        }
+
 
         /* ===================== GALLERY / VIDEO + ALUMNI CAROUSEL ===================== */
         .gallery{background:var(--navy-950);padding:100px 0;color:var(--cream);position:relative;overflow:hidden;}
@@ -513,63 +534,92 @@
         .airline-plane-badge svg{width:24px;height:24px;color:#fff;transform:rotate(90deg);}
         .alumni-nav{display:flex;align-items:center;justify-content:space-between;margin-top:22px;}
 
-        /* ===================== SCHOOL GALLERY (large slideshow, prev/next) ===================== */
-        .school-gallery{margin-top:26px;}
-        .school-gallery-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;}
-        .school-gallery-label{display:flex;align-items:center;gap:8px;}
-        .school-gallery-label svg{width:14px;height:14px;color:var(--steel-light);transform:rotate(90deg);flex-shrink:0;}
-        .school-gallery-label span{
+        /* ===================== SEAT MAP GALLERY ===================== */
+        .seatmap-gallery{margin-top:30px;}
+        .seatmap-head{display:flex;align-items:center;gap:8px;margin-bottom:18px;}
+        .seatmap-head svg{width:14px;height:14px;color:var(--steel-light);transform:rotate(90deg);flex-shrink:0;}
+        .seatmap-head span{
             font-family:var(--ff-mono);font-size:.72rem;letter-spacing:.08em;color:var(--steel-light);
             text-transform:uppercase;
         }
-        .school-gallery-count{font-family:var(--ff-mono);font-size:.72rem;color:rgba(247,241,236,.5);}
-        .school-gallery-stage{
-            position:relative;border-radius:var(--radius-lg);overflow:hidden;
-            aspect-ratio:16/9;background:#12100f;
-            box-shadow:0 30px 60px -26px rgba(0,0,0,.55);
+        .seatmap-cabin{
+            position:relative;background:linear-gradient(180deg,#EFEBE8,#E3DCD6);
+            border-radius:56px 56px 20px 20px;padding:46px 22px 30px;
+            box-shadow:0 30px 60px -28px rgba(0,0,0,.5);
         }
-        .school-gallery-track{display:flex;height:100%;transition:transform .6s var(--ease);}
-        .school-gallery-slide{flex:0 0 100%;height:100%;position:relative;}
-        .school-gallery-slide img{
-            width:100%;height:100%;object-fit:cover;display:block;
-            transform:scale(1.06);transition:transform 7s linear;
+        .seatmap-nose{
+            position:absolute;top:16px;left:50%;transform:translateX(-50%);
+            display:flex;align-items:center;gap:6px;font-family:var(--ff-mono);font-size:.6rem;
+            letter-spacing:.1em;color:var(--ink-soft);text-transform:uppercase;white-space:nowrap;
         }
-        .school-gallery-slide.active img{transform:scale(1);}
-        .school-gallery-slide::after{
-            content:'';position:absolute;inset:0;
-            background:linear-gradient(0deg,rgba(0,0,0,.68),transparent 42%);pointer-events:none;
+        .seatmap-nose svg{width:11px;height:11px;transform:rotate(-90deg);flex-shrink:0;}
+        .seatmap-rows{display:flex;flex-direction:column;gap:12px;margin-top:6px;}
+        .seatmap-row{display:flex;align-items:center;justify-content:center;gap:12px;}
+        .seatmap-rownum{width:18px;flex-shrink:0;text-align:center;font-family:var(--ff-mono);font-size:.66rem;color:var(--ink-soft);}
+        .seatmap-block{display:flex;gap:10px;}
+        .seatmap-aisle{width:24px;flex-shrink:0;position:relative;align-self:stretch;}
+        .seatmap-aisle::before{
+            content:'';position:absolute;left:50%;top:0;bottom:0;border-left:2px dashed var(--line);transform:translateX(-50%);
         }
-        .school-gallery-cap{
-            position:absolute;left:22px;right:22px;bottom:18px;color:#fff;
-            font-family:var(--ff-display);font-weight:600;font-size:1.05rem;
+        .seat{
+            position:relative;width:76px;height:76px;border-radius:16px 16px 6px 6px;overflow:hidden;
+            border:none;padding:0;cursor:pointer;background:#ccc;flex-shrink:0;
+            box-shadow:0 6px 14px -8px rgba(43,38,36,.35);transition:transform .3s var(--ease),box-shadow .3s var(--ease);
         }
-        .school-gallery-mark{
-            position:absolute;top:16px;left:20px;display:flex;align-items:center;gap:6px;
-            font-family:var(--ff-mono);font-size:.66rem;letter-spacing:.08em;color:rgba(247,241,236,.8);
-            text-transform:uppercase;
+        .seat img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s var(--ease);}
+        .seat:hover img{transform:scale(1.08);}
+        .seat:hover,.seat:focus-visible{transform:translateY(-4px);box-shadow:0 16px 26px -10px rgba(43,38,36,.45),0 0 0 3px var(--coral);outline:none;}
+        .seat-id{
+            position:absolute;bottom:5px;right:5px;background:rgba(36,30,28,.68);color:#fff;
+            font-family:var(--ff-mono);font-size:.56rem;letter-spacing:.03em;padding:2px 6px;border-radius:4px;
         }
-        .school-gallery-mark svg{width:12px;height:12px;transform:rotate(90deg);}
-        .school-gallery-arrow{
-            position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;
-            background:rgba(18,16,15,.55);backdrop-filter:blur(4px);color:#fff;
-            display:flex;align-items:center;justify-content:center;transition:background .25s,transform .25s;
+        .seat-empty{
+            background:repeating-linear-gradient(45deg,rgba(140,135,131,.15),rgba(140,135,131,.15) 6px,transparent 6px,transparent 12px);
+            border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;cursor:default;box-shadow:none;
         }
-        .school-gallery-arrow svg{width:19px;height:19px;}
-        .school-gallery-arrow:hover{background:rgba(228,87,46,.85);}
-        .school-gallery-arrow.prev{left:16px;}
-        .school-gallery-arrow.next{right:16px;}
-        .school-gallery-dots{display:flex;justify-content:center;gap:7px;margin-top:16px;}
-        .school-gallery-dots button{width:7px;height:7px;border-radius:50%;background:var(--line);transition:background .25s,width .25s;}
-        .school-gallery-dots button.active{background:var(--coral);width:20px;border-radius:4px;}
+        .seat-empty:hover{transform:none;box-shadow:none;}
+        .seat-empty svg{width:20px;height:20px;color:var(--steel);}
+        .seatmap-tail{margin-top:22px;text-align:center;font-family:var(--ff-mono);font-size:.6rem;letter-spacing:.1em;color:var(--ink-soft);text-transform:uppercase;}
         @media (max-width:560px){
-            .school-gallery-stage{aspect-ratio:4/3;}
-            .school-gallery-arrow{width:38px;height:38px;}
-            .school-gallery-arrow svg{width:16px;height:16px;}
-            .school-gallery-cap{font-size:.92rem;}
+            .seat{width:58px;height:58px;border-radius:12px 12px 4px 4px;}
+            .seatmap-cabin{padding:40px 12px 24px;border-radius:40px 40px 16px 16px;}
+            .seatmap-row{gap:7px;}
+            .seatmap-block{gap:6px;}
+            .seatmap-aisle{width:16px;}
+            .seat-id{font-size:.5rem;padding:1px 4px;bottom:3px;right:3px;}
         }
-        @media (prefers-reduced-motion:reduce){
-            .school-gallery-slide img,.school-gallery-track{transition:none;}
+
+        .seatmap-lightbox{
+            position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
+            background:rgba(8,3,5,.92);opacity:0;pointer-events:none;transition:opacity .3s var(--ease);padding:24px;
         }
+        .seatmap-lightbox.open{opacity:1;pointer-events:auto;}
+        .seatmap-lightbox-stage{position:relative;max-width:560px;width:100%;text-align:center;}
+        .seatmap-lightbox-stage img{width:100%;border-radius:var(--radius-md);display:block;max-height:66vh;object-fit:cover;}
+        .seatmap-lightbox-info{margin-top:16px;display:flex;flex-direction:column;gap:4px;color:#fff;}
+        .seatmap-lightbox-seat{font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.1em;color:var(--coral);text-transform:uppercase;}
+        .seatmap-lightbox-cap{font-family:var(--ff-display);font-weight:600;font-size:1.1rem;}
+        .seatmap-lightbox-close{
+            position:absolute;top:-56px;right:0;width:40px;height:40px;border-radius:50%;
+            background:rgba(255,255,255,.1);color:#fff;display:flex;align-items:center;justify-content:center;
+        }
+        .seatmap-lightbox-close svg{width:16px;height:16px;}
+        .seatmap-lightbox-close:hover{background:rgba(255,255,255,.2);}
+        .seatmap-lightbox-arrow{
+            position:fixed;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;
+            background:rgba(255,255,255,.1);color:#fff;display:flex;align-items:center;justify-content:center;z-index:201;
+        }
+        .seatmap-lightbox-arrow svg{width:18px;height:18px;}
+        .seatmap-lightbox-arrow:hover{background:rgba(228,87,46,.85);}
+        .seatmap-lightbox-arrow.prev{left:20px;}
+        .seatmap-lightbox-arrow.next{right:20px;}
+        @media (max-width:560px){
+            .seatmap-lightbox-close{top:-48px;}
+            .seatmap-lightbox-arrow{width:36px;height:36px;}
+            .seatmap-lightbox-arrow.prev{left:6px;}
+            .seatmap-lightbox-arrow.next{right:6px;}
+        }
+
 
         /* ===================== ALUMNI GALLERY BUTTON + MODAL ===================== */
         .alumni-carousel{position:relative;}
@@ -908,49 +958,6 @@
             .testi p{font-size:1.1rem;}
         }
 
-        /* ===================== PRICING ===================== */
-        .pricing-section{background:var(--cream);padding:100px 0;}
-        .pricing-card{
-            max-width:560px;margin:0 auto;background:var(--navy-950);color:var(--cream);
-            border-radius:var(--radius-lg);padding:46px 40px 40px;position:relative;overflow:hidden;
-            box-shadow:0 40px 80px -30px rgba(61,9,16,.5);
-        }
-        .pricing-card::before{
-            content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;
-            background:radial-gradient(circle,rgba(228,87,46,.18),transparent 70%);pointer-events:none;
-        }
-        .pricing-kicker{
-            font-family:var(--ff-mono);font-size:.72rem;letter-spacing:.1em;color:var(--coral);
-            text-transform:uppercase;display:flex;align-items:center;gap:8px;position:relative;
-        }
-        .pricing-kicker svg{width:15px;height:15px;transform:rotate(90deg);}
-        .pricing-course-name{font-family:var(--ff-display);font-size:1.5rem;margin-top:12px;color:#fff;position:relative;}
-        .pricing-amount{font-family:var(--ff-display);font-weight:700;font-size:3.6rem;margin-top:16px;color:#fff;line-height:1;position:relative;}
-        .pricing-amount span{font-size:1.05rem;font-weight:500;color:rgba(247,241,236,.55);margin-left:8px;}
-        .pricing-includes-label{
-            font-family:var(--ff-mono);font-size:.72rem;letter-spacing:.08em;color:rgba(247,241,236,.55);
-            margin-top:32px;text-transform:uppercase;position:relative;
-        }
-        .pricing-list{margin-top:16px;display:flex;flex-direction:column;gap:13px;position:relative;}
-        .pricing-list li{display:flex;align-items:flex-start;gap:11px;font-size:.96rem;color:rgba(247,241,236,.94);}
-        .pricing-list li svg{width:18px;height:18px;color:var(--coral);flex-shrink:0;margin-top:1px;}
-        .pricing-divider{margin:32px 0 22px;border:none;border-top:1px dashed rgba(247,241,236,.25);position:relative;}
-        .pricing-deposit{font-family:var(--ff-mono);font-size:.86rem;color:rgba(247,241,236,.85);position:relative;}
-        .pricing-deposit b{color:#fff;}
-        .pricing-financing{font-size:.85rem;color:rgba(247,241,236,.58);margin-top:7px;position:relative;}
-        .pricing-cta{
-            margin-top:28px;display:inline-flex;align-items:center;gap:8px;background:var(--coral);color:var(--navy-950);
-            font-family:var(--ff-display);font-weight:700;font-size:.92rem;padding:14px 28px;border-radius:100px;
-            transition:transform .3s var(--ease);position:relative;
-        }
-        .pricing-cta svg{width:15px;height:15px;transform:rotate(90deg);transition:transform .35s var(--ease);}
-        .pricing-cta:hover{transform:translateY(-3px);}
-        .pricing-cta:hover svg{transform:rotate(90deg) translateY(-4px);}
-        .pricing-note{margin-top:20px;font-size:.82rem;color:rgba(247,241,236,.5);position:relative;}
-        @media (max-width:560px){
-            .pricing-card{padding:36px 26px 32px;}
-            .pricing-amount{font-size:2.9rem;}
-        }
 
         /* ===================== FAQ ===================== */
         .faq-section{background:var(--cream);padding:100px 0;}
@@ -1006,8 +1013,16 @@
         }
         @media (max-width:560px){
             .wrap{padding:0 20px;}
-            .hero-meta{gap:26px;}
-            .stats-grid{grid-template-columns:1fr;}
+            .nav{padding:16px 18px;}
+            .nav-cta{gap:8px;}
+            .nav-cta > a.btn{display:none;}
+            .logo-text{font-size:.98rem;}
+            .logo-text span{font-size:.5rem;letter-spacing:.09em;}
+            .stats{padding:50px 0 30px;}
+            .stats-grid{grid-template-columns:repeat(2,1fr);gap:12px;}
+            .stat-card{padding:16px 12px;}
+            .stat-num{font-size:1.7rem;}
+            .stat-label{font-size:.62rem;}
             .team-grid{grid-template-columns:1fr;}
             .footer-grid{grid-template-columns:1fr;}
             .route-label,.route-dest{display:none;}
@@ -1076,7 +1091,7 @@
 <div class="announce-bar" id="announceBar">
     <a href="#contacto">
         <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
-        <span><span data-i18n="announce.prefix">PRÓXIMO CURSO:</span> <strong id="nextCourseDate">SEPTIEMBRE 2026</strong> <span data-i18n="announce.suffix">— plazas limitadas, reserva ya la tuya</span></span>
+        <span><span data-i18n="announce.prefix">PRÓXIMO CURSO:</span> <strong id="nextCourseDate">SEPTIEMBRE 2026</strong></span>
     </a>
     <button type="button" class="announce-close" id="announceClose" aria-label="Cerrar aviso">✕</button>
 </div>
@@ -1143,6 +1158,7 @@
 
 <!-- ============ HERO ============ -->
 <section class="hero" id="inicio">
+    <div class="hero-bg"><img src="images/footer-group.jpg" alt="Tripulantes de Global Crew Valencia"></div>
     <svg class="hero-plane" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
     <svg class="hero-contrail" viewBox="0 0 620 500" aria-hidden="true">
         <g class="hero-contrail-dots"><circle cx="36.9" cy="453.7" r="1.00" opacity="0.08"/> <circle cx="43.1" cy="466.3" r="1.00" opacity="0.08"/> <circle cx="45.0" cy="449.7" r="1.01" opacity="0.08"/> <circle cx="51.3" cy="462.2" r="1.01" opacity="0.08"/> <circle cx="53.1" cy="445.5" r="1.03" opacity="0.09"/> <circle cx="59.5" cy="458.0" r="1.03" opacity="0.09"/> <circle cx="61.3" cy="441.3" r="1.04" opacity="0.09"/> <circle cx="67.7" cy="453.8" r="1.04" opacity="0.09"/> <circle cx="69.5" cy="437.1" r="1.06" opacity="0.10"/> <circle cx="76.0" cy="449.5" r="1.06" opacity="0.10"/> <circle cx="77.7" cy="432.8" r="1.07" opacity="0.10"/> <circle cx="84.2" cy="445.1" r="1.07" opacity="0.10"/> <circle cx="85.9" cy="428.4" r="1.09" opacity="0.11"/> <circle cx="92.5" cy="440.7" r="1.09" opacity="0.11"/> <circle cx="94.2" cy="424.0" r="1.11" opacity="0.11"/> <circle cx="100.8" cy="436.3" r="1.11" opacity="0.11"/> <circle cx="102.5" cy="419.5" r="1.12" opacity="0.12"/> <circle cx="109.2" cy="431.8" r="1.12" opacity="0.12"/> <circle cx="110.8" cy="414.9" r="1.14" opacity="0.13"/> <circle cx="117.5" cy="427.2" r="1.14" opacity="0.13"/> <circle cx="119.1" cy="410.3" r="1.16" opacity="0.13"/> <circle cx="125.9" cy="422.6" r="1.16" opacity="0.13"/> <circle cx="127.5" cy="405.7" r="1.17" opacity="0.14"/> <circle cx="134.3" cy="417.9" r="1.17" opacity="0.14"/> <circle cx="135.8" cy="401.0" r="1.19" opacity="0.15"/> <circle cx="142.7" cy="413.1" r="1.19" opacity="0.15"/> <circle cx="144.2" cy="396.2" r="1.21" opacity="0.16"/> <circle cx="151.2" cy="408.3" r="1.21" opacity="0.16"/> <circle cx="152.7" cy="391.4" r="1.23" opacity="0.16"/> <circle cx="159.6" cy="403.5" r="1.23" opacity="0.16"/> <circle cx="161.1" cy="386.5" r="1.24" opacity="0.17"/> <circle cx="168.1" cy="398.6" r="1.24" opacity="0.17"/> <circle cx="169.6" cy="381.5" r="1.26" opacity="0.18"/> <circle cx="176.7" cy="393.6" r="1.26" opacity="0.18"/> <circle cx="178.1" cy="376.5" r="1.28" opacity="0.19"/> <circle cx="185.2" cy="388.6" r="1.28" opacity="0.19"/> <circle cx="186.6" cy="371.5" r="1.30" opacity="0.20"/> <circle cx="193.8" cy="383.5" r="1.30" opacity="0.20"/> <circle cx="195.1" cy="366.3" r="1.32" opacity="0.21"/> <circle cx="202.3" cy="378.3" r="1.32" opacity="0.21"/> <circle cx="203.7" cy="361.2" r="1.33" opacity="0.21"/> <circle cx="210.9" cy="373.1" r="1.33" opacity="0.21"/> <circle cx="212.3" cy="355.9" r="1.35" opacity="0.22"/> <circle cx="219.6" cy="367.9" r="1.35" opacity="0.22"/> <circle cx="220.9" cy="350.6" r="1.37" opacity="0.23"/> <circle cx="228.2" cy="362.6" r="1.37" opacity="0.23"/> <circle cx="229.5" cy="345.3" r="1.39" opacity="0.24"/> <circle cx="236.9" cy="357.2" r="1.39" opacity="0.24"/> <circle cx="238.2" cy="339.9" r="1.41" opacity="0.25"/> <circle cx="245.6" cy="351.8" r="1.41" opacity="0.25"/> <circle cx="246.8" cy="334.4" r="1.43" opacity="0.26"/> <circle cx="254.3" cy="346.3" r="1.43" opacity="0.26"/> <circle cx="255.5" cy="328.9" r="1.45" opacity="0.27"/> <circle cx="263.1" cy="340.7" r="1.45" opacity="0.27"/> <circle cx="264.3" cy="323.3" r="1.47" opacity="0.28"/> <circle cx="271.8" cy="335.1" r="1.47" opacity="0.28"/> <circle cx="273.0" cy="317.7" r="1.48" opacity="0.29"/> <circle cx="280.6" cy="329.5" r="1.48" opacity="0.29"/> <circle cx="281.8" cy="312.0" r="1.50" opacity="0.30"/> <circle cx="289.4" cy="323.7" r="1.50" opacity="0.30"/> <circle cx="290.6" cy="306.3" r="1.52" opacity="0.31"/> <circle cx="298.3" cy="318.0" r="1.52" opacity="0.31"/> <circle cx="299.4" cy="300.5" r="1.54" opacity="0.32"/> <circle cx="307.1" cy="312.1" r="1.54" opacity="0.32"/> <circle cx="308.2" cy="294.6" r="1.56" opacity="0.33"/> <circle cx="316.0" cy="306.2" r="1.56" opacity="0.33"/> <circle cx="317.1" cy="288.7" r="1.58" opacity="0.34"/> <circle cx="324.9" cy="300.3" r="1.58" opacity="0.34"/> <circle cx="326.0" cy="282.7" r="1.60" opacity="0.35"/> <circle cx="333.8" cy="294.3" r="1.60" opacity="0.35"/> <circle cx="334.9" cy="276.6" r="1.62" opacity="0.36"/> <circle cx="342.8" cy="288.2" r="1.62" opacity="0.36"/> <circle cx="343.8" cy="270.6" r="1.64" opacity="0.37"/> <circle cx="351.7" cy="282.1" r="1.64" opacity="0.37"/> <circle cx="352.8" cy="264.4" r="1.66" opacity="0.38"/> <circle cx="360.7" cy="275.9" r="1.66" opacity="0.38"/> <circle cx="361.8" cy="258.2" r="1.68" opacity="0.39"/> <circle cx="369.7" cy="269.7" r="1.68" opacity="0.39"/> <circle cx="370.8" cy="251.9" r="1.70" opacity="0.40"/> <circle cx="378.8" cy="263.4" r="1.70" opacity="0.40"/> <circle cx="379.8" cy="245.6" r="1.72" opacity="0.41"/> <circle cx="387.8" cy="257.1" r="1.72" opacity="0.41"/> <circle cx="388.8" cy="239.2" r="1.74" opacity="0.42"/> <circle cx="396.9" cy="250.6" r="1.74" opacity="0.42"/> <circle cx="397.9" cy="232.8" r="1.76" opacity="0.43"/> <circle cx="406.0" cy="244.2" r="1.76" opacity="0.43"/> <circle cx="407.0" cy="226.3" r="1.78" opacity="0.44"/> <circle cx="415.2" cy="237.7" r="1.78" opacity="0.44"/> <circle cx="416.1" cy="219.7" r="1.80" opacity="0.46"/> <circle cx="424.3" cy="231.1" r="1.80" opacity="0.46"/> <circle cx="425.3" cy="213.1" r="1.82" opacity="0.47"/> <circle cx="433.5" cy="224.4" r="1.82" opacity="0.47"/> <circle cx="434.4" cy="206.4" r="1.84" opacity="0.48"/> <circle cx="442.7" cy="217.7" r="1.84" opacity="0.48"/> <circle cx="443.6" cy="199.7" r="1.86" opacity="0.49"/> <circle cx="451.9" cy="211.0" r="1.86" opacity="0.49"/> <circle cx="452.8" cy="192.9" r="1.88" opacity="0.50"/> <circle cx="461.1" cy="204.2" r="1.88" opacity="0.50"/> <circle cx="462.1" cy="186.1" r="1.90" opacity="0.51"/> <circle cx="470.4" cy="197.3" r="1.90" opacity="0.51"/> <circle cx="471.3" cy="179.2" r="1.92" opacity="0.52"/> <circle cx="479.7" cy="190.4" r="1.92" opacity="0.52"/> <circle cx="480.6" cy="172.2" r="1.94" opacity="0.54"/> <circle cx="489.0" cy="183.4" r="1.94" opacity="0.54"/> <circle cx="489.9" cy="165.2" r="1.96" opacity="0.55"/> <circle cx="498.3" cy="176.4" r="1.96" opacity="0.55"/> <circle cx="499.2" cy="158.1" r="1.98" opacity="0.56"/> <circle cx="507.7" cy="169.3" r="1.98" opacity="0.56"/> <circle cx="508.6" cy="151.0" r="2.00" opacity="0.57"/> <circle cx="517.1" cy="162.1" r="2.00" opacity="0.57"/> <circle cx="518.0" cy="143.8" r="2.02" opacity="0.58"/> <circle cx="526.5" cy="154.9" r="2.02" opacity="0.58"/> <circle cx="527.3" cy="136.6" r="2.04" opacity="0.59"/> <circle cx="535.9" cy="147.7" r="2.04" opacity="0.59"/> <circle cx="536.8" cy="129.3" r="2.06" opacity="0.61"/> <circle cx="545.4" cy="140.3" r="2.06" opacity="0.61"/> <circle cx="546.2" cy="121.9" r="2.08" opacity="0.62"/> <circle cx="554.8" cy="132.9" r="2.08" opacity="0.62"/> <circle cx="555.7" cy="114.5" r="2.10" opacity="0.63"/> <circle cx="564.3" cy="125.5" r="2.10" opacity="0.63"/></g>
@@ -1153,11 +1169,6 @@
     <div class="hero-content">
         <div class="wrap">
             <span class="eyebrow reveal is-visible" data-i18n="hero.eyebrow">CENTRO HOMOLOGADO AESA · TCP</span>
-            <a href="#cursos" class="vr-badge reveal is-visible" style="transition-delay:.05s">
-                <span class="vr-star"><svg viewBox="0 0 24 24"><use href="#icon-star"/></svg></span>
-                <svg viewBox="0 0 24 24"><use href="#icon-vr"/></svg>
-                <span data-i18n="hero.vrBadge">Primera escuela de España con formación en Realidad Virtual: extinción de incendios y evacuación</span>
-            </a>
             <h1 class="reveal is-visible" style="transition-delay:.1s" data-i18n-html="hero.title">Tu carrera <em>despega</em> aquí.</h1>
             <p class="lede reveal is-visible" style="transition-delay:.2s" data-i18n="hero.lede">
                 Formamos tripulantes de cabina de pasajeros con formación oficial AESA, prácticas reales en un avión de Iberia,
@@ -1166,11 +1177,6 @@
             <div class="hero-cta reveal is-visible" style="transition-delay:.3s">
                 <a href="#cursos" class="btn btn-primary" data-i18n="hero.ctaCourses">Ver los cursos</a>
                 <a href="#contacto" class="btn btn-ghost" data-i18n="hero.ctaCall">Reservar una llamada</a>
-            </div>
-            <div class="hero-meta reveal is-visible" style="transition-delay:.4s">
-                <div><b data-count="7">0</b><span data-i18n="hero.metaYears">años formando TCP</span></div>
-                <div><b data-count="94" data-suffix="%">0</b><span data-i18n="hero.metaJobs">inserción laboral</span></div>
-                <div><b data-count="9">0</b><span data-i18n="hero.metaWeeks">semanas, curso completo</span></div>
             </div>
         </div>
     </div>
@@ -1208,6 +1214,65 @@
             </div>
         </div>
         <p class="stats-tagline reveal" style="transition-delay:.4s"><svg viewBox="0 0 24 24" style="width:15px;height:15px;transform:rotate(90deg);vertical-align:-2px;margin-right:6px;"><use href="#icon-plane"/></svg><span data-i18n="stats.tagline">La escuela TCP de Valencia con más alumnos volando</span></p>
+        <p class="stats-subtag reveal" style="transition-delay:.5s" data-i18n="stats.vrNote">Primera escuela de España con formación en Realidad Virtual: incendios y evacuación.</p>
+    </div>
+</section>
+<div class="route-divider" data-wp="2">
+    <div class="route-inner">
+        <span class="route-label" data-i18n="wp.02">WP02 · RUTA DE FORMACIÓN</span>
+        <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
+        <span class="route-dest" data-i18n="wp.02dest">ELIGE TU PROGRAMA</span>
+    </div>
+</div>
+
+<!-- ============ COURSES ============ -->
+<section class="courses" id="cursos">
+    <div class="wrap">
+        <div class="section-head reveal">
+            <span class="eyebrow" data-i18n="courses.eyebrow">NUESTROS CURSOS</span>
+            <h2 data-i18n="courses.title">Dos programas, un mismo destino: volar.</h2>
+            <p data-i18n="courses.subtitle">Formación oficial AESA según el Reglamento (UE) nº 290/2012, con prácticas reales en un avión de Iberia desde el primer mes.</p>
+        </div>
+        <div class="course-grid course-grid-2">
+            <div class="pass pass-red reveal">
+                <div class="pass-main">
+                    <span class="pass-code">TCP · 01</span>
+                    <h3 data-i18n="courses.tcp.name">Tripulante de Cabina de Pasajeros</h3>
+                    <p data-i18n="courses.tcp.desc">El programa completo: teoría oficial AESA, prácticas reales en un avión de Iberia y orientación laboral incluida.</p>
+                    <ul class="pass-list">
+                        <li data-i18n="courses.tcp.li1">9 asignaturas oficiales AESA</li>
+                        <li data-i18n="courses.tcp.li2">Prácticas en un A300 de Iberia (Manises)</li>
+                        <li data-i18n="courses.tcp.li3">3 asignaturas exclusivas + Inglés</li>
+                        <li data-i18n="courses.tcp.li4">5 experiencias formativas</li>
+                        <li data-i18n="courses.tcp.li5">Formación TCP más completa de Valencia</li>
+                    </ul>
+                </div>
+                <div class="pass-tear">
+                    <div class="pass-duration"><span data-i18n="courses.duration">DURACIÓN</span><b data-i18n="courses.tcp.weeks">9 semanas</b></div>
+                    <div class="pass-price"><span data-i18n="courses.price">PRECIO</span><b data-i18n="courses.tcp.price">3.300 €</b></div>
+                    <button type="button" class="pass-link" data-course="tcp"><span data-i18n="courses.more">Saber más</span> <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></button>
+                </div>
+            </div>
+            <div class="pass pass-featured reveal" style="transition-delay:.1s">
+                <div class="pass-main">
+                    <span class="pass-code">TCP · EJECUTIVO</span>
+                    <h3 data-i18n="courses.exec.name">TCP Ejecutivo</h3>
+                    <p data-i18n="courses.exec.desc">El complemento para llevar tu formación de Cabin Crew a otro nivel y acceder a más oportunidades: servicio VIP, protocolo y aviación privada.</p>
+                    <ul class="pass-list">
+                        <li data-i18n="courses.exec.li1">4 asignaturas exclusivas TCP Ejecutivo</li>
+                        <li>Silver Service Training</li>
+                        <li>VIP Protocol &amp; Etiquette</li>
+                        <li>Private Jet Operations</li>
+                        <li>Premium Hospitality Experience</li>
+                    </ul>
+                </div>
+                <div class="pass-tear">
+                    <div class="pass-duration"><span data-i18n="courses.duration">DURACIÓN</span><b data-i18n="courses.exec.weeks">1 semana</b></div>
+                    <div class="pass-price"><span data-i18n="courses.price">PRECIO</span><b data-i18n="courses.exec.price">750 €</b></div>
+                    <button type="button" class="pass-link" data-course="tcp-exp"><span data-i18n="courses.more">Saber más</span> <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></button>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -1246,63 +1311,6 @@
                 <canvas id="bpCanvas" width="1200" height="500"></canvas>
             </div>
             <p class="bp-hint" data-i18n="bp.hint">Se descarga como imagen — puedes compartirla directamente en Instagram, WhatsApp o donde quieras.</p>
-        </div>
-    </div>
-</section>
-
-<div class="route-divider" data-wp="2">
-    <div class="route-inner">
-        <span class="route-label" data-i18n="wp.02">WP02 · RUTA DE FORMACIÓN</span>
-        <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-        <span class="route-dest" data-i18n="wp.02dest">ELIGE TU PROGRAMA</span>
-    </div>
-</div>
-
-<!-- ============ COURSES ============ -->
-<section class="courses" id="cursos">
-    <div class="wrap">
-        <div class="section-head reveal">
-            <span class="eyebrow" data-i18n="courses.eyebrow">NUESTROS CURSOS</span>
-            <h2 data-i18n="courses.title">Dos programas, un mismo destino: volar.</h2>
-            <p data-i18n="courses.subtitle">Formación oficial AESA según el Reglamento (UE) nº 290/2012, con prácticas reales en un avión de Iberia desde el primer mes.</p>
-        </div>
-        <div class="course-grid course-grid-2">
-            <div class="pass pass-red reveal">
-                <div class="pass-main">
-                    <span class="pass-code">TCP · 01</span>
-                    <h3 data-i18n="courses.tcp.name">Tripulante de Cabina de Pasajeros</h3>
-                    <p data-i18n="courses.tcp.desc">El programa completo: teoría oficial AESA, prácticas reales en un avión de Iberia y orientación laboral incluida.</p>
-                    <ul class="pass-list">
-                        <li data-i18n="courses.tcp.li1">9 asignaturas oficiales AESA</li>
-                        <li data-i18n="courses.tcp.li2">Prácticas en un A300 de Iberia (Manises)</li>
-                        <li data-i18n="courses.tcp.li3">Prácticas en Realidad Virtual: incendios y evacuación</li>
-                        <li data-i18n="courses.tcp.li4">Certificado oficial AESA</li>
-                        <li data-i18n="courses.tcp.li5">Asesoramiento laboral hasta que vueles</li>
-                    </ul>
-                </div>
-                <div class="pass-tear">
-                    <div class="pass-duration"><span data-i18n="courses.duration">DURACIÓN</span><b data-i18n="courses.tcp.weeks">9 semanas</b></div>
-                    <button type="button" class="pass-link" data-course="tcp"><span data-i18n="courses.more">Saber más</span> <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></button>
-                </div>
-            </div>
-            <div class="pass pass-featured reveal" style="transition-delay:.1s">
-                <div class="pass-main">
-                    <span class="pass-code">TCP · EJECUTIVO</span>
-                    <h3 data-i18n="courses.exec.name">TCP Ejecutivo</h3>
-                    <p data-i18n="courses.exec.desc">El complemento para llevar tu formación de Cabin Crew a otro nivel y acceder a más oportunidades: servicio VIP, protocolo y aviación privada.</p>
-                    <ul class="pass-list">
-                        <li data-i18n="courses.exec.li1">4 asignaturas exclusivas TCP Ejecutivo</li>
-                        <li>Silver Service Training</li>
-                        <li>VIP Protocol &amp; Etiquette</li>
-                        <li>Private Jet Operations</li>
-                        <li>Premium Hospitality Experience</li>
-                    </ul>
-                </div>
-                <div class="pass-tear">
-                    <div class="pass-duration"><span data-i18n="courses.duration">DURACIÓN</span><b data-i18n="courses.exec.weeks">1 semana</b></div>
-                    <button type="button" class="pass-link" data-course="tcp-exp"><span data-i18n="courses.more">Saber más</span> <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></button>
-                </div>
-            </div>
         </div>
     </div>
 </section>
@@ -1374,64 +1382,57 @@
             </div>
         </div>
 
-        <div class="school-gallery reveal">
-            <div class="school-gallery-head">
-                <div class="school-gallery-label">
-                    <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
-                    <span data-i18n="schoolGallery.label">ÁLBUM DE LA ESCUELA</span>
-                </div>
-                <span class="school-gallery-count"><span id="schoolGalleryCurrent">1</span>/<span id="schoolGalleryTotal">8</span></span>
+        <div class="seatmap-gallery reveal">
+            <div class="seatmap-head">
+                <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                <span data-i18n="seatmap.label">ELIGE TU ASIENTO</span>
             </div>
-            <div class="school-gallery-stage" id="schoolGalleryStage">
-                <div class="school-gallery-track" id="schoolGalleryTrack">
-                    <div class="school-gallery-slide active">
-                        <img src="images/practicals-extintor.jpg" alt="Alumno practicando con extintor real" loading="lazy">
-                        <span class="school-gallery-mark"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>GLOBAL CREW</span>
-                        <span class="school-gallery-cap" data-i18n="practicals.c1">Extinción de incendios</span>
+            <div class="seatmap-cabin">
+                <div class="seatmap-nose"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg><span data-i18n="seatmap.front">FRENTE DE LA CABINA</span></div>
+                <div class="seatmap-rows">
+                    <div class="seatmap-row">
+                        <span class="seatmap-rownum">1</span>
+                        <div class="seatmap-block">
+                            <button type="button" class="seat" data-cap="seatmap.cap0"><img src="images/crew-kike.jpg" alt="Kike, director de la escuela" loading="lazy"><span class="seat-id">1A</span></button>
+                            <button type="button" class="seat" data-cap="seatmap.cap1"><img src="images/crew-nabila.jpg" alt="Nabila, instructora de medicina aeronáutica" loading="lazy"><span class="seat-id">1B</span></button>
+                        </div>
+                        <div class="seatmap-aisle"></div>
+                        <div class="seatmap-block">
+                            <button type="button" class="seat" data-cap="seatmap.cap2"><img src="images/crew-manuel.jpg" alt="Manuel, piloto en Ryanair" loading="lazy"><span class="seat-id">1C</span></button>
+                            <button type="button" class="seat" data-cap="seatmap.cap3"><img src="images/crew-david.jpg" alt="David, instructor de operación normal y emergencia" loading="lazy"><span class="seat-id">1D</span></button>
+                        </div>
                     </div>
-                    <div class="school-gallery-slide">
-                        <img src="images/practicals-salvavidas.jpg" alt="Alumna con chaleco salvavidas" loading="lazy">
-                        <span class="school-gallery-mark"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>GLOBAL CREW</span>
-                        <span class="school-gallery-cap" data-i18n="practicals.c2">Supervivencia en el agua</span>
-                    </div>
-                    <div class="school-gallery-slide">
-                        <img src="images/practicals-exit-sign.jpg" alt="Alumna con señal de salida de emergencia" style="object-position:top;" loading="lazy">
-                        <span class="school-gallery-mark"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>GLOBAL CREW</span>
-                        <span class="school-gallery-cap" data-i18n="practicals.c3">Señalización de emergencia</span>
-                    </div>
-                    <div class="school-gallery-slide">
-                        <img src="images/practicals-oxigeno.jpg" alt="Alumno con máscara de oxígeno" loading="lazy">
-                        <span class="school-gallery-mark"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>GLOBAL CREW</span>
-                        <span class="school-gallery-cap" data-i18n="practicals.c4">Material de emergencia</span>
-                    </div>
-                    <div class="school-gallery-slide">
-                        <img src="images/practicals-tarjeta.jpg" alt="Alumna explicando tarjeta de salidas de emergencia" loading="lazy">
-                        <span class="school-gallery-mark"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>GLOBAL CREW</span>
-                        <span class="school-gallery-cap" data-i18n="practicals.c5">Procedimientos de cabina</span>
-                    </div>
-                    <div class="school-gallery-slide">
-                        <img src="images/practicals-avion.jpg" alt="Alumno con maqueta de avión" style="object-position:top;" loading="lazy">
-                        <span class="school-gallery-mark"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>GLOBAL CREW</span>
-                        <span class="school-gallery-cap" data-i18n="practicals.c6">Conocimientos de aviación</span>
-                    </div>
-                    <div class="school-gallery-slide">
-                        <img src="images/footer-group.jpg" alt="Equipo y alumnos de Global Crew Valencia" loading="lazy">
-                        <span class="school-gallery-mark"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>GLOBAL CREW</span>
-                        <span class="school-gallery-cap" data-i18n="windowAlbum.c7">Nuestro equipo</span>
-                    </div>
-                    <div class="school-gallery-slide">
-                        <img src="images/crew-manuel.jpg" alt="Manuel, instructor de Conocimientos Generales de Aviación" loading="lazy">
-                        <span class="school-gallery-mark"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>GLOBAL CREW</span>
-                        <span class="school-gallery-cap" data-i18n="windowAlbum.c8">Instructores en activo</span>
+                    <div class="seatmap-row">
+                        <span class="seatmap-rownum">2</span>
+                        <div class="seatmap-block">
+                            <button type="button" class="seat" data-cap="seatmap.cap4"><img src="images/crew-amparo.jpg" alt="Amparo, instructora de mercancías peligrosas" loading="lazy"><span class="seat-id">2A</span></button>
+                            <button type="button" class="seat" data-cap="seatmap.cap5"><img src="images/crew-alicia.jpg" alt="Alicia, instructora de CRM" loading="lazy"><span class="seat-id">2B</span></button>
+                        </div>
+                        <div class="seatmap-aisle"></div>
+                        <div class="seatmap-block">
+                            <button type="button" class="seat" data-cap="seatmap.cap6"><img src="images/footer-group.jpg" alt="Equipo de Global Crew Valencia" loading="lazy"><span class="seat-id">2C</span></button>
+                            <div class="seat seat-empty" aria-hidden="true" title="Próximamente más fotos"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
+                        </div>
                     </div>
                 </div>
-                <button type="button" class="school-gallery-arrow prev" id="schoolGalleryPrev" aria-label="Anterior"><svg viewBox="0 0 24 24"><use href="#icon-chevron-l"/></svg></button>
-                <button type="button" class="school-gallery-arrow next" id="schoolGalleryNext" aria-label="Siguiente"><svg viewBox="0 0 24 24"><use href="#icon-chevron-r"/></svg></button>
+                <div class="seatmap-tail" data-i18n="seatmap.tail">COLA DE LA CABINA</div>
             </div>
-            <div class="school-gallery-dots" id="schoolGalleryDots"></div>
         </div>
     </div>
 </section>
+
+<div class="seatmap-lightbox" id="seatmapLightbox">
+    <button type="button" class="seatmap-lightbox-arrow prev" id="seatmapLightboxPrev" aria-label="Anterior"><svg viewBox="0 0 24 24"><use href="#icon-chevron-l"/></svg></button>
+    <div class="seatmap-lightbox-stage">
+        <button type="button" class="seatmap-lightbox-close" id="seatmapLightboxClose" aria-label="Cerrar"><svg viewBox="0 0 24 24"><use href="#icon-close"/></svg></button>
+        <img id="seatmapLightboxImg" src="" alt="">
+        <div class="seatmap-lightbox-info">
+            <span class="seatmap-lightbox-seat" id="seatmapLightboxSeat"></span>
+            <span class="seatmap-lightbox-cap" id="seatmapLightboxCap"></span>
+        </div>
+    </div>
+    <button type="button" class="seatmap-lightbox-arrow next" id="seatmapLightboxNext" aria-label="Siguiente"><svg viewBox="0 0 24 24"><use href="#icon-chevron-r"/></svg></button>
+</div>
 
 
 <!-- ============ ALUMNI FULL GALLERY MODAL ============ -->
@@ -1531,14 +1532,14 @@
             <div class="crew-card reveal" style="transition-delay:.16s">
                 <img class="crew-photo" src="images/crew-manuel.jpg" alt="Manuel, instructor de Conocimientos Generales de Aviación" loading="lazy">
                 <h4>Manuel</h4>
-                <div class="role" data-i18n="team.manuel.role">Piloto · Instructor</div>
+                <div class="role" data-i18n="team.manuel.role">Piloto en Ryanair · Instructor</div>
                 <span class="crew-subject" data-i18n="team.manuel.subject">Conocimientos generales de aviación</span>
                 <p class="crew-bio" data-i18n="team.manuel.bio">Piloto en activo. Acerca a los alumnos la realidad de la navegación aérea y el funcionamiento de una aeronave desde la cabina de mando.</p>
             </div>
             <div class="crew-card reveal">
                 <img class="crew-photo" src="images/crew-david.jpg" alt="David, instructor de Operación Normal y Emergencia" loading="lazy">
                 <h4>David</h4>
-                <div class="role" data-i18n="team.david.role">Instructor</div>
+                <div class="role" data-i18n="team.david.role">TCP en Air Europa · Instructor</div>
                 <span class="crew-subject" data-i18n="team.david.subject">ONE (Operación Normal y de Emergencia) y Fuego</span>
                 <p class="crew-bio" data-i18n="team.david.bio">Enseña a los alumnos a actuar ante cualquier situación en cabina, desde la operación normal hasta la extinción de un fuego real.</p>
             </div>
@@ -1552,7 +1553,7 @@
             <div class="crew-card reveal">
                 <img class="crew-photo" src="images/crew-alicia.jpg" alt="Alicia, instructora de CRM" loading="lazy">
                 <h4>Alicia</h4>
-                <div class="role" data-i18n="team.alicia.role">Instructora</div>
+                <div class="role" data-i18n="team.alicia.role">TCP en Air Nostrum · Instructora</div>
                 <span class="crew-subject" data-i18n="team.alicia.subject">CRM (Gestión de Recursos de la Tripulación)</span>
                 <p class="crew-bio" data-i18n="team.alicia.bio">Enseña a coordinarse como equipo en cabina: comunicación, liderazgo y toma de decisiones conjunta ante cualquier situación.</p>
             </div>
@@ -1630,50 +1631,9 @@
 
 <div class="route-divider" data-wp="9">
     <div class="route-inner">
-        <span class="route-label" data-i18n="wp.09">WP09 · TU INVERSIÓN</span>
+        <span class="route-label" data-i18n="wp.09">WP09 · ANTES DE DESPEGAR</span>
         <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-        <span class="route-dest" data-i18n="wp.09dest">LO QUE INCLUYE TU FORMACIÓN</span>
-    </div>
-</div>
-
-<!-- ============ PRICING ============ -->
-<section class="pricing-section">
-    <div class="wrap">
-        <div class="section-head reveal">
-            <span class="eyebrow" data-i18n="pricing.eyebrow">TU INVERSIÓN</span>
-            <h2 data-i18n="pricing.title">Antes de hablar de precio, mira todo lo que incluye.</h2>
-            <p data-i18n="pricing.subtitle">Formación oficial AESA, prácticas reales, preparación de entrevistas y acompañamiento hasta que empieces a volar — todo en un único programa.</p>
-        </div>
-        <div class="pricing-card reveal">
-            <div class="pricing-kicker">
-                <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
-                <span data-i18n="pricing.kicker">INVERSIÓN EN TU FUTURO</span>
-            </div>
-            <div class="pricing-course-name" data-i18n="pricing.courseName">Curso TCP homologado AESA</div>
-            <div class="pricing-amount">3.300&nbsp;€ <span data-i18n="pricing.vat">IVA incluido</span></div>
-            <div class="pricing-includes-label" data-i18n="pricing.includesLabel">INCLUYE</div>
-            <ul class="pricing-list">
-                <li><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg><span data-i18n="pricing.li1">Formación teórica y práctica oficial AESA</span></li>
-                <li><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg><span data-i18n="pricing.li2">Uniforme completo</span></li>
-                <li><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg><span data-i18n="pricing.li3">Simuladores de vuelo</span></li>
-                <li><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg><span data-i18n="pricing.li4">Preparación de entrevistas con aerolíneas</span></li>
-                <li><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg><span data-i18n="pricing.li5">Formación adicional exclusiva de Global Crew</span></li>
-                <li><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg><span data-i18n="pricing.li6">Acompañamiento laboral incluso después de empezar a volar</span></li>
-            </ul>
-            <hr class="pricing-divider">
-            <div class="pricing-deposit"><span data-i18n="pricing.depositLabel">Reserva de plaza:</span> <b data-i18n="pricing.depositAmount">300 €</b></div>
-            <p class="pricing-financing" data-i18n="pricing.financing">Financiación hasta 12 meses sin intereses.</p>
-            <a href="#contacto" class="pricing-cta"><span data-i18n="pricing.cta">Habla con un profesor</span> <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></a>
-            <p class="pricing-note" data-i18n="pricing.execNote">¿Te interesa el TCP Ejecutivo? Pregúntanos por el precio de este complemento.</p>
-        </div>
-    </div>
-</section>
-
-<div class="route-divider" data-wp="10">
-    <div class="route-inner">
-        <span class="route-label" data-i18n="wp.10">WP10 · ANTES DE DESPEGAR</span>
-        <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-        <span class="route-dest" data-i18n="wp.10dest">RESOLVEMOS TUS DUDAS</span>
+        <span class="route-dest" data-i18n="wp.09dest">RESOLVEMOS TUS DUDAS</span>
     </div>
 </div>
 
@@ -1739,11 +1699,11 @@
     </div>
 </section>
 
-<div class="route-divider" data-wp="11">
+<div class="route-divider" data-wp="10">
     <div class="route-inner">
-        <span class="route-label" data-i18n="wp.11">WP11 · EMBARQUE INMEDIATO</span>
+        <span class="route-label" data-i18n="wp.10">WP10 · EMBARQUE INMEDIATO</span>
         <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-        <span class="route-dest" data-i18n="wp.11dest">HABLEMOS</span>
+        <span class="route-dest" data-i18n="wp.10dest">HABLEMOS</span>
     </div>
 </div>
 
@@ -2127,7 +2087,7 @@
             'nav.tagline': 'ESCUELA DE TRIPULANTES · VALENCIA',
             'nav.courses': 'Cursos', 'nav.school': 'La escuela', 'nav.team': 'Instructores',
             'nav.quiz': 'Descubre tu perfil', 'nav.contact': 'Contacto', 'nav.talk': 'Hablemos',
-            'announce.prefix': 'PRÓXIMO CURSO:', 'announce.suffix': '— plazas limitadas, reserva ya la tuya',
+            'announce.prefix': 'PRÓXIMO CURSO:',
             'hero.eyebrow': 'CENTRO HOMOLOGADO AESA · TCP',
             'hero.vrBadge': 'Primera escuela de España con formación en Realidad Virtual: extinción de incendios y evacuación',
             'hero.title': 'Tu carrera <em>despega</em> aquí.',
@@ -2143,12 +2103,12 @@
             'wp.06': 'WP06 · TRIPULACIÓN DOCENTE', 'wp.06dest': 'CONOCE A TUS INSTRUCTORES',
             'wp.07': 'WP07 · RECONOCIMIENTO', 'wp.07dest': 'RESPALDO OFICIAL',
             'wp.08': 'WP08 · DESTINO FINAL', 'wp.08dest': 'TU CARRERA',
-            'wp.09': 'WP09 · TU INVERSIÓN', 'wp.09dest': 'LO QUE INCLUYE TU FORMACIÓN',
-            'wp.10': 'WP10 · ANTES DE DESPEGAR', 'wp.10dest': 'RESOLVEMOS TUS DUDAS',
-            'wp.11': 'WP11 · EMBARQUE INMEDIATO', 'wp.11dest': 'HABLEMOS',
+            'wp.09': 'WP09 · ANTES DE DESPEGAR', 'wp.09dest': 'RESOLVEMOS TUS DUDAS',
+            'wp.10': 'WP10 · EMBARQUE INMEDIATO', 'wp.10dest': 'HABLEMOS',
             'stats.years': 'Años formando TCP', 'stats.students': 'Alumnos formados',
             'stats.employability': 'Empleabilidad', 'stats.execWeeks': 'Semana, TCP Ejecutivo',
             'stats.tagline': 'La escuela TCP de Valencia con más alumnos volando',
+            'stats.vrNote': 'Primera escuela de España con formación en Realidad Virtual: incendios y evacuación.',
             'testPromo.eyebrow': 'TEST RÁPIDO · 1 MINUTO',
             'testPromo.title': '¿Tienes lo que hace falta para ser Cabin Crew?',
             'testPromo.body': 'Responde 6 preguntas y despega: descubre tu perfil de tripulante mientras el avión va tomando pista en tiempo real.',
@@ -2162,17 +2122,21 @@
             'courses.tcp.name': 'Tripulante de Cabina de Pasajeros',
             'courses.tcp.desc': 'El programa completo: teoría oficial AESA, prácticas reales en un avión de Iberia y orientación laboral incluida.',
             'courses.tcp.li1': '9 asignaturas oficiales AESA', 'courses.tcp.li2': 'Prácticas en un A300 de Iberia (Manises)',
-            'courses.tcp.li3': 'Prácticas en Realidad Virtual: incendios y evacuación', 'courses.tcp.li4': 'Certificado oficial AESA',
-            'courses.tcp.li5': 'Asesoramiento laboral hasta que vueles',
+            'courses.tcp.li3': '3 asignaturas exclusivas + Inglés', 'courses.tcp.li4': '5 experiencias formativas',
+            'courses.tcp.li5': 'Formación TCP más completa de Valencia',
             'courses.duration': 'DURACIÓN', 'courses.tcp.weeks': '9 semanas', 'courses.more': 'Saber más',
+            'courses.price': 'PRECIO', 'courses.tcp.price': '3.300 €', 'courses.exec.price': '750 €',
             'courses.exec.name': 'TCP Ejecutivo',
             'courses.exec.desc': 'El complemento para llevar tu formación de Cabin Crew a otro nivel y acceder a más oportunidades: servicio VIP, protocolo y aviación privada.',
             'courses.exec.li1': '4 asignaturas exclusivas TCP Ejecutivo', 'courses.exec.weeks': '1 semana',
             'gallery.eyebrow': 'NUESTRA ESCUELA', 'gallery.title': 'Así es un día en Global Crew.',
             'gallery.subtitle': 'Mira cómo es la escuela por dentro y descubre a algunos de los alumnos que ya están volando.',
             'gallery.videoFallback': '¿No carga?', 'gallery.videoLink': 'Ver vídeo en YouTube',
-            'schoolGallery.label': 'ÁLBUM DE LA ESCUELA', 'windowAlbum.c7': 'Nuestro equipo', 'windowAlbum.c8': 'Instructores en activo',
             'alumni.eyebrow': 'ALUMNOS CONTRATADOS',
+            'seatmap.label': 'ELIGE TU ASIENTO', 'seatmap.front': 'FRENTE DE LA CABINA', 'seatmap.tail': 'COLA DE LA CABINA',
+            'seatmap.cap0': 'Kike, director de la escuela', 'seatmap.cap1': 'Nabila, medicina aeronáutica',
+            'seatmap.cap2': 'Manuel, piloto en Ryanair', 'seatmap.cap3': 'David, ONE y fuego',
+            'seatmap.cap4': 'Amparo, mercancías peligrosas', 'seatmap.cap5': 'Alicia, CRM', 'seatmap.cap6': 'Nuestro equipo',
             'alumni.fallback1.quote': '"Entré sin saber nada del sector y hoy vuelo con Iberia. Las prácticas reales en el A300 marcaron la diferencia."',
             'alumni.fallback1.airline': 'Ahora vuela con Iberia',
             'alumni.fallback2.quote': '"Apenas dos meses después de graduarme ya estaba volando de base en Valencia con Vueling."',
@@ -2196,15 +2160,15 @@
             'team.subtitle': 'Profesionales en activo del sector aéreo, cada uno especializado en una parte distinta de tu formación.',
             'team.nabila.role': 'Enfermera · Instructora', 'team.nabila.subject': 'Medicina aeronáutica y primeros auxilios',
             'team.nabila.bio': 'Enfermera en activo. Enseña a los alumnos a administrar oxígeno, hacer RCP y actuar ante cualquier emergencia médica a bordo.',
-            'team.manuel.role': 'Piloto · Instructor', 'team.manuel.subject': 'Conocimientos generales de aviación',
+            'team.manuel.role': 'Piloto en Ryanair · Instructor', 'team.manuel.subject': 'Conocimientos generales de aviación',
             'team.manuel.bio': 'Piloto en activo. Acerca a los alumnos la realidad de la navegación aérea y el funcionamiento de una aeronave desde la cabina de mando.',
             'team.kike.role': 'TCP en Iberia · Director de la escuela', 'team.kike.subject': 'Preparación de entrevistas y orientación laboral',
             'team.kike.bio': 'TCP en Iberia. Como director de Global Crew, prepara a cada alumno de forma individual para sus entrevistas y le acompaña hasta verle volar.',
-            'team.david.role': 'Instructor', 'team.david.subject': 'ONE (Operación Normal y de Emergencia) y Fuego',
+            'team.david.role': 'TCP en Air Europa · Instructor', 'team.david.subject': 'ONE (Operación Normal y de Emergencia) y Fuego',
             'team.david.bio': 'Enseña a los alumnos a actuar ante cualquier situación en cabina, desde la operación normal hasta la extinción de un fuego real.',
             'team.amparo.role': 'TCP en Air Nostrum · Instructora', 'team.amparo.subject': 'Mercancías Peligrosas',
             'team.amparo.bio': 'TCP en activo en Air Nostrum. Enseña a identificar y gestionar mercancías peligrosas a bordo según la normativa AESA.',
-            'team.alicia.role': 'Instructora', 'team.alicia.subject': 'CRM (Gestión de Recursos de la Tripulación)',
+            'team.alicia.role': 'TCP en Air Nostrum · Instructora', 'team.alicia.subject': 'CRM (Gestión de Recursos de la Tripulación)',
             'team.alicia.bio': 'Enseña a coordinarse como equipo en cabina: comunicación, liderazgo y toma de decisiones conjunta ante cualquier situación.',
             'accred.eyebrow': 'ESCUELA HOMOLOGADA', 'accred.title': 'Formación reconocida por las autoridades aéreas.',
             'accred.body': 'Global Crew TCP Training es un centro de formación de TCP autorizado por AESA y el Ministerio de Transportes, Movilidad y Agenda Urbana para impartir cursos oficiales de TCP según el Reglamento (UE) nº 290/2012.',
@@ -2216,16 +2180,6 @@
             'testi.a2': '— Alumno, TCP Ejecutivo',
             'testi.q3': '"El acompañamiento hasta la entrevista fue clave. Me prepararon de forma individual hasta que conseguí volar."',
             'testi.a3': '— Alumno, promoción TCP',
-            'pricing.eyebrow': 'TU INVERSIÓN', 'pricing.title': 'Antes de hablar de precio, mira todo lo que incluye.',
-            'pricing.subtitle': 'Formación oficial AESA, prácticas reales, preparación de entrevistas y acompañamiento hasta que empieces a volar — todo en un único programa.',
-            'pricing.kicker': 'INVERSIÓN EN TU FUTURO', 'pricing.courseName': 'Curso TCP homologado AESA', 'pricing.vat': 'IVA incluido',
-            'pricing.includesLabel': 'INCLUYE',
-            'pricing.li1': 'Formación teórica y práctica oficial AESA', 'pricing.li2': 'Uniforme completo',
-            'pricing.li3': 'Simuladores de vuelo', 'pricing.li4': 'Preparación de entrevistas con aerolíneas',
-            'pricing.li5': 'Formación adicional exclusiva de Global Crew', 'pricing.li6': 'Acompañamiento laboral incluso después de empezar a volar',
-            'pricing.depositLabel': 'Reserva de plaza:', 'pricing.depositAmount': '300 €',
-            'pricing.financing': 'Financiación hasta 12 meses sin intereses.', 'pricing.cta': 'Habla con un profesor',
-            'pricing.execNote': '¿Te interesa el TCP Ejecutivo? Pregúntanos por el precio de este complemento.',
             'faq.eyebrow': 'PREGUNTAS FRECUENTES', 'faq.title': 'Lo que todo el mundo nos pregunta.',
             'faq.subtitle': 'Y si tu duda no está aquí, escríbenos por WhatsApp y te respondemos al momento.',
             'faq.q1': '¿Qué os diferencia de otras escuelas TCP?',
@@ -2263,7 +2217,7 @@
             'nav.tagline': 'CABIN CREW SCHOOL · VALENCIA',
             'nav.courses': 'Courses', 'nav.school': 'The school', 'nav.team': 'Instructors',
             'nav.quiz': 'Discover your profile', 'nav.contact': 'Contact', 'nav.talk': "Let's talk",
-            'announce.prefix': 'NEXT INTAKE:', 'announce.suffix': '— limited seats, reserve yours now',
+            'announce.prefix': 'NEXT INTAKE:',
             'hero.eyebrow': 'AESA-CERTIFIED CENTRE · CABIN CREW',
             'hero.vrBadge': 'The first school in Spain with Virtual Reality training: fire fighting and evacuation',
             'hero.title': 'Your career <em>takes off</em> here.',
@@ -2279,12 +2233,12 @@
             'wp.06': 'WP06 · TEACHING CREW', 'wp.06dest': 'MEET YOUR INSTRUCTORS',
             'wp.07': 'WP07 · RECOGNITION', 'wp.07dest': 'OFFICIAL BACKING',
             'wp.08': 'WP08 · FINAL DESTINATION', 'wp.08dest': 'YOUR CAREER',
-            'wp.09': 'WP09 · YOUR INVESTMENT', 'wp.09dest': "WHAT'S INCLUDED",
-            'wp.10': 'WP10 · BEFORE TAKEOFF', 'wp.10dest': 'WE ANSWER YOUR QUESTIONS',
-            'wp.11': 'WP11 · IMMEDIATE BOARDING', 'wp.11dest': "LET'S TALK",
+            'wp.09': 'WP09 · BEFORE TAKEOFF', 'wp.09dest': 'WE ANSWER YOUR QUESTIONS',
+            'wp.10': 'WP10 · IMMEDIATE BOARDING', 'wp.10dest': "LET'S TALK",
             'stats.years': 'Years training Cabin Crew', 'stats.students': 'Students trained',
             'stats.employability': 'Employability', 'stats.execWeeks': 'Week, Executive Cabin Crew',
             'stats.tagline': 'The Cabin Crew school in Valencia with the most students flying',
+            'stats.vrNote': 'First school in Spain with Virtual Reality training: fire and evacuation.',
             'testPromo.eyebrow': 'QUICK TEST · 1 MINUTE',
             'testPromo.title': 'Do you have what it takes to be Cabin Crew?',
             'testPromo.body': 'Answer 6 questions and take off: discover your crew profile while the plane taxis down the runway in real time.',
@@ -2298,17 +2252,21 @@
             'courses.tcp.name': 'Cabin Crew Attendant',
             'courses.tcp.desc': 'The complete programme: official AESA theory, real practicals on an Iberia aircraft, and career guidance included.',
             'courses.tcp.li1': '9 official AESA subjects', 'courses.tcp.li2': 'Practicals on an Iberia A300 (Manises)',
-            'courses.tcp.li3': 'Virtual Reality practicals: fire and evacuation', 'courses.tcp.li4': 'Official AESA certificate',
-            'courses.tcp.li5': 'Career guidance until you start flying',
+            'courses.tcp.li3': '3 exclusive subjects + English', 'courses.tcp.li4': '5 hands-on training experiences',
+            'courses.tcp.li5': 'The most complete Cabin Crew training in Valencia',
             'courses.duration': 'DURATION', 'courses.tcp.weeks': '9 weeks', 'courses.more': 'Learn more',
+            'courses.price': 'PRICE', 'courses.tcp.price': '€3,300', 'courses.exec.price': '€750',
             'courses.exec.name': 'Executive Cabin Crew',
             'courses.exec.desc': 'The add-on to take your Cabin Crew training to the next level and access more opportunities: VIP service, protocol and private aviation.',
             'courses.exec.li1': '4 exclusive Executive Cabin Crew subjects', 'courses.exec.weeks': '1 week',
             'gallery.eyebrow': 'OUR SCHOOL', 'gallery.title': 'A day at Global Crew.',
             'gallery.subtitle': 'See what the school looks like inside and meet some of the students who are already flying.',
             'gallery.videoFallback': "Won't load?", 'gallery.videoLink': 'Watch the video on YouTube',
-            'schoolGallery.label': 'SCHOOL ALBUM', 'windowAlbum.c7': 'Our team', 'windowAlbum.c8': 'Active instructors',
             'alumni.eyebrow': 'HIRED STUDENTS',
+            'seatmap.label': 'CHOOSE YOUR SEAT', 'seatmap.front': 'FRONT OF THE CABIN', 'seatmap.tail': 'BACK OF THE CABIN',
+            'seatmap.cap0': 'Kike, school director', 'seatmap.cap1': 'Nabila, aviation medicine',
+            'seatmap.cap2': 'Manuel, pilot at Ryanair', 'seatmap.cap3': 'David, Normal & Emergency Ops and Fire',
+            'seatmap.cap4': 'Amparo, dangerous goods', 'seatmap.cap5': 'Alicia, CRM', 'seatmap.cap6': 'Our team',
             'alumni.fallback1.quote': '"I joined knowing nothing about the industry and now I fly with Iberia. The real practicals on the A300 made the difference."',
             'alumni.fallback1.airline': 'Now flying with Iberia',
             'alumni.fallback2.quote': '"Barely two months after graduating I was already flying out of the Valencia base with Vueling."',
@@ -2332,15 +2290,15 @@
             'team.subtitle': 'Active professionals in the aviation industry, each specialised in a different part of your training.',
             'team.nabila.role': 'Nurse · Instructor', 'team.nabila.subject': 'Aviation medicine and first aid',
             'team.nabila.bio': 'Active nurse. Teaches students to administer oxygen, perform CPR and respond to any medical emergency on board.',
-            'team.manuel.role': 'Pilot · Instructor', 'team.manuel.subject': 'General aviation knowledge',
+            'team.manuel.role': 'Pilot at Ryanair · Instructor', 'team.manuel.subject': 'General aviation knowledge',
             'team.manuel.bio': 'Active pilot. Brings students closer to the reality of air navigation and how an aircraft works, from the flight deck.',
             'team.kike.role': 'Iberia Cabin Crew · School Director', 'team.kike.subject': 'Interview preparation and career guidance',
             'team.kike.bio': "Iberia Cabin Crew member. As Global Crew's director, he prepares every student individually for their interviews and supports them until they're flying.",
-            'team.david.role': 'Instructor', 'team.david.subject': 'Normal & Emergency Operations and Fire',
+            'team.david.role': 'Cabin Crew at Air Europa · Instructor', 'team.david.subject': 'Normal & Emergency Operations and Fire',
             'team.david.bio': 'Teaches students how to respond to any situation in the cabin, from normal operations to putting out a real fire.',
             'team.amparo.role': 'Air Nostrum Cabin Crew · Instructor', 'team.amparo.subject': 'Dangerous Goods',
             'team.amparo.bio': 'Active Cabin Crew member at Air Nostrum. Teaches how to identify and handle dangerous goods on board under AESA regulations.',
-            'team.alicia.role': 'Instructor', 'team.alicia.subject': 'CRM (Crew Resource Management)',
+            'team.alicia.role': 'Cabin Crew at Air Nostrum · Instructor', 'team.alicia.subject': 'CRM (Crew Resource Management)',
             'team.alicia.bio': 'Teaches how to work as a crew in the cabin: communication, leadership and joint decision-making in any situation.',
             'accred.eyebrow': 'CERTIFIED SCHOOL', 'accred.title': 'Training recognised by the air authorities.',
             'accred.body': 'Global Crew TCP Training is a Cabin Crew training centre authorised by AESA and the Spanish Ministry of Transport, Mobility and Urban Agenda to deliver official Cabin Crew courses under Regulation (EU) No 290/2012.',
@@ -2352,16 +2310,6 @@
             'testi.a2': '— Student, Executive Cabin Crew',
             'testi.q3': '"The support all the way to the interview was key. They prepared me individually until I got to fly."',
             'testi.a3': '— Student, Cabin Crew class',
-            'pricing.eyebrow': 'YOUR INVESTMENT', 'pricing.title': "Before we talk price, here's everything it includes.",
-            'pricing.subtitle': 'Official AESA training, real hands-on practice, interview preparation and support until you\'re flying — all in one programme.',
-            'pricing.kicker': 'AN INVESTMENT IN YOUR FUTURE', 'pricing.courseName': 'AESA-approved Cabin Crew course', 'pricing.vat': 'VAT included',
-            'pricing.includesLabel': "WHAT'S INCLUDED",
-            'pricing.li1': 'Official AESA theoretical and practical training', 'pricing.li2': 'Full uniform',
-            'pricing.li3': 'Flight simulators', 'pricing.li4': 'Interview preparation with airlines',
-            'pricing.li5': "Exclusive additional training from Global Crew", 'pricing.li6': "Career support even after you start flying",
-            'pricing.depositLabel': 'Deposit to reserve your seat:', 'pricing.depositAmount': '€300',
-            'pricing.financing': 'Financing available for up to 12 months, interest-free.', 'pricing.cta': 'Talk to a teacher',
-            'pricing.execNote': 'Interested in Executive Cabin Crew? Ask us about the price of this add-on.',
             'faq.eyebrow': 'FREQUENTLY ASKED QUESTIONS', 'faq.title': 'What everyone asks us.',
             'faq.subtitle': "And if your question isn't here, message us on WhatsApp and we'll answer right away.",
             'faq.q1': 'What sets you apart from other Cabin Crew schools?',
@@ -2877,71 +2825,52 @@
         });
     }
 
-    /* ===================== SCHOOL GALLERY (large slideshow, prev/next) ===================== */
-    (function initSchoolGallery() {
-        const stage = document.getElementById('schoolGalleryStage');
-        const track = document.getElementById('schoolGalleryTrack');
-        const dotsWrap = document.getElementById('schoolGalleryDots');
-        const currentEl = document.getElementById('schoolGalleryCurrent');
-        const totalEl = document.getElementById('schoolGalleryTotal');
-        const prevBtn = document.getElementById('schoolGalleryPrev');
-        const nextBtn = document.getElementById('schoolGalleryNext');
-        if (!stage || !track) return;
+    /* ===================== SEAT MAP GALLERY ===================== */
+    (function initSeatmapGallery() {
+        const seats = [...document.querySelectorAll('.seatmap-cabin .seat:not(.seat-empty)')];
+        const lightbox = document.getElementById('seatmapLightbox');
+        if (!seats.length || !lightbox) return;
 
-        const slides = [...track.querySelectorAll('.school-gallery-slide')];
-        const total = slides.length;
-        let index = 0;
-        let autoplay = null;
-        const AUTOPLAY_MS = 5500;
-
-        if (totalEl) totalEl.textContent = total;
-        dotsWrap.innerHTML = slides.map((_, i) => `<button type="button" data-i="${i}" aria-label="Foto ${i + 1}" class="${i === 0 ? 'active' : ''}"></button>`).join('');
-        const dots = [...dotsWrap.querySelectorAll('button')];
+        const imgEl = document.getElementById('seatmapLightboxImg');
+        const seatEl = document.getElementById('seatmapLightboxSeat');
+        const capEl = document.getElementById('seatmapLightboxCap');
+        const closeBtn = document.getElementById('seatmapLightboxClose');
+        const prevBtn = document.getElementById('seatmapLightboxPrev');
+        const nextBtn = document.getElementById('seatmapLightboxNext');
+        let current = 0;
 
         function render() {
-            track.style.transform = `translateX(-${index * 100}%)`;
-            slides.forEach((s, i) => s.classList.toggle('active', i === index));
-            dots.forEach((d, i) => d.classList.toggle('active', i === index));
-            if (currentEl) currentEl.textContent = index + 1;
+            const btn = seats[current];
+            const img = btn.querySelector('img');
+            imgEl.src = img.src;
+            imgEl.alt = img.alt;
+            seatEl.textContent = btn.querySelector('.seat-id').textContent;
+            capEl.textContent = I18N[currentLang][btn.dataset.cap] || img.alt;
         }
-
-        function goTo(i) {
-            index = (i + total) % total;
+        function open(i) {
+            current = i;
             render();
+            lightbox.classList.add('open');
+            document.body.style.overflow = 'hidden';
         }
-        function next() { goTo(index + 1); }
-        function prev() { goTo(index - 1); }
-
-        function restartAutoplay() {
-            clearInterval(autoplay);
-            autoplay = setInterval(next, AUTOPLAY_MS);
+        function close() {
+            lightbox.classList.remove('open');
+            document.body.style.overflow = '';
         }
+        function next() { current = (current + 1) % seats.length; render(); }
+        function prev() { current = (current - 1 + seats.length) % seats.length; render(); }
 
-        prevBtn.addEventListener('click', () => { prev(); restartAutoplay(); });
-        nextBtn.addEventListener('click', () => { next(); restartAutoplay(); });
-        dots.forEach((d) => d.addEventListener('click', () => { goTo(parseInt(d.dataset.i, 10)); restartAutoplay(); }));
-
-        stage.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') { prev(); restartAutoplay(); }
-            if (e.key === 'ArrowRight') { next(); restartAutoplay(); }
+        seats.forEach((btn, i) => btn.addEventListener('click', () => open(i)));
+        closeBtn.addEventListener('click', close);
+        nextBtn.addEventListener('click', next);
+        prevBtn.addEventListener('click', prev);
+        lightbox.addEventListener('click', (e) => { if (e.target === lightbox) close(); });
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('open')) return;
+            if (e.key === 'Escape') close();
+            if (e.key === 'ArrowRight') next();
+            if (e.key === 'ArrowLeft') prev();
         });
-        stage.setAttribute('tabindex', '0');
-
-        // Touch / mouse swipe
-        let dragStartX = null;
-        stage.addEventListener('pointerdown', (e) => { dragStartX = e.clientX; });
-        stage.addEventListener('pointerup', (e) => {
-            if (dragStartX == null) return;
-            const dx = e.clientX - dragStartX;
-            if (Math.abs(dx) > 40) { dx < 0 ? next() : prev(); restartAutoplay(); }
-            dragStartX = null;
-        });
-
-        stage.addEventListener('mouseenter', () => clearInterval(autoplay));
-        stage.addEventListener('mouseleave', restartAutoplay);
-
-        render();
-        restartAutoplay();
     })();
 
     /* ===================== NEXT COURSE DATE (from Blob) ===================== */
