@@ -236,8 +236,12 @@
         .hero-content{position:relative;z-index:2;width:100%;}
         .hero .wrap{display:grid;grid-template-columns:1fr;gap:20px;}
         .hero h1{
-            color:var(--cream);font-size:clamp(2.6rem,6.2vw,4.6rem);
+            color:var(--cream);font-size:clamp(1.15rem,4.9vw,4.4rem);
             max-width:900px;font-weight:700;text-shadow:0 4px 24px rgba(0,0,0,.55),0 1px 4px rgba(0,0,0,.7);
+            white-space:nowrap;
+        }
+        @media (max-width:339px){
+            .hero h1{white-space:normal;}
         }
         .hero h1 em{
             font-style:normal;color:var(--coral);
@@ -788,12 +792,13 @@
 
         /* ===================== CONTACT: FORM + MAP ===================== */
         .contact-section{background:var(--cream);padding:100px 0;}
-        .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start;}
+        .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:stretch;}
         .contact-form{
             background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);
-            padding:36px;display:flex;flex-direction:column;gap:24px;
+            padding:40px;display:flex;flex-direction:column;gap:26px;
         }
-        .form-row{display:flex;flex-direction:column;gap:9px;}
+        .form-row{display:flex;flex-direction:column;gap:10px;}
+        .form-row.form-row-grow{flex:1;min-height:0;}
         .form-row label{font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);}
         .form-row input,.form-row select,.form-row textarea{
             font-family:var(--ff-body);font-size:.95rem;color:var(--ink);
@@ -803,8 +808,10 @@
         .form-row input:focus,.form-row select:focus,.form-row textarea:focus{
             outline:none;border-color:var(--steel);box-shadow:0 0 0 3px rgba(140,135,131,.2);
         }
-        .form-row textarea{resize:vertical;min-height:110px;}
-        .form-two{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+        .form-row textarea{resize:vertical;min-height:160px;}
+        .form-row-grow textarea{flex:1;min-height:160px;height:100%;}
+        .form-two{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+        .form-hp{position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;}
         .form-submit{
             font-family:var(--ff-display);font-weight:600;font-size:.95rem;
             background:var(--navy-950);color:var(--cream);padding:15px 26px;border-radius:100px;
@@ -1770,9 +1777,15 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-row">
+                <div class="form-row form-row-grow">
                     <label for="cf-message" data-i18n="contact.message">Mensaje para el profesor</label>
                     <textarea id="cf-message" name="message" placeholder="Cuéntanos qué te gustaría saber sobre el curso, fechas o requisitos de acceso..." data-i18n-placeholder="contact.messagePh" required></textarea>
+                </div>
+                <!-- Honeypot: invisible to real people, bots that auto-fill every field will fill this in.
+                     Formspree discards any submission where a field named "_gotcha" is non-empty. -->
+                <div class="form-hp" aria-hidden="true">
+                    <label for="cf-hp">¿Cuál es tu apellido?</label>
+                    <input type="text" id="cf-hp" name="_gotcha" tabindex="-1" autocomplete="off">
                 </div>
                 <button type="submit" class="form-submit"><span data-i18n="contact.submit">Enviar mensaje</span> <svg viewBox="0 0 24 24" style="width:15px;height:15px;transform:rotate(90deg);"><use href="#icon-plane"/></svg></button>
                 <p class="form-note" id="formNote"></p>
@@ -3302,10 +3315,32 @@
     const contactForm = document.getElementById('contactForm');
     const formNote = document.getElementById('formNote');
     const formSubmitBtn = contactForm ? contactForm.querySelector('.form-submit') : null;
+    const formLoadedAt = Date.now(); // used for the "submitted too fast to be human" check below
 
     if (contactForm) {
         contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            // Honeypot: a real visitor never sees or fills this field, so if it has
+            // a value the request came from a bot. Pretend it worked and stop there —
+            // no need to tip the bot off that it was caught.
+            const honeypot = contactForm.querySelector('#cf-hp');
+            if (honeypot && honeypot.value.trim() !== '') {
+                formNote.classList.remove('error');
+                formNote.classList.add('ok');
+                formNote.textContent = '¡Gracias! Tu mensaje se ha enviado. Un profesor de Global Crew te responderá muy pronto.';
+                contactForm.reset();
+                return;
+            }
+            // A human needs at least a couple of seconds to read the form and type
+            // something; near-instant submissions are almost always bots/scripts.
+            if (Date.now() - formLoadedAt < 2500) {
+                formNote.classList.remove('error');
+                formNote.classList.add('ok');
+                formNote.textContent = '¡Gracias! Tu mensaje se ha enviado. Un profesor de Global Crew te responderá muy pronto.';
+                contactForm.reset();
+                return;
+            }
 
             formSubmitBtn.disabled = true;
             formNote.classList.remove('ok', 'error');
