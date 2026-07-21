@@ -386,9 +386,21 @@
             letter-spacing:.04em;color:var(--navy-800);
         }
         .stats-tagline svg{color:var(--steel);}
-        .stats-subtag{
-            text-align:center;margin-top:8px;font-family:var(--ff-mono);font-size:.68rem;
-            letter-spacing:.02em;color:var(--ink-soft);
+        .stats-vr-banner{
+            display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+            max-width:640px;margin:20px auto 0;padding:14px 26px;border-radius:100px;
+            background:var(--navy-950);color:#fff;text-align:center;
+            box-shadow:0 16px 32px -16px rgba(61,9,16,.5);
+        }
+        .stats-vr-banner svg{width:19px;height:19px;color:var(--coral);flex-shrink:0;}
+        .stats-vr-banner span{font-family:var(--ff-display);font-weight:600;font-size:.88rem;letter-spacing:.01em;}
+        .stats-vr-banner .stats-vr-tag{
+            font-family:var(--ff-mono);font-size:.62rem;letter-spacing:.08em;color:var(--coral);
+            text-transform:uppercase;background:rgba(228,87,46,.15);padding:3px 9px;border-radius:100px;
+        }
+        @media (max-width:560px){
+            .stats-vr-banner{padding:12px 18px;gap:8px;}
+            .stats-vr-banner span{font-size:.8rem;}
         }
 
         /* ===================== COURSES — boarding pass cards ===================== */
@@ -903,69 +915,70 @@
             padding-top:24px;border-top:1px solid var(--line);
         }
 
-        /* ===================== TESTIMONIALS ===================== */
-        .testimonials{background:var(--navy-950);color:var(--cream);padding:100px 0;position:relative;overflow:hidden;}
 
-        /* ===================== IN-FLIGHT ENTERTAINMENT FRAME ===================== */
-        .ife-frame{
-            position:relative;max-width:820px;margin:0 auto;border-radius:22px;
-            background:linear-gradient(160deg,#2A2A2C,#151516 60%,#0D0D0E);
-            border:1px solid rgba(255,255,255,.08);
-            box-shadow:0 30px 70px -30px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06);
-            padding:14px 14px 16px;
+        /* ===================== BLOG ===================== */
+        .blog-section{background:var(--sky);padding:100px 0;}
+        .blog-filters{
+            display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:40px;
         }
-        .ife-topbar{display:flex;align-items:center;gap:10px;padding:6px 10px 14px;}
-        .ife-camera{width:6px;height:6px;border-radius:50%;background:#444;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15);}
-        .ife-channel{
-            font-family:var(--ff-mono);font-size:.62rem;letter-spacing:.1em;color:rgba(247,241,236,.45);
-            flex:1;text-align:center;
+        .blog-filter{
+            font-family:var(--ff-mono);font-size:.76rem;letter-spacing:.03em;color:var(--ink-soft);
+            border:1px solid var(--line);border-radius:100px;padding:9px 18px;background:#fff;
+            transition:background .2s,color .2s,border-color .2s;
         }
-        .ife-signal svg{width:12px;height:12px;color:rgba(247,241,236,.35);transform:rotate(90deg);}
-        .ife-screen{
-            background:radial-gradient(120% 100% at 50% 0%,#3D0910 0%,#26060B 65%,#160408 100%);
-            border-radius:8px;padding:52px 32px;min-height:200px;display:flex;align-items:center;
-            box-shadow:inset 0 0 40px rgba(0,0,0,.5),inset 0 0 0 1px rgba(0,0,0,.4);
-            position:relative;overflow:hidden;
+        .blog-filter:hover{border-color:var(--steel);}
+        .blog-filter.active{background:var(--navy-950);color:#fff;border-color:var(--navy-950);}
+        .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;}
+        .blog-card{
+            background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);
+            overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .3s,transform .3s;
         }
-        .ife-screen::before{ /* subtle scanline / glow */
-            content:'';position:absolute;inset:0;pointer-events:none;
-            background:linear-gradient(180deg,rgba(255,255,255,.04),transparent 40%);
+        .blog-card:hover{transform:translateY(-4px);box-shadow:0 20px 40px -20px rgba(43,38,36,.25);}
+        .blog-card-img{aspect-ratio:16/10;overflow:hidden;background:#ddd;}
+        .blog-card-img img{width:100%;height:100%;object-fit:cover;display:block;}
+        .blog-card-tag{
+            margin:18px 22px 0;font-family:var(--ff-mono);font-size:.66rem;letter-spacing:.06em;
+            color:var(--coral);text-transform:uppercase;
         }
-        .ife-bottombar{display:flex;align-items:center;gap:14px;padding:16px 12px 4px;}
-        .ife-play{
-            width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.08);flex-shrink:0;
-            display:flex;align-items:center;justify-content:center;
+        .blog-card h3{
+            margin:8px 22px 0;font-family:var(--ff-display);font-weight:700;font-size:1.08rem;
+            color:var(--navy-950);line-height:1.3;
         }
-        .ife-play svg{width:11px;height:11px;color:rgba(247,241,236,.7);transform:rotate(90deg);}
-        .ife-scrub{flex:1;height:3px;background:rgba(255,255,255,.12);border-radius:3px;overflow:hidden;}
-        .ife-scrub-fill{height:100%;width:0%;background:var(--steel-light);border-radius:3px;}
-        .ife-btn{
-            position:absolute;top:50%;width:34px;height:34px;border-radius:50%;transform:translateY(-50%);
-            background:linear-gradient(160deg,#333,#161616);box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 4px 10px rgba(0,0,0,.4);
-            display:none;
+        .blog-card-excerpt{
+            margin:10px 22px 0;color:var(--ink-soft);font-size:.88rem;line-height:1.55;
+            display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
         }
-        .ife-btn-left{left:-50px;}
-        .ife-btn-right{right:-50px;}
-
-        .testi-track{position:relative;max-width:600px;margin:0 auto;min-height:150px;width:100%;}
-        .testi{
-            position:absolute;inset:0;opacity:0;transform:translateY(14px);transition:opacity .7s var(--ease),transform .7s var(--ease);
-            text-align:center;
+        .blog-card-more{margin:0 22px;overflow:hidden;}
+        .blog-card-more p{padding-top:10px;color:var(--ink-soft);font-size:.88rem;line-height:1.55;border-top:1px dashed var(--line);margin-top:14px;}
+        .blog-card-toggle{
+            display:flex;align-items:center;gap:6px;margin:16px 22px 22px;font-family:var(--ff-display);
+            font-weight:600;font-size:.85rem;color:var(--navy-800);
         }
-        .testi.active{opacity:1;transform:translateY(0);position:relative;}
-        .testi p{font-family:var(--ff-display);font-size:1.3rem;line-height:1.4;color:var(--cream);}
-        .testi .who{margin-top:18px;font-family:var(--ff-mono);font-size:.68rem;color:var(--steel-light);letter-spacing:.08em;}
-        .testi-dots{display:flex;gap:7px;flex-shrink:0;}
-        .testi-dots button{width:6px;height:6px;border-radius:50%;background:rgba(247,244,236,.25);}
-        .testi-dots button.active{background:var(--steel-light);width:16px;border-radius:4px;}
-        @media (min-width:900px){
-            .ife-btn{display:block;}
+        .blog-card-toggle svg{width:13px;height:13px;transform:rotate(90deg);transition:transform .3s var(--ease);}
+        .blog-card-toggle.open svg{transform:rotate(-90deg);}
+        @media (max-width:980px){
+            .blog-grid{grid-template-columns:repeat(2,1fr);}
         }
-        @media (max-width:560px){
-            .ife-screen{padding:38px 20px;min-height:220px;}
-            .testi p{font-size:1.1rem;}
+        @media (max-width:640px){
+            .blog-grid{grid-template-columns:1fr;}
+            .blog-filters{gap:6px;}
+            .blog-filter{padding:8px 14px;font-size:.72rem;}
+        }
+        .blog-loading,.blog-empty{
+            grid-column:1/-1;text-align:center;padding:30px 20px;color:var(--ink-soft);
+            font-family:var(--ff-mono);font-size:.85rem;
         }
 
+        /* ===================== SECTION "SHOW MORE" TOGGLE ===================== */
+        .section-more{display:flex;justify-content:center;margin-top:34px;}
+        .section-more-btn{
+            display:inline-flex;align-items:center;gap:8px;font-family:var(--ff-display);font-weight:600;
+            font-size:.9rem;color:var(--navy-950);border:1px solid var(--line);border-radius:100px;
+            padding:12px 24px;background:#fff;transition:background .25s,transform .25s;
+        }
+        .section-more-btn:hover{background:#fff;transform:translateY(-2px);box-shadow:0 12px 24px -12px rgba(43,38,36,.25);}
+        .section-more-btn svg{width:14px;height:14px;transform:rotate(90deg);transition:transform .3s var(--ease);}
+        .section-more-btn.open svg{transform:rotate(-90deg);}
 
         /* ===================== FAQ ===================== */
         .faq-section{background:var(--cream);padding:100px 0;}
@@ -1143,6 +1156,7 @@
         <a href="#cursos" data-i18n="nav.courses">Cursos</a>
         <a href="#galeria" data-i18n="nav.school">La escuela</a>
         <a href="#equipo" data-i18n="nav.team">Instructores</a>
+        <a href="blog.html" data-i18n="nav.blog">Blog</a>
         <a href="test-cabin-crew.html" data-i18n="nav.quiz">Descubre tu perfil</a>
         <a href="#contacto" data-i18n="nav.contact">Contacto</a>
     </nav>
@@ -1161,6 +1175,7 @@
     <a href="#cursos" data-i18n="nav.courses">Cursos</a>
     <a href="#galeria" data-i18n="nav.school">La escuela</a>
     <a href="#equipo" data-i18n="nav.team">Instructores</a>
+    <a href="blog.html" data-i18n="nav.blog">Blog</a>
     <a href="test-cabin-crew.html" data-i18n="nav.quiz">Descubre tu perfil</a>
     <a href="#contacto" data-i18n="nav.contact">Contacto</a>
     <button type="button" class="lang-toggle lang-toggle-mobile" id="langToggleMobile" aria-label="Cambiar idioma / Switch language">
@@ -1225,7 +1240,11 @@
             </div>
         </div>
         <p class="stats-tagline reveal" style="transition-delay:.4s"><svg viewBox="0 0 24 24" style="width:15px;height:15px;transform:rotate(90deg);vertical-align:-2px;margin-right:6px;"><use href="#icon-plane"/></svg><span data-i18n="stats.tagline">La escuela TCP de Valencia con más alumnos volando</span></p>
-        <p class="stats-subtag reveal" style="transition-delay:.5s" data-i18n="stats.vrNote">Primera escuela de España con formación en Realidad Virtual: incendios y evacuación.</p>
+        <div class="stats-vr-banner reveal" style="transition-delay:.5s">
+            <svg viewBox="0 0 24 24"><use href="#icon-vr"/></svg>
+            <span data-i18n="stats.vrNote">Primera escuela de España con formación en Realidad Virtual: incendios y evacuación</span>
+            <span class="stats-vr-tag" data-i18n="stats.vrTag">NOVEDAD</span>
+        </div>
     </div>
 </section>
 <div class="route-divider" data-wp="2">
@@ -1622,44 +1641,28 @@
 
 <div class="route-divider" data-wp="8">
     <div class="route-inner">
-        <span class="route-label" data-i18n="wp.08">WP08 · DESTINO FINAL</span>
+        <span class="route-label" data-i18n="wp.08blog">WP08 · EN EL BLOG</span>
         <div class="route-track"><svg class="plane-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-        <span class="route-dest" data-i18n="wp.08dest">TU CARRERA</span>
+        <span class="route-dest" data-i18n="wp.08blogdest">CONSEJOS Y NOTICIAS</span>
     </div>
 </div>
 
-<!-- ============ TESTIMONIALS ============ -->
-<section class="testimonials">
+<!-- ============ BLOG ============ -->
+<section class="blog-section" id="blog">
     <div class="wrap">
-        <div class="ife-frame reveal">
-            <div class="ife-topbar">
-                <span class="ife-camera"></span>
-                <span class="ife-channel" data-i18n="testi.channel">GLOBAL CREW TV · CANAL TESTIMONIOS</span>
-                <span class="ife-signal"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span>
-            </div>
-            <div class="ife-screen">
-                <div class="testi-track" id="testiTrack">
-                    <div class="testi active">
-                        <p data-i18n="testi.q1">"Entré sin saber nada del sector y salí con contrato en mano. Las prácticas reales en el avión marcaron la diferencia."</p>
-                        <div class="who" data-i18n="testi.a1">— Alumna, promoción TCP</div>
-                    </div>
-                    <div class="testi">
-                        <p data-i18n="testi.q2">"Los profesores siguen volando, así que todo lo que enseñan pasa por la realidad de una cabina, no solo por un libro."</p>
-                        <div class="who" data-i18n="testi.a2">— Alumno, TCP Ejecutivo</div>
-                    </div>
-                    <div class="testi">
-                        <p data-i18n="testi.q3">"El acompañamiento hasta la entrevista fue clave. Me prepararon de forma individual hasta que conseguí volar."</p>
-                        <div class="who" data-i18n="testi.a3">— Alumno, promoción TCP</div>
-                    </div>
-                </div>
-            </div>
-            <div class="ife-bottombar">
-                <span class="ife-play"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></span>
-                <div class="ife-scrub"><div class="ife-scrub-fill" id="ifeScrubFill"></div></div>
-                <div class="testi-dots" id="testiDots"></div>
-            </div>
-            <span class="ife-btn ife-btn-left"></span>
-            <span class="ife-btn ife-btn-right"></span>
+        <div class="section-head reveal">
+            <span class="eyebrow" data-i18n="blog.eyebrow">BLOG</span>
+            <h2 data-i18n="blog.title">Consejos, noticias y la vida real de un TCP.</h2>
+            <p data-i18n="blog.subtitle">Novedades de la escuela, próximas convocatorias y todo lo que te ayude a conocer mejor cómo es de verdad este trabajo.</p>
+        </div>
+        <div class="blog-grid" id="blogGrid">
+            <p class="blog-loading" id="blogLoading" data-i18n="blog.loading">Cargando artículos...</p>
+        </div>
+        <div class="section-more">
+            <a href="blog.html" class="section-more-btn">
+                <span data-i18n="blog.viewAll">Ver todos los artículos</span>
+                <svg viewBox="0 0 24 24"><use href="#icon-chevron-r"/></svg>
+            </a>
         </div>
     </div>
 </section>
@@ -1863,6 +1866,7 @@
                 <ul>
                     <li><a href="#galeria" data-i18n="nav.school">La escuela</a></li>
                     <li><a href="#equipo" data-i18n="nav.team">Instructores</a></li>
+                    <li><a href="blog.html" data-i18n="nav.blog">Blog</a></li>
                     <li><a href="#" data-i18n="footer.faq">Preguntas frecuentes</a></li>
                 </ul>
             </div>
@@ -2129,7 +2133,7 @@
     const I18N = {
         es: {
             'nav.tagline': 'ESCUELA DE TRIPULANTES · VALENCIA',
-            'nav.courses': 'Cursos', 'nav.school': 'La escuela', 'nav.team': 'Instructores',
+            'nav.courses': 'Cursos', 'nav.school': 'La escuela', 'nav.team': 'Instructores', 'nav.blog': 'Blog',
             'nav.quiz': 'Descubre tu perfil', 'nav.contact': 'Contacto', 'nav.talk': 'Hablemos',
             'announce.prefix': 'PRÓXIMO CURSO:',
             'hero.eyebrow': 'CENTRO HOMOLOGADO AESA · TCP',
@@ -2146,13 +2150,13 @@
             'wp.05': 'WP05 · ALREDEDOR DEL MUNDO', 'wp.05dest': 'MIRA HASTA DÓNDE LLEGAN',
             'wp.06': 'WP06 · TRIPULACIÓN DOCENTE', 'wp.06dest': 'CONOCE A TUS INSTRUCTORES',
             'wp.07': 'WP07 · RECONOCIMIENTO', 'wp.07dest': 'RESPALDO OFICIAL',
-            'wp.08': 'WP08 · DESTINO FINAL', 'wp.08dest': 'TU CARRERA',
+            'wp.08blog': 'WP08 · EN EL BLOG', 'wp.08blogdest': 'CONSEJOS Y NOTICIAS',
             'wp.09': 'WP09 · ANTES DE DESPEGAR', 'wp.09dest': 'RESOLVEMOS TUS DUDAS',
             'wp.10': 'WP10 · EMBARQUE INMEDIATO', 'wp.10dest': 'HABLEMOS',
             'stats.years': 'Años formando TCP', 'stats.students': 'Alumnos formados',
             'stats.employability': 'Empleabilidad', 'stats.execWeeks': 'Semanas, duración curso TCP',
             'stats.tagline': 'La escuela TCP de Valencia con más alumnos volando',
-            'stats.vrNote': 'Primera escuela de España con formación en Realidad Virtual: incendios y evacuación.',
+            'stats.vrNote': 'Primera escuela de España con formación en Realidad Virtual: incendios y evacuación', 'stats.vrTag': 'NOVEDAD',
             'testPromo.eyebrow': 'TEST RÁPIDO · 1 MINUTO',
             'testPromo.title': '¿Estás hecho para volar?',
             'testPromo.body': 'Con solo 6 preguntas sabrás si reúnes las cualidades que buscan las aerolíneas y cómo puedes prepararte para conseguir tu primer trabajo como TCP.',
@@ -2215,13 +2219,12 @@
             'accred.eyebrow': 'ESCUELA HOMOLOGADA', 'accred.title': 'Formación reconocida por las autoridades aéreas.',
             'accred.body': 'Global Crew TCP Training es un centro de formación de TCP autorizado por AESA y el Ministerio de Transportes, Movilidad y Agenda Urbana para impartir cursos oficiales de TCP según el Reglamento (UE) nº 290/2012.',
             'accred.easa': 'Normativa EASA',
-            'testi.channel': 'GLOBAL CREW TV · CANAL TESTIMONIOS',
-            'testi.q1': '"Entré sin saber nada del sector y salí con contrato en mano. Las prácticas reales en el avión marcaron la diferencia."',
-            'testi.a1': '— Alumna, promoción TCP',
-            'testi.q2': '"Los profesores siguen volando, así que todo lo que enseñan pasa por la realidad de una cabina, no solo por un libro."',
-            'testi.a2': '— Alumno, TCP Ejecutivo',
-            'testi.q3': '"El acompañamiento hasta la entrevista fue clave. Me prepararon de forma individual hasta que conseguí volar."',
-            'testi.a3': '— Alumno, promoción TCP',
+            'blog.eyebrow': 'BLOG', 'blog.title': 'Consejos, noticias y la vida real de un TCP.',
+            'blog.subtitle': 'Novedades de la escuela, próximas convocatorias y todo lo que te ayude a conocer mejor cómo es de verdad este trabajo.',
+            'blog.filterNews': 'Noticias', 'blog.filterLife': 'Vida del TCP',
+            'blog.filterCourse': 'Curso TCP', 'blog.filterCuriosities': 'Curiosidades',
+            'blog.loading': 'Cargando artículos...', 'blog.empty': 'Muy pronto, los primeros artículos del blog.',
+            'blog.viewAll': 'Ver todos los artículos',
             'faq.eyebrow': 'PREGUNTAS FRECUENTES', 'faq.title': 'Lo que todo el mundo nos pregunta.',
             'faq.subtitle': 'Y si tu duda no está aquí, escríbenos por WhatsApp y te respondemos al momento.',
             'faq.q1': '¿Qué os diferencia de otras escuelas TCP?',
@@ -2258,7 +2261,7 @@
         },
         en: {
             'nav.tagline': 'CABIN CREW SCHOOL · VALENCIA',
-            'nav.courses': 'Courses', 'nav.school': 'The school', 'nav.team': 'Instructors',
+            'nav.courses': 'Courses', 'nav.school': 'The school', 'nav.team': 'Instructors', 'nav.blog': 'Blog',
             'nav.quiz': 'Discover your profile', 'nav.contact': 'Contact', 'nav.talk': "Let's talk",
             'announce.prefix': 'NEXT INTAKE:',
             'hero.eyebrow': 'AESA-CERTIFIED CENTRE · CABIN CREW',
@@ -2275,13 +2278,13 @@
             'wp.05': 'WP05 · AROUND THE WORLD', 'wp.05dest': 'SEE HOW FAR THEY GO',
             'wp.06': 'WP06 · TEACHING CREW', 'wp.06dest': 'MEET YOUR INSTRUCTORS',
             'wp.07': 'WP07 · RECOGNITION', 'wp.07dest': 'OFFICIAL BACKING',
-            'wp.08': 'WP08 · FINAL DESTINATION', 'wp.08dest': 'YOUR CAREER',
+            'wp.08blog': 'WP08 · ON THE BLOG', 'wp.08blogdest': 'TIPS AND NEWS',
             'wp.09': 'WP09 · BEFORE TAKEOFF', 'wp.09dest': 'WE ANSWER YOUR QUESTIONS',
             'wp.10': 'WP10 · IMMEDIATE BOARDING', 'wp.10dest': "LET'S TALK",
             'stats.years': 'Years training Cabin Crew', 'stats.students': 'Students trained',
             'stats.employability': 'Employability', 'stats.execWeeks': 'Weeks, TCP course duration',
             'stats.tagline': 'The Cabin Crew school in Valencia with the most students flying',
-            'stats.vrNote': 'First school in Spain with Virtual Reality training: fire and evacuation.',
+            'stats.vrNote': 'First school in Spain with Virtual Reality training: fire and evacuation', 'stats.vrTag': 'NEW',
             'testPromo.eyebrow': 'QUICK TEST · 1 MINUTE',
             'testPromo.title': 'Are you cut out to fly?',
             'testPromo.body': "With just 6 questions you'll find out if you have the qualities airlines look for, and how to prepare to land your first job as Cabin Crew.",
@@ -2344,13 +2347,12 @@
             'accred.eyebrow': 'CERTIFIED SCHOOL', 'accred.title': 'Training recognised by the air authorities.',
             'accred.body': 'Global Crew TCP Training is a Cabin Crew training centre authorised by AESA and the Spanish Ministry of Transport, Mobility and Urban Agenda to deliver official Cabin Crew courses under Regulation (EU) No 290/2012.',
             'accred.easa': 'EASA regulations',
-            'testi.channel': 'GLOBAL CREW TV · TESTIMONIALS CHANNEL',
-            'testi.q1': '"I joined knowing nothing about the industry and left with a contract in hand. The real practicals on the aircraft made the difference."',
-            'testi.a1': '— Student, Cabin Crew class',
-            'testi.q2': "\"The teachers are still flying, so everything they teach comes from the reality of a cabin, not just a book.\"",
-            'testi.a2': '— Student, Executive Cabin Crew',
-            'testi.q3': '"The support all the way to the interview was key. They prepared me individually until I got to fly."',
-            'testi.a3': '— Student, Cabin Crew class',
+            'blog.eyebrow': 'BLOG', 'blog.title': 'Tips, news and the real life of a Cabin Crew member.',
+            'blog.subtitle': 'School updates, upcoming intakes and everything that helps you get to know what this job is really like.',
+            'blog.filterNews': 'News', 'blog.filterLife': 'Cabin Crew Life',
+            'blog.filterCourse': 'Cabin Crew Course', 'blog.filterCuriosities': 'Curiosities',
+            'blog.loading': 'Loading articles...', 'blog.empty': 'The first blog posts are coming very soon.',
+            'blog.viewAll': 'View all articles',
             'faq.eyebrow': 'FREQUENTLY ASKED QUESTIONS', 'faq.title': 'What everyone asks us.',
             'faq.subtitle': "And if your question isn't here, message us on WhatsApp and we'll answer right away.",
             'faq.q1': 'What sets you apart from other Cabin Crew schools?',
@@ -3374,70 +3376,60 @@
         });
     }
 
+    /* ===================== BLOG (homepage teaser, 3 latest real posts) ===================== */
+    (function initBlogTeaser() {
+        const grid = document.getElementById('blogGrid');
+        if (!grid) return;
+
+        const CATEGORY_LABEL_KEYS = { noticias: 'blog.filterNews', vida: 'blog.filterLife', curso: 'blog.filterCourse', curiosidades: 'blog.filterCuriosities' };
+
+        function formatDate(iso) {
+            if (!iso) return '';
+            const d = new Date(iso);
+            if (isNaN(d)) return '';
+            return d.toLocaleDateString(currentLang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        async function load() {
+            try {
+                const res = await fetch(`/api/blog-list?lang=${currentLang}`);
+                const data = await res.json();
+                const posts = (Array.isArray(data.posts) ? data.posts : []).slice(0, 3);
+
+                if (!posts.length) {
+                    grid.innerHTML = `<p class="blog-empty" data-i18n="blog.empty">Muy pronto, los primeros artículos del blog.</p>`;
+                    return;
+                }
+
+                grid.innerHTML = posts.map((p) => {
+                    const catKey = CATEGORY_LABEL_KEYS[p.category];
+                    const catLabel = catKey ? I18N[currentLang][catKey] : (p.category || '');
+                    return `
+                        <article class="blog-card">
+                            ${p.image ? `<div class="blog-card-img"><img src="${p.image}" alt="${(p.title || '').replace(/"/g, '&quot;')}" loading="lazy"></div>` : ''}
+                            <span class="blog-card-tag">${catLabel}</span>
+                            <h3>${p.title || ''}</h3>
+                            <p class="blog-card-excerpt">${p.text || ''}</p>
+                        </article>
+                    `;
+                }).join('');
+            } catch (err) {
+                grid.innerHTML = `<p class="blog-empty" data-i18n="blog.empty">Muy pronto, los primeros artículos del blog.</p>`;
+            }
+        }
+
+        load();
+        // Re-render in the new language if the person switches ES/EN after this loads.
+        document.querySelectorAll('.lang-toggle, #langToggle').forEach((el) => {
+            el.addEventListener('click', () => setTimeout(load, 0));
+        });
+    })();
+
     /* ===================== FAQ ACCORDION ===================== */
     /* Native <details>/<summary> now handles open/close and the exclusive
        group behavior (via the shared name="faq-group" attribute) — no JS
        needed, which also means the FAQ keeps working even if something
        else on the page throws a JS error. */
-
-    /* ===================== TESTIMONIALS CAROUSEL (IFE style) ===================== */
-    const TESTI_INTERVAL_MS = 6000;
-    let testis = [];
-    let testiDots = [];
-    let testiIndex = 0;
-    let testiAutoplay = null;
-    let scrubStart = performance.now();
-    const testiDotsWrap = document.getElementById('testiDots');
-    const ifeScrubFill = document.getElementById('ifeScrubFill');
-
-    function restartScrub() { scrubStart = performance.now(); }
-
-    function showTesti(i) {
-        testis.forEach((t, idx) => t.classList.toggle('active', idx === i));
-        testiDots.forEach((d, idx) => d.classList.toggle('active', idx === i));
-        testiIndex = i;
-    }
-
-    function testiHTML(t) {
-        return `<div class="testi">
-    <p>"${t.quote}"</p>
-    <div class="who">— ${t.name}</div>
-  </div>`;
-    }
-
-    function initTestisCarousel() {
-        const testiTrack = document.getElementById('testiTrack');
-        testis = [...testiTrack.querySelectorAll('.testi')];
-        if (testis.length) testis[0].classList.add('active');
-        testiIndex = 0;
-
-        testiDotsWrap.innerHTML = testis.map((_, i) => `<button data-i="${i}" class="${i===0?'active':''}"></button>`).join('');
-        testiDots = [...testiDotsWrap.querySelectorAll('button')];
-        testiDots.forEach(d => d.addEventListener('click', () => {
-            showTesti(parseInt(d.dataset.i));
-            restartScrub();
-        }));
-
-        clearInterval(testiAutoplay);
-        if (testis.length > 1) {
-            testiAutoplay = setInterval(() => {
-                showTesti((testiIndex + 1) % testis.length);
-                restartScrub();
-            }, TESTI_INTERVAL_MS);
-        }
-        restartScrub();
-    }
-
-    function tickScrub(now) {
-        if (ifeScrubFill) {
-            const pct = Math.min(((now - scrubStart) / TESTI_INTERVAL_MS) * 100, 100);
-            ifeScrubFill.style.width = pct + '%';
-        }
-        requestAnimationFrame(tickScrub);
-    }
-    requestAnimationFrame(tickScrub);
-
-    initTestisCarousel();
 
     /* ===================== ONE COMBINED FETCH FOR ALL BLOB DATA ===================== */
     async function loadHomeDataFromBlob(lang) {
@@ -3453,9 +3445,6 @@
                 alumniTrack.innerHTML = data.alumni.map(alumniSlideHTML).join('');
                 alumniGalleryData = data.alumni;
             }
-            if (data.testimonials && data.testimonials.length) {
-                document.getElementById('testiTrack').innerHTML = data.testimonials.map(testiHTML).join('');
-            }
             if (data.nextCourseText) {
                 bpCourseDate = data.nextCourseText;
                 if (courseEl) courseEl.innerHTML = highlightStars(data.nextCourseText);
@@ -3464,7 +3453,6 @@
             // No API available (e.g. hosted outside Vercel) — keep the built-in examples already in the HTML.
         } finally {
             initAlumniCarousel();
-            initTestisCarousel();
             if (!alumniGalleryData.length) alumniGalleryData = buildAlumniFallbackFromDOM();
             alumniGalleryShown = ALUMNI_GALLERY_BATCH;
             renderAlumniGallery();
