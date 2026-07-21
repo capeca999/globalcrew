@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin · Blog Global Crew</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+    :root{
+        --navy-950:#3D0910;--navy-800:#750C1B;--steel:#8C8783;--steel-light:#D6D2CD;
+        --cream:#F7F1EC;--sky:#EFEBE8;--coral:#E4572E;--ink:#241E1C;--ink-soft:#6E6763;
+        --line:rgba(43,38,36,0.14);--ff-display:'Space Grotesk',sans-serif;--ff-body:'Inter',sans-serif;
+        --ff-mono:'IBM Plex Mono',monospace;--radius-lg:18px;--radius-md:12px;--ease:cubic-bezier(.22,.9,.32,1);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:var(--ff-body);color:var(--ink);background:var(--sky);min-height:100vh;}
+    a{color:inherit;}
+    .wrap{max-width:960px;margin:0 auto;padding:40px 24px 80px;}
+    h1,h2{font-family:var(--ff-display);color:var(--navy-950);}
+    .hidden{display:none !important;}
+
+    /* ---- login ---- */
+    #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--navy-950);padding:24px;}
+    .login-card{background:#fff;border-radius:var(--radius-lg);padding:44px 36px;max-width:380px;width:100%;}
+    .login-card h1{font-size:1.4rem;margin-bottom:6px;}
+    .login-card p{color:var(--ink-soft);font-size:.88rem;margin-bottom:26px;}
+    .field{margin-bottom:16px;}
+    .field label{display:block;font-family:var(--ff-mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:7px;}
+    .field input,.field select,.field textarea{
+        width:100%;font-family:var(--ff-body);font-size:.95rem;color:var(--ink);border:1px solid var(--line);
+        border-radius:10px;padding:11px 13px;background:var(--cream);
+    }
+    .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--steel);}
+    .btn{
+        display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--ff-display);
+        font-weight:600;font-size:.92rem;padding:12px 22px;border-radius:100px;cursor:pointer;transition:transform .25s,background .25s;
+        border:none;
+    }
+    .btn-primary{background:var(--navy-950);color:#fff;width:100%;}
+    .btn-primary:hover{background:var(--navy-800);}
+    .btn-ghost{background:#fff;color:var(--navy-950);border:1px solid var(--line);}
+    .btn-ghost:hover{background:var(--sky);}
+    .btn-danger{background:#fff;color:#B3261E;border:1px solid rgba(179,38,30,.35);font-size:.78rem;padding:8px 14px;}
+    .btn-danger:hover{background:#FDECEC;}
+    .msg{margin-top:14px;font-family:var(--ff-mono);font-size:.78rem;min-height:1.2em;}
+    .msg.error{color:#B3261E;}
+    .msg.ok{color:#2E7D4F;}
+
+    /* ---- dashboard ---- */
+    #dashboard header{
+        display:flex;align-items:center;justify-content:space-between;background:var(--navy-950);
+        color:#fff;padding:20px 0;margin-bottom:0;
+    }
+    #dashboard header .wrap{display:flex;align-items:center;justify-content:space-between;padding:0 24px;max-width:960px;margin:0 auto;width:100%;}
+    #dashboard header h1{color:#fff;font-size:1.1rem;}
+    #dashboard header span{font-family:var(--ff-mono);font-size:.76rem;color:rgba(247,241,236,.7);}
+
+    .panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);padding:30px;margin-bottom:28px;}
+    .panel h2{font-size:1.15rem;margin-bottom:20px;}
+    .form-row-two{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    @media (max-width:640px){.form-row-two{grid-template-columns:1fr;}}
+    textarea{resize:vertical;min-height:90px;}
+    .img-preview{margin-top:10px;max-width:220px;border-radius:10px;overflow:hidden;border:1px solid var(--line);}
+    .img-preview img{width:100%;display:block;}
+    .form-actions{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;align-items:center;}
+
+    .post-row{
+        display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);
+    }
+    .post-row:last-child{border-bottom:none;}
+    .post-row img{width:64px;height:48px;object-fit:cover;border-radius:8px;background:var(--sky);flex-shrink:0;}
+    .post-row .post-info{flex:1;min-width:0;}
+    .post-row h3{font-size:.95rem;font-family:var(--ff-display);color:var(--navy-950);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .post-row .post-meta{font-family:var(--ff-mono);font-size:.68rem;color:var(--ink-soft);margin-top:3px;}
+    .post-row .post-actions{display:flex;gap:8px;flex-shrink:0;}
+    .empty-note{color:var(--ink-soft);font-family:var(--ff-mono);font-size:.82rem;text-align:center;padding:20px 0;}
+</style>
+</head>
+<body>
+
+<!-- ===================== LOGIN ===================== -->
+<div id="loginScreen">
+    <div class="login-card">
+        <h1>Panel de Global Crew</h1>
+        <p>Inicia sesión para gestionar los artículos del blog.</p>
+        <form id="loginForm">
+            <div class="field">
+                <label for="loginUser">Usuario</label>
+                <input type="text" id="loginUser" autocomplete="username" required>
+            </div>
+            <div class="field">
+                <label for="loginPass">Contraseña</label>
+                <input type="password" id="loginPass" autocomplete="current-password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Entrar</button>
+            <p class="msg error" id="loginMsg"></p>
+        </form>
+    </div>
+</div>
+
+<!-- ===================== DASHBOARD ===================== -->
+<div id="dashboard" class="hidden">
+    <header>
+        <div class="wrap">
+            <h1>Blog · Global Crew</h1>
+            <div style="display:flex;align-items:center;gap:16px;">
+                <span id="whoami"></span>
+                <button type="button" class="btn btn-ghost" id="logoutBtn" style="padding:8px 16px;font-size:.8rem;">Cerrar sesión</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="wrap">
+        <div class="panel">
+            <h2 id="formTitle">Nuevo artículo</h2>
+            <form id="postForm">
+                <input type="hidden" id="postSlug">
+                <div class="form-row-two">
+                    <div class="field">
+                        <label for="postLang">Idioma</label>
+                        <select id="postLang">
+                            <option value="es">Español</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="postCategory">Categoría</label>
+                        <select id="postCategory">
+                            <option value="noticias">Noticias</option>
+                            <option value="vida">Vida del TCP</option>
+                            <option value="curso">Curso TCP</option>
+                            <option value="curiosidades">Curiosidades</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="postTitleInput">Titular</label>
+                    <input type="text" id="postTitleInput" placeholder="Ej: Nueva convocatoria: ya puedes reservar tu plaza" required>
+                </div>
+                <div class="field">
+                    <label for="postText">Texto</label>
+                    <textarea id="postText" placeholder="Un párrafo corto, el que se ve en la tarjeta del blog." required></textarea>
+                </div>
+                <div class="field">
+                    <label for="postImage">Foto</label>
+                    <input type="file" id="postImage" accept="image/*">
+                    <div class="img-preview hidden" id="imgPreviewWrap"><img id="imgPreview" src="" alt=""></div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="saveBtn" style="width:auto;">Publicar</button>
+                    <button type="button" class="btn btn-ghost hidden" id="cancelEditBtn">Cancelar edición</button>
+                    <p class="msg" id="formMsg"></p>
+                </div>
+            </form>
+        </div>
+
+        <div class="panel">
+            <h2>Artículos publicados</h2>
+            <div style="margin-bottom:16px;">
+                <select id="listLangFilter" style="font-family:var(--ff-mono);font-size:.8rem;padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:var(--cream);">
+                    <option value="es">Español</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+            <div id="postList"><p class="empty-note">Cargando...</p></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const loginScreen = document.getElementById('loginScreen');
+    const dashboard = document.getElementById('dashboard');
+    const loginForm = document.getElementById('loginForm');
+    const loginMsg = document.getElementById('loginMsg');
+    const whoami = document.getElementById('whoami');
+
+    async function checkSession() {
+        try {
+            const res = await fetch('/api/admin-me');
+            const data = await res.json();
+            if (data.authenticated) {
+                showDashboard(data.username);
+            } else {
+                showLogin();
+            }
+        } catch {
+            showLogin();
+        }
+    }
+
+    function showLogin() {
+        loginScreen.classList.remove('hidden');
+        dashboard.classList.add('hidden');
+    }
+
+    function showDashboard(username) {
+        loginScreen.classList.add('hidden');
+        dashboard.classList.remove('hidden');
+        whoami.textContent = 'Conectado como ' + username;
+        loadPosts();
+    }
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        loginMsg.textContent = '';
+        const username = document.getElementById('loginUser').value.trim();
+        const password = document.getElementById('loginPass').value;
+        try {
+            const res = await fetch('/api/admin-login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password }),
+            });
+            const data = await res.json();
+            if (res.ok) {
+                document.getElementById('loginPass').value = '';
+                showDashboard(data.username);
+            } else {
+                loginMsg.textContent = data.error || 'No se ha podido iniciar sesión.';
+            }
+        } catch {
+            loginMsg.textContent = 'No hay conexión con el servidor.';
+        }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+        await fetch('/api/admin-logout', { method: 'POST' });
+        showLogin();
+    });
+
+    // ---- Post form (create / edit) ----
+    const postForm = document.getElementById('postForm');
+    const formTitle = document.getElementById('formTitle');
+    const formMsg = document.getElementById('formMsg');
+    const saveBtn = document.getElementById('saveBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const imgInput = document.getElementById('postImage');
+    const imgPreviewWrap = document.getElementById('imgPreviewWrap');
+    const imgPreview = document.getElementById('imgPreview');
+
+    let editingSlug = null;
+    let editingExistingImage = null;
+    let pendingImageBase64 = null;
+    let pendingImageType = null;
+
+    imgInput.addEventListener('change', () => {
+        const file = imgInput.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+            const dataUrl = reader.result; // "data:image/jpeg;base64,...."
+            pendingImageBase64 = dataUrl.split(',')[1];
+            pendingImageType = file.type;
+            imgPreview.src = dataUrl;
+            imgPreviewWrap.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    });
+
+    function resetForm() {
+        postForm.reset();
+        editingSlug = null;
+        editingExistingImage = null;
+        pendingImageBase64 = null;
+        pendingImageType = null;
+        imgPreviewWrap.classList.add('hidden');
+        formTitle.textContent = 'Nuevo artículo';
+        saveBtn.textContent = 'Publicar';
+        cancelEditBtn.classList.add('hidden');
+        formMsg.textContent = '';
+        formMsg.className = 'msg';
+    }
+
+    cancelEditBtn.addEventListener('click', resetForm);
+
+    postForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        formMsg.textContent = 'Guardando...';
+        formMsg.className = 'msg';
+        saveBtn.disabled = true;
+
+        const payload = {
+            slug: editingSlug,
+            lang: document.getElementById('postLang').value,
+            category: document.getElementById('postCategory').value,
+            title: document.getElementById('postTitleInput').value,
+            text: document.getElementById('postText').value,
+            existingImage: editingExistingImage,
+        };
+        if (pendingImageBase64) {
+            payload.imageBase64 = pendingImageBase64;
+            payload.imageType = pendingImageType;
+        }
+
+        try {
+            const res = await fetch('/api/blog-save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+            const data = await res.json();
+            if (res.ok) {
+                formMsg.textContent = '¡Guardado!';
+                formMsg.className = 'msg ok';
+                resetForm();
+                loadPosts();
+            } else if (res.status === 401) {
+                formMsg.textContent = 'Tu sesión ha caducado. Recarga la página e inicia sesión de nuevo.';
+                formMsg.className = 'msg error';
+            } else {
+                formMsg.textContent = data.error || 'No se ha podido guardar.';
+                formMsg.className = 'msg error';
+            }
+        } catch {
+            formMsg.textContent = 'No hay conexión con el servidor.';
+            formMsg.className = 'msg error';
+        } finally {
+            saveBtn.disabled = false;
+        }
+    });
+
+    // ---- Post list ----
+    const postList = document.getElementById('postList');
+    const listLangFilter = document.getElementById('listLangFilter');
+    const CATEGORY_LABELS = { noticias: 'Noticias', vida: 'Vida del TCP', curso: 'Curso TCP', curiosidades: 'Curiosidades' };
+
+    async function loadPosts() {
+        postList.innerHTML = '<p class="empty-note">Cargando...</p>';
+        try {
+            const res = await fetch('/api/blog-list?lang=' + listLangFilter.value);
+            const data = await res.json();
+            const posts = Array.isArray(data.posts) ? data.posts : [];
+            if (!posts.length) {
+                postList.innerHTML = '<p class="empty-note">Todavía no hay artículos en este idioma.</p>';
+                return;
+            }
+            postList.innerHTML = posts.map((p) => `
+                <div class="post-row">
+                    ${p.image ? `<img src="${p.image}" alt="">` : '<div style="width:64px;height:48px;background:var(--sky);border-radius:8px;flex-shrink:0;"></div>'}
+                    <div class="post-info">
+                        <h3>${p.title}</h3>
+                        <div class="post-meta">${CATEGORY_LABELS[p.category] || p.category} · ${new Date(p.publishedAt).toLocaleDateString('es-ES')}</div>
+                    </div>
+                    <div class="post-actions">
+                        <button type="button" class="btn btn-ghost" style="padding:8px 14px;font-size:.78rem;" data-edit="${p.slug}" data-lang="${p.lang}">Editar</button>
+                        <button type="button" class="btn btn-danger" data-delete="${p.slug}" data-lang="${p.lang}">Borrar</button>
+                    </div>
+                </div>
+            `).join('');
+
+            postList.querySelectorAll('[data-edit]').forEach((btn) => {
+                btn.addEventListener('click', () => startEdit(posts.find((p) => p.slug === btn.dataset.edit)));
+            });
+            postList.querySelectorAll('[data-delete]').forEach((btn) => {
+                btn.addEventListener('click', () => deletePost(btn.dataset.delete, btn.dataset.lang));
+            });
+        } catch {
+            postList.innerHTML = '<p class="empty-note">No se han podido cargar los artículos.</p>';
+        }
+    }
+
+    function startEdit(post) {
+        if (!post) return;
+        editingSlug = post.slug;
+        editingExistingImage = post.image || null;
+        pendingImageBase64 = null;
+        pendingImageType = null;
+        document.getElementById('postLang').value = post.lang;
+        document.getElementById('postCategory').value = post.category;
+        document.getElementById('postTitleInput').value = post.title;
+        document.getElementById('postText').value = post.text;
+        if (post.image) {
+            imgPreview.src = post.image;
+            imgPreviewWrap.classList.remove('hidden');
+        } else {
+            imgPreviewWrap.classList.add('hidden');
+        }
+        formTitle.textContent = 'Editando artículo';
+        saveBtn.textContent = 'Guardar cambios';
+        cancelEditBtn.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function deletePost(slug, lang) {
+        if (!confirm('¿Seguro que quieres borrar este artículo? No se puede deshacer.')) return;
+        try {
+            const res = await fetch('/api/blog-delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ slug, lang }),
+            });
+            if (res.ok) {
+                loadPosts();
+            } else {
+                alert('No se ha podido borrar el artículo.');
+            }
+        } catch {
+            alert('No hay conexión con el servidor.');
+        }
+    }
+
+    listLangFilter.addEventListener('change', loadPosts);
+
+    checkSession();
+</script>
+
+</body>
+</html>

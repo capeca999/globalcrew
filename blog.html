@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog · Global Crew Valencia</title>
+<meta name="description" content="Consejos, noticias y la vida real de un TCP — el blog de Global Crew Valencia.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+    :root{
+        --navy-950:#3D0910;--navy-800:#750C1B;--navy-700:#9C2A3A;
+        --steel:#8C8783;--steel-light:#D6D2CD;--cream:#F7F1EC;--sky:#EFEBE8;
+        --coral:#E4572E;--ink:#241E1C;--ink-soft:#6E6763;--line:rgba(43,38,36,0.14);
+        --ff-display:'Space Grotesk',sans-serif;--ff-body:'Inter',sans-serif;--ff-mono:'IBM Plex Mono',monospace;
+        --radius-lg:22px;--radius-md:14px;--ease:cubic-bezier(.22,.9,.32,1);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:var(--ff-body);color:var(--ink);background:var(--sky);-webkit-font-smoothing:antialiased;}
+    a{text-decoration:none;color:inherit;}
+    .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+    @media (max-width:640px){.wrap{padding:0 20px;}}
+
+    /* ---- nav ---- */
+    .mini-nav{display:flex;align-items:center;justify-content:space-between;padding:22px 0;background:var(--navy-950);}
+    .mini-nav .wrap{display:flex;align-items:center;justify-content:space-between;}
+    .mini-logo{display:flex;align-items:center;gap:10px;color:var(--cream);}
+    .mini-logo-text{font-family:var(--ff-display);font-weight:700;font-size:1.05rem;color:#fff;}
+    .mini-nav-right{display:flex;align-items:center;gap:16px;}
+    .lang-toggle{display:flex;gap:5px;font-family:var(--ff-mono);font-size:.76rem;color:rgba(247,241,236,.55);}
+    .lang-toggle .lang-opt.active{color:#fff;font-weight:700;}
+    .back-link{font-family:var(--ff-mono);font-size:.72rem;letter-spacing:.05em;color:rgba(247,241,236,.75);}
+    .back-link:hover{color:#fff;}
+
+    /* ---- header ---- */
+    .blog-header{background:var(--navy-950);padding:50px 0 70px;color:#fff;}
+    .eyebrow{
+        font-family:var(--ff-mono);font-size:.72rem;letter-spacing:.1em;color:var(--coral);
+        text-transform:uppercase;display:flex;align-items:center;gap:8px;
+    }
+    .eyebrow::before{content:'';width:20px;height:1px;background:var(--coral);}
+    .blog-header h1{font-family:var(--ff-display);font-weight:700;font-size:clamp(2rem,4vw,3rem);margin-top:14px;}
+    .blog-header p{margin-top:14px;color:rgba(247,241,236,.75);max-width:560px;font-size:1.02rem;}
+
+    /* ---- filters ---- */
+    .blog-filters{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:44px 0 40px;}
+    .blog-filter{
+        font-family:var(--ff-mono);font-size:.78rem;color:var(--ink-soft);border:1px solid var(--line);
+        border-radius:100px;padding:9px 18px;background:#fff;transition:background .2s,color .2s,border-color .2s;
+    }
+    .blog-filter:hover{border-color:var(--steel);}
+    .blog-filter.active{background:var(--navy-950);color:#fff;border-color:var(--navy-950);}
+
+    /* ---- grid ---- */
+    .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;padding-bottom:100px;}
+    @media (max-width:980px){.blog-grid{grid-template-columns:repeat(2,1fr);}}
+    @media (max-width:640px){.blog-grid{grid-template-columns:1fr;}}
+
+    .blog-card{
+        background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;
+        display:flex;flex-direction:column;transition:box-shadow .3s,transform .3s;
+    }
+    .blog-card:hover{transform:translateY(-4px);box-shadow:0 20px 40px -20px rgba(43,38,36,.25);}
+    .blog-card-img{aspect-ratio:16/10;overflow:hidden;background:#ddd;}
+    .blog-card-img img{width:100%;height:100%;object-fit:cover;display:block;}
+    .blog-card-tag{margin:18px 22px 0;font-family:var(--ff-mono);font-size:.66rem;letter-spacing:.06em;color:var(--coral);text-transform:uppercase;}
+    .blog-card h3{margin:8px 22px 0;font-family:var(--ff-display);font-weight:700;font-size:1.08rem;color:var(--navy-950);line-height:1.3;}
+    .blog-card-text{margin:10px 22px 22px;color:var(--ink-soft);font-size:.9rem;line-height:1.55;}
+    .blog-card-date{margin:0 22px 18px;font-family:var(--ff-mono);font-size:.66rem;color:var(--steel);}
+
+    .blog-empty,.blog-loading{
+        grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--ink-soft);
+        font-family:var(--ff-mono);font-size:.85rem;
+    }
+    .blog-error{grid-column:1/-1;text-align:center;padding:40px 20px;color:#B3261E;font-family:var(--ff-mono);font-size:.85rem;}
+</style>
+</head>
+<body>
+
+<header class="mini-nav">
+    <div class="wrap">
+        <a href="index.html" class="mini-logo">
+            <span class="mini-logo-text">GLOBAL CREW</span>
+        </a>
+        <div class="mini-nav-right">
+            <button type="button" class="lang-toggle" id="langToggle" aria-label="Cambiar idioma / Switch language">
+                <span class="lang-opt lang-es active" data-lang="es">ES</span><span>/</span><span class="lang-opt lang-en" data-lang="en">EN</span>
+            </button>
+            <a href="index.html" class="back-link" id="backLink">← Volver a la web</a>
+        </div>
+    </div>
+</header>
+
+<section class="blog-header">
+    <div class="wrap">
+        <span class="eyebrow" id="txtEyebrow">BLOG</span>
+        <h1 id="txtTitle">Consejos, noticias y la vida real de un TCP.</h1>
+        <p id="txtSubtitle">Todo lo que nos preguntáis por WhatsApp, respondido con calma: sueldos, pruebas de acceso, convocatorias y cómo es de verdad este trabajo.</p>
+    </div>
+</section>
+
+<div class="wrap">
+    <div class="blog-filters" id="blogFilters">
+        <button type="button" class="blog-filter active" data-filter="todas">Todas</button>
+        <button type="button" class="blog-filter" data-filter="noticias">Noticias</button>
+        <button type="button" class="blog-filter" data-filter="vida">Vida del TCP</button>
+        <button type="button" class="blog-filter" data-filter="curso">Curso TCP</button>
+        <button type="button" class="blog-filter" data-filter="curiosidades">Curiosidades</button>
+    </div>
+    <div class="blog-grid" id="blogGrid">
+        <div class="blog-loading" id="blogLoading">Cargando artículos...</div>
+    </div>
+</div>
+
+<script>
+    const TXT = {
+        es: {
+            eyebrow: 'BLOG', title: 'Consejos, noticias y la vida real de un TCP.',
+            subtitle: 'Todo lo que nos preguntáis por WhatsApp, respondido con calma: sueldos, pruebas de acceso, convocatorias y cómo es de verdad este trabajo.',
+            back: '← Volver a la web', loading: 'Cargando artículos...',
+            empty: 'Todavía no hay artículos en esta categoría.', error: 'No se han podido cargar los artículos. Inténtalo de nuevo en un momento.',
+            filters: { todas: 'Todas', noticias: 'Noticias', vida: 'Vida del TCP', curso: 'Curso TCP', curiosidades: 'Curiosidades' }
+        },
+        en: {
+            eyebrow: 'BLOG', title: 'Tips, news and the real life of a Cabin Crew member.',
+            subtitle: 'Everything you ask us on WhatsApp, answered calmly: salaries, entry tests, intakes and what this job is really like.',
+            back: '← Back to the website', loading: 'Loading articles...',
+            empty: 'No articles in this category yet.', error: "Couldn't load the articles. Please try again in a moment.",
+            filters: { todas: 'All', noticias: 'News', vida: 'Cabin Crew Life', curso: 'Cabin Crew Course', curiosidades: 'Curiosities' }
+        }
+    };
+
+    let currentLang = localStorage.getItem('gcLang') || 'es';
+    let currentFilter = 'todas';
+    let allPosts = [];
+
+    function applyStaticText() {
+        const t = TXT[currentLang];
+        document.documentElement.lang = currentLang;
+        document.getElementById('txtEyebrow').textContent = t.eyebrow;
+        document.getElementById('txtTitle').textContent = t.title;
+        document.getElementById('txtSubtitle').textContent = t.subtitle;
+        document.getElementById('backLink').textContent = t.back;
+        document.querySelectorAll('.blog-filter').forEach((btn) => {
+            btn.textContent = t.filters[btn.dataset.filter];
+        });
+        document.querySelectorAll('.lang-toggle .lang-opt').forEach((el) => {
+            el.classList.toggle('active', el.dataset.lang === currentLang);
+        });
+    }
+
+    function formatDate(iso) {
+        if (!iso) return '';
+        const d = new Date(iso);
+        if (isNaN(d)) return '';
+        return d.toLocaleDateString(currentLang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    function render() {
+        const grid = document.getElementById('blogGrid');
+        const t = TXT[currentLang];
+        const posts = currentFilter === 'todas' ? allPosts : allPosts.filter((p) => p.category === currentFilter);
+
+        if (!posts.length) {
+            grid.innerHTML = `<div class="blog-empty">${t.empty}</div>`;
+            return;
+        }
+
+        grid.innerHTML = posts.map((p) => `
+            <article class="blog-card">
+                ${p.image ? `<div class="blog-card-img"><img src="${p.image}" alt="${(p.title || '').replace(/"/g, '&quot;')}" loading="lazy"></div>` : ''}
+                <span class="blog-card-tag">${t.filters[p.category] || p.category || ''}</span>
+                <h3>${p.title || ''}</h3>
+                <p class="blog-card-text">${p.text || ''}</p>
+                <span class="blog-card-date">${formatDate(p.publishedAt)}</span>
+            </article>
+        `).join('');
+    }
+
+    async function loadPosts() {
+        const grid = document.getElementById('blogGrid');
+        grid.innerHTML = `<div class="blog-loading">${TXT[currentLang].loading}</div>`;
+        try {
+            const res = await fetch(`/api/blog-list?lang=${currentLang}`);
+            const data = await res.json();
+            allPosts = Array.isArray(data.posts) ? data.posts : [];
+            render();
+        } catch (err) {
+            grid.innerHTML = `<div class="blog-error">${TXT[currentLang].error}</div>`;
+        }
+    }
+
+    document.querySelectorAll('.blog-filter').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.blog-filter').forEach((b) => b.classList.toggle('active', b === btn));
+            currentFilter = btn.dataset.filter;
+            render();
+        });
+    });
+
+    document.getElementById('langToggle').addEventListener('click', () => {
+        currentLang = currentLang === 'es' ? 'en' : 'es';
+        localStorage.setItem('gcLang', currentLang);
+        applyStaticText();
+        loadPosts();
+    });
+
+    applyStaticText();
+    loadPosts();
+</script>
+
+</body>
+</html>
