@@ -192,7 +192,9 @@
         .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center 30%;}
         .hero-bg::after{
             content:'';position:absolute;inset:0;
-            background:linear-gradient(180deg,rgba(61,9,16,.72) 0%,rgba(61,9,16,.5) 32%,rgba(23,6,10,.55) 60%,rgba(11,3,5,.88) 100%);
+            background:
+                    linear-gradient(90deg,rgba(11,3,5,.78) 0%,rgba(11,3,5,.55) 32%,rgba(11,3,5,.15) 60%,transparent 78%),
+                    linear-gradient(180deg,rgba(61,9,16,.62) 0%,rgba(61,9,16,.4) 32%,rgba(23,6,10,.5) 60%,rgba(11,3,5,.88) 100%);
         }
         .hero::before{ /* stars/dust */
             content:'';position:absolute;inset:0;z-index:1;
@@ -235,15 +237,14 @@
         .hero .wrap{display:grid;grid-template-columns:1fr;gap:20px;}
         .hero h1{
             color:var(--cream);font-size:clamp(2.6rem,6.2vw,4.6rem);
-            max-width:900px;font-weight:700;
+            max-width:900px;font-weight:700;text-shadow:0 4px 24px rgba(0,0,0,.55),0 1px 4px rgba(0,0,0,.7);
         }
         .hero h1 em{
-            font-style:normal;color:var(--steel-light);
-            background:linear-gradient(90deg,var(--steel-light),var(--steel));
-            -webkit-background-clip:text;background-clip:text;color:transparent;
+            font-style:normal;color:var(--coral);
         }
         .hero p.lede{
-            color:rgba(247,244,236,.78);font-size:1.15rem;max-width:520px;margin-top:22px;
+            color:rgba(247,244,236,.95);font-size:1.15rem;max-width:520px;margin-top:22px;
+            text-shadow:0 2px 14px rgba(0,0,0,.6),0 1px 3px rgba(0,0,0,.7);
         }
         .vr-badge{
             position:relative;display:inline-flex;align-items:center;gap:10px;margin-top:18px;max-width:560px;
@@ -787,12 +788,12 @@
 
         /* ===================== CONTACT: FORM + MAP ===================== */
         .contact-section{background:var(--cream);padding:100px 0;}
-        .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:stretch;}
+        .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start;}
         .contact-form{
             background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);
-            padding:36px;display:flex;flex-direction:column;gap:18px;
+            padding:36px;display:flex;flex-direction:column;gap:24px;
         }
-        .form-row{display:flex;flex-direction:column;gap:7px;}
+        .form-row{display:flex;flex-direction:column;gap:9px;}
         .form-row label{font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);}
         .form-row input,.form-row select,.form-row textarea{
             font-family:var(--ff-body);font-size:.95rem;color:var(--ink);
@@ -803,7 +804,7 @@
             outline:none;border-color:var(--steel);box-shadow:0 0 0 3px rgba(140,135,131,.2);
         }
         .form-row textarea{resize:vertical;min-height:110px;}
-        .form-two{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+        .form-two{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
         .form-submit{
             font-family:var(--ff-display);font-weight:600;font-size:.95rem;
             background:var(--navy-950);color:var(--cream);padding:15px 26px;border-radius:100px;
@@ -1173,10 +1174,9 @@
     <div class="hero-content">
         <div class="wrap">
             <span class="eyebrow reveal is-visible" data-i18n="hero.eyebrow">CENTRO HOMOLOGADO AESA · TCP</span>
-            <h1 class="reveal is-visible" style="transition-delay:.1s" data-i18n-html="hero.title">Tu carrera <em>despega</em> aquí.</h1>
+            <h1 class="reveal is-visible" style="transition-delay:.1s" data-i18n-html="hero.title">Tu futuro, listo para <em>despegar</em>.</h1>
             <p class="lede reveal is-visible" style="transition-delay:.2s" data-i18n="hero.lede">
-                Formamos tripulantes de cabina de pasajeros con formación oficial AESA, prácticas reales en un avión de Iberia,
-                instructores en activo y un plan de estudios pensado para que vueles con una aerolínea, no solo para aprobar un examen.
+                La aventura de tu vida puede empezar hoy. Viajar, descubrir nuevos países, conocer personas de todo el mundo y convertir la aviación en tu profesión. En Global Crew recibirás una formación oficial AESA con un enfoque claro: prepararte para conseguir tu primer trabajo como Tripulante de Cabina y ayudarte a dar el salto a una aerolínea.
             </p>
             <div class="hero-cta reveal is-visible" style="transition-delay:.3s">
                 <a href="#cursos" class="btn btn-primary" data-i18n="hero.ctaCourses">Ver los cursos</a>
@@ -2121,8 +2121,8 @@
             'announce.prefix': 'PRÓXIMO CURSO:',
             'hero.eyebrow': 'CENTRO HOMOLOGADO AESA · TCP',
             'hero.vrBadge': 'Primera escuela de España con formación en Realidad Virtual: extinción de incendios y evacuación',
-            'hero.title': 'Tu carrera <em>despega</em> aquí.',
-            'hero.lede': 'Formamos tripulantes de cabina de pasajeros con formación oficial AESA, prácticas reales en un avión de Iberia, instructores en activo y un plan de estudios pensado para que vueles con una aerolínea, no solo para aprobar un examen.',
+            'hero.title': 'Tu futuro, listo para <em>despegar</em>.',
+            'hero.lede': 'La aventura de tu vida puede empezar hoy. Viajar, descubrir nuevos países, conocer personas de todo el mundo y convertir la aviación en tu profesión. En Global Crew recibirás una formación oficial AESA con un enfoque claro: prepararte para conseguir tu primer trabajo como Tripulante de Cabina y ayudarte a dar el salto a una aerolínea.',
             'hero.ctaCourses': 'Ver los cursos', 'hero.ctaCall': 'Reservar una llamada',
             'hero.metaYears': 'años formando TCP', 'hero.metaJobs': 'inserción laboral', 'hero.metaWeeks': 'semanas, curso completo',
             'hero.scroll': 'DESLIZA',
@@ -2250,8 +2250,8 @@
             'announce.prefix': 'NEXT INTAKE:',
             'hero.eyebrow': 'AESA-CERTIFIED CENTRE · CABIN CREW',
             'hero.vrBadge': 'The first school in Spain with Virtual Reality training: fire fighting and evacuation',
-            'hero.title': 'Your career <em>takes off</em> here.',
-            'hero.lede': 'We train cabin crew members with official AESA certification, real practicals on an Iberia aircraft, active-duty instructors and a curriculum designed to get you flying with an airline, not just to pass an exam.',
+            'hero.title': 'Your future, ready to <em>take off</em>.',
+            'hero.lede': 'The adventure of your life can start today. Travelling, discovering new countries, meeting people from all over the world, and turning aviation into your profession. At Global Crew you\'ll get official AESA training with a clear focus: preparing you to land your first job as Cabin Crew and helping you make the leap to an airline.',
             'hero.ctaCourses': 'See the courses', 'hero.ctaCall': 'Book a call',
             'hero.metaYears': 'years training Cabin Crew', 'hero.metaJobs': 'job placement rate', 'hero.metaWeeks': 'weeks, full course',
             'hero.scroll': 'SCROLL',
