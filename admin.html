@@ -364,7 +364,7 @@
     function startEdit(post) {
         if (!post) return;
         editingSlug = post.slug;
-        editingExistingImage = post.image || null;
+        editingExistingImage = post.imagePath || null;
         pendingImageBase64 = null;
         pendingImageType = null;
         document.getElementById('postLang').value = post.lang;

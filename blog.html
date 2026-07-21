@@ -22,13 +22,24 @@
     @media (max-width:640px){.wrap{padding:0 20px;}}
 
     /* ---- nav ---- */
-    .mini-nav{display:flex;align-items:center;justify-content:space-between;padding:22px 0;background:var(--navy-950);}
+    .mini-nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0;background:var(--navy-950);}
     .mini-nav .wrap{display:flex;align-items:center;justify-content:space-between;}
-    .mini-logo{display:flex;align-items:center;gap:10px;color:var(--cream);}
-    .mini-logo-text{font-family:var(--ff-display);font-weight:700;font-size:1.05rem;color:#fff;}
-    .mini-nav-right{display:flex;align-items:center;gap:16px;}
-    .lang-toggle{display:flex;gap:5px;font-family:var(--ff-mono);font-size:.76rem;color:rgba(247,241,236,.55);}
-    .lang-toggle .lang-opt.active{color:#fff;font-weight:700;}
+    .mini-logo{display:flex;align-items:center;gap:11px;color:var(--cream);}
+    .mini-logo-mark{width:38px;height:38px;border-radius:50%;overflow:hidden;flex-shrink:0;background:rgba(247,241,236,.08);}
+    .mini-logo-mark img{width:100%;height:100%;object-fit:cover;display:block;}
+    .mini-logo-text{font-family:var(--ff-display);font-weight:700;font-size:1.05rem;color:#fff;line-height:1.1;}
+    .mini-logo-text span{display:block;font-family:var(--ff-mono);font-size:.58rem;letter-spacing:.14em;color:rgba(247,241,236,.5);font-weight:500;margin-top:2px;}
+    .mini-nav-right{display:flex;align-items:center;gap:18px;}
+    .lang-toggle{
+        display:flex;align-items:center;gap:2px;font-family:var(--ff-mono);font-size:.74rem;
+        background:rgba(247,241,236,.08);border:1px solid rgba(247,241,236,.16);border-radius:100px;padding:4px;
+        cursor:pointer;
+    }
+    .lang-toggle .lang-opt{
+        padding:5px 12px;border-radius:100px;color:rgba(247,241,236,.55);transition:background .2s,color .2s;
+    }
+    .lang-toggle .lang-opt.active{background:var(--coral);color:#fff;font-weight:700;}
+    .lang-toggle:hover .lang-opt:not(.active){color:rgba(247,241,236,.85);}
     .back-link{font-family:var(--ff-mono);font-size:.72rem;letter-spacing:.05em;color:rgba(247,241,236,.75);}
     .back-link:hover{color:#fff;}
 
@@ -80,11 +91,12 @@
 <header class="mini-nav">
     <div class="wrap">
         <a href="index.html" class="mini-logo">
-            <span class="mini-logo-text">GLOBAL CREW</span>
+            <span class="mini-logo-mark"><img src="images/logo-nav.png" alt="Global Crew Valencia"></span>
+            <span class="mini-logo-text">GLOBAL CREW<span>ESCUELA DE TRIPULANTES</span></span>
         </a>
         <div class="mini-nav-right">
             <button type="button" class="lang-toggle" id="langToggle" aria-label="Cambiar idioma / Switch language">
-                <span class="lang-opt lang-es active" data-lang="es">ES</span><span>/</span><span class="lang-opt lang-en" data-lang="en">EN</span>
+                <span class="lang-opt lang-es active" data-lang="es">ES</span><span class="lang-opt lang-en" data-lang="en">EN</span>
             </button>
             <a href="index.html" class="back-link" id="backLink">← Volver a la web</a>
         </div>

@@ -1,6 +1,6 @@
 import { put } from '@vercel/blob';
 import { requireAuth } from './_auth.js';
-import { slugify } from './_blog-utils.js';
+import { slugify, proxiedImageUrl } from './_blog-utils.js';
 
 // Allow a slightly larger body since images travel as base64.
 export const config = { api: { bodyParser: { sizeLimit: '8mb' } } };
@@ -19,9 +19,9 @@ export default async function handler(request, response) {
     title,
     category,
     text,
-    imageBase64,   // optional: new image, sent as base64 (no data: prefix)
-    imageType,     // e.g. "image/jpeg"
-    existingImage, // optional: keep this image URL when editing without changing the photo
+    imageBase64,       // optional: new image, sent as base64 (no data: prefix)
+    imageType,         // e.g. "image/jpeg"
+    existingImage,     // optional: raw blob pathname to keep when editing without changing the photo
     publishedAt: incomingPublishedAt,
   } = request.body || {};
 
@@ -36,16 +36,19 @@ export default async function handler(request, response) {
 
   const slug = incomingSlug || slugify(title) || `post-${Date.now()}`;
 
-  let image = existingImage || null;
+  // The Blob store here is private (same as the rest of the project), so
+  // images are uploaded privately and served through /api/blob-image,
+  // exactly like the alumni photos in home-data.js.
+  let imagePath = existingImage || null;
   if (imageBase64) {
     try {
       const ext = (imageType || 'image/jpeg').split('/')[1]?.replace('jpeg', 'jpg') || 'jpg';
       const buffer = Buffer.from(imageBase64, 'base64');
       const uploaded = await put(`blog-images/${langKey}-${slug}-${Date.now()}.${ext}`, buffer, {
-        access: 'public',
+        access: 'private',
         contentType: imageType || 'image/jpeg',
       });
-      image = uploaded.url;
+      imagePath = uploaded.pathname;
     } catch (err) {
       return response.status(500).json({ error: `No se pudo subir la imagen: ${err.message}` });
     }
@@ -58,7 +61,7 @@ export default async function handler(request, response) {
     title: title.trim(),
     category: category || 'noticias',
     text: text.trim(),
-    image,
+    imagePath,
     author: session.username,
     publishedAt: incomingPublishedAt || now,
     updatedAt: now,
@@ -71,7 +74,9 @@ export default async function handler(request, response) {
       addRandomSuffix: false,
       allowOverwrite: true,
     });
-    return response.status(200).json({ ok: true, post });
+    // Return a ready-to-display URL too, so the admin UI can show the photo immediately.
+    const responsePost = { ...post, image: imagePath ? proxiedImageUrl(request, imagePath) : null };
+    return response.status(200).json({ ok: true, post: responsePost });
   } catch (err) {
     return response.status(500).json({ error: err.message });
   }

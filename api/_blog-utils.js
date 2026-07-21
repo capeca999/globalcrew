@@ -20,4 +20,14 @@ export async function readJsonBlob(pathname) {
   }
 }
 
+// Same pattern already used for alumni photos in home-data.js: the Blob
+// store here is private, so images are served through this proxy instead
+// of a direct public URL.
+export function proxiedImageUrl(request, pathname) {
+  const host = request.headers['x-forwarded-host'] || request.headers.host;
+  const protocol = request.headers['x-forwarded-proto'] || 'https';
+  const base = host ? `${protocol}://${host}` : '';
+  return `${base}/api/blob-image?path=${encodeURIComponent(pathname)}`;
+}
+
 export const CATEGORIES = ['noticias', 'vida', 'curso', 'curiosidades'];
