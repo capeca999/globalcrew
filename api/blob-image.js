@@ -2,7 +2,7 @@ import { get } from '@vercel/blob';
 
 // Only allow proxying files inside these known folders, to avoid
 // this route being used to fetch arbitrary paths from the store.
-const ALLOWED_PREFIXES = ['alumnoscontratados/', 'proximoscursos/', 'logo/', 'blog-images/'];
+const ALLOWED_PREFIXES = ['alumnoscontratados/', 'proximoscursos/', 'logo/', 'blog-images/', 'blog/'];
 
 export default async function handler(request, response) {
   const { path } = request.query;

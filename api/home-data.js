@@ -220,7 +220,7 @@ export default async function handler(request, response) {
       // 1 hour cache: fewer Advanced Operations, still fresh enough for how
       // often this content actually changes. Vercel serves the cached
       // version instantly and revalidates in the background afterwards.
-      response.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
+      response.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=86400');
     }
 
     const payload = { alumni, testimonials: cleanedTestimonials, nextCourseText };
