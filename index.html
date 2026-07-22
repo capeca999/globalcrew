@@ -931,7 +931,7 @@
         .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;}
         .blog-card{
             background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);
-            overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .3s,transform .3s;
+            overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .3s,transform .3s;cursor:pointer;
         }
         .blog-card:hover{transform:translateY(-4px);box-shadow:0 20px 40px -20px rgba(43,38,36,.25);}
         .blog-card-img{aspect-ratio:16/10;overflow:hidden;background:#ddd;}
@@ -3407,12 +3407,12 @@
                     const catKey = CATEGORY_LABEL_KEYS[p.category];
                     const catLabel = catKey ? I18N[currentLang][catKey] : (p.category || '');
                     return `
-                        <article class="blog-card">
+                        <a class="blog-card" href="blog-post.html?slug=${encodeURIComponent(p.slug)}&lang=${currentLang}">
                             ${p.image ? `<div class="blog-card-img"><img src="${p.image}" alt="${(p.title || '').replace(/"/g, '&quot;')}" loading="lazy"></div>` : ''}
                             <span class="blog-card-tag">${catLabel}</span>
                             <h3>${p.title || ''}</h3>
                             <p class="blog-card-excerpt">${p.text || ''}</p>
-                        </article>
+                        </a>
                     `;
                 }).join('');
             } catch (err) {
