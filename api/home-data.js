@@ -185,13 +185,20 @@ async function handleRead(request, response) {
 
     // ================= SEAT MAP / FAQ / TEAM / HERO =================
     // All known exact paths, fetched directly by URL — no listing needed.
-    const seatmapData = (await fetchPublicJson(publicUrl(SEATMAP_KEY))) || {};
+    // Fetched in parallel since they're independent of each other.
+    const [seatmapDataRaw, faqRaw, teamRaw, heroRaw] = await Promise.all([
+      fetchPublicJson(publicUrl(SEATMAP_KEY)),
+      fetchPublicJson(publicUrl(FAQ_KEY)),
+      fetchPublicJson(publicUrl(TEAM_KEY)),
+      fetchPublicJson(publicUrl(HERO_KEY)),
+    ]);
+    const seatmapData = seatmapDataRaw || {};
     const seatmap = SEAT_IDS.map((id) => ({
       id, image: seatmapData[id]?.image || null, caption: seatmapData[id]?.caption || '',
     }));
-    const faq = (await fetchPublicJson(publicUrl(FAQ_KEY))) || DEFAULT_FAQ;
-    const team = (await fetchPublicJson(publicUrl(TEAM_KEY))) || DEFAULT_TEAM;
-    const hero = (await fetchPublicJson(publicUrl(HERO_KEY))) || DEFAULT_HERO;
+    const faq = faqRaw || DEFAULT_FAQ;
+    const team = teamRaw || DEFAULT_TEAM;
+    const hero = heroRaw || DEFAULT_HERO;
 
     // ================= RESPONSE =================
     if (!debug) {
