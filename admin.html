@@ -112,6 +112,20 @@
     .seat-card input[type="file"]{font-size:.72rem;width:100%;margin-bottom:8px;}
     .seat-card-actions{display:flex;gap:6px;}
     .seat-card-actions button{flex:1;font-size:.72rem;padding:7px 8px;}
+
+    .repeat-item{border:1px solid var(--line);border-radius:var(--radius-md);padding:18px;margin-bottom:16px;background:var(--cream);position:relative;}
+    .repeat-item-toolbar{display:flex;justify-content:flex-end;gap:6px;margin-bottom:12px;}
+    .repeat-item-toolbar button{
+        width:30px;height:30px;border-radius:8px;background:#fff;border:1px solid var(--line);
+        display:flex;align-items:center;justify-content:center;font-size:.85rem;cursor:pointer;
+    }
+    .repeat-item-toolbar button:hover{background:var(--sky);}
+    .repeat-item-toolbar .remove-btn{color:#B3261E;}
+    .lang-col-label{font-family:var(--ff-mono);font-size:.66rem;letter-spacing:.05em;color:var(--steel);margin:14px 0 8px;text-transform:uppercase;}
+    .lang-col-label:first-child{margin-top:0;}
+    .team-photo-row{display:flex;gap:14px;align-items:flex-start;margin-bottom:14px;}
+    .team-photo-preview{width:70px;height:70px;border-radius:12px;overflow:hidden;background:#fff;border:1px solid var(--line);flex-shrink:0;}
+    .team-photo-preview img{width:100%;height:100%;object-fit:cover;}
 </style>
 </head>
 <body>
@@ -154,6 +168,9 @@
             <button type="button" class="tab-btn" data-tab="alumni">Alumnos contratados</button>
             <button type="button" class="tab-btn" data-tab="course">Próximo curso</button>
             <button type="button" class="tab-btn" data-tab="seats">Asientos</button>
+            <button type="button" class="tab-btn" data-tab="faq">Preguntas frecuentes</button>
+            <button type="button" class="tab-btn" data-tab="team">Equipo</button>
+            <button type="button" class="tab-btn" data-tab="hero">Portada</button>
         </div>
 
         <div class="tab-panel" id="tab-blog">
@@ -396,6 +413,70 @@
                     Son los 16 sitios del mapa de asientos de la home ("Elige tu asiento y conoce nuestras instalaciones"). Sube una foto a cada uno, con un texto corto que la describa. Los que dejes vacíos se ven como el icono a rayas de "próximamente".
                 </p>
                 <div class="seats-grid" id="seatsGrid"></div>
+            </div>
+        </div>
+
+        <!-- ===================== FAQ TAB ===================== -->
+        <div class="tab-panel hidden" id="tab-faq">
+            <div class="panel">
+                <h2>Preguntas frecuentes</h2>
+                <p style="color:var(--ink-soft);font-size:.85rem;margin-bottom:20px;">
+                    El inglés es opcional en cada pregunta — si lo dejas vacío, se mostrará la versión en español también para quien vea la web en inglés.
+                </p>
+                <div id="faqList"></div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-ghost" id="faqAddBtn" style="width:auto;">+ Añadir pregunta</button>
+                    <button type="button" class="btn btn-primary" id="faqSaveBtn" style="width:auto;">Guardar todas</button>
+                    <p class="msg" id="faqMsg"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== TEAM TAB ===================== -->
+        <div class="tab-panel hidden" id="tab-team">
+            <div class="panel">
+                <h2>Equipo de profesores</h2>
+                <p style="color:var(--ink-soft);font-size:.85rem;margin-bottom:20px;">
+                    El orden de aquí abajo es el mismo en que aparecen en la web — usa las flechas para reordenar.
+                </p>
+                <div id="teamList"></div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-ghost" id="teamAddBtn" style="width:auto;">+ Añadir profesor</button>
+                    <button type="button" class="btn btn-primary" id="teamSaveBtn" style="width:auto;">Guardar equipo</button>
+                    <p class="msg" id="teamMsg"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== HERO TAB ===================== -->
+        <div class="tab-panel hidden" id="tab-hero">
+            <div class="panel">
+                <h2>Textos de la portada</h2>
+                <p style="color:var(--ink-soft);font-size:.85rem;margin-bottom:20px;">
+                    El titular grande se divide en 3 partes para poder resaltar una palabra en color — por ejemplo: "Tu futuro, listo para" + <b>"despegar"</b> + ".".
+                </p>
+                <form id="heroForm">
+                    <h3 style="font-family:var(--ff-mono);font-size:.75rem;color:var(--ink-soft);margin-bottom:10px;">ESPAÑOL</h3>
+                    <div class="form-row-two">
+                        <div class="field"><label>Texto antes</label><input type="text" id="heroBeforeEs" placeholder="Tu futuro, listo para"></div>
+                        <div class="field"><label>Palabra a resaltar</label><input type="text" id="heroHighlightEs" placeholder="despegar" required></div>
+                    </div>
+                    <div class="field"><label>Texto después (normalmente solo el punto)</label><input type="text" id="heroAfterEs" placeholder="."></div>
+                    <div class="field"><label>Párrafo debajo del titular</label><textarea id="heroLedeEs" required></textarea></div>
+
+                    <h3 style="font-family:var(--ff-mono);font-size:.75rem;color:var(--ink-soft);margin:24px 0 10px;">ENGLISH (opcional)</h3>
+                    <div class="form-row-two">
+                        <div class="field"><label>Text before</label><input type="text" id="heroBeforeEn" placeholder="Your future, ready to"></div>
+                        <div class="field"><label>Highlighted word</label><input type="text" id="heroHighlightEn" placeholder="take off"></div>
+                    </div>
+                    <div class="field"><label>Text after</label><input type="text" id="heroAfterEn" placeholder="."></div>
+                    <div class="field"><label>Paragraph below the title</label><textarea id="heroLedeEn"></textarea></div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="heroSaveBtn" style="width:auto;">Guardar</button>
+                        <p class="msg" id="heroMsg"></p>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -690,6 +771,9 @@
     let alumniLoaded = false;
     let courseLoaded = false;
     let seatsLoaded = false;
+    let faqLoaded = false;
+    let teamLoaded = false;
+    let heroLoaded = false;
     document.querySelectorAll('.tab-btn').forEach((btn) => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.tab-btn').forEach((b) => b.classList.toggle('active', b === btn));
@@ -698,6 +782,9 @@
             if (btn.dataset.tab === 'alumni' && !alumniLoaded) { alumniLoaded = true; loadAlumni(); loadAirlines(); }
             if (btn.dataset.tab === 'course' && !courseLoaded) { courseLoaded = true; loadCourse(); }
             if (btn.dataset.tab === 'seats' && !seatsLoaded) { seatsLoaded = true; loadSeats(); }
+            if (btn.dataset.tab === 'faq' && !faqLoaded) { faqLoaded = true; loadFaq(); }
+            if (btn.dataset.tab === 'team' && !teamLoaded) { teamLoaded = true; loadTeam(); }
+            if (btn.dataset.tab === 'hero' && !heroLoaded) { heroLoaded = true; loadHero(); }
         });
     });
 
@@ -1222,6 +1309,266 @@
             alert('No hay conexión con el servidor.');
         }
     }
+
+    // ===================== PREGUNTAS FRECUENTES =====================
+    const faqList = document.getElementById('faqList');
+    let faqItems = [];
+
+    async function loadFaq() {
+        faqList.innerHTML = '<p class="empty-note">Cargando...</p>';
+        try {
+            const res = await fetch('/api/home-data?lang=es');
+            const data = await res.json();
+            faqItems = Array.isArray(data.faq) ? data.faq : [];
+            renderFaqList();
+        } catch {
+            faqList.innerHTML = '<p class="empty-note">No se han podido cargar las preguntas.</p>';
+        }
+    }
+
+    function readFaqFromDom() {
+        return [...faqList.querySelectorAll('.repeat-item')].map((el, i) => ({
+            id: el.dataset.id || ('f' + Date.now() + i),
+            questionEs: el.querySelector('.faq-qes').value,
+            answerEs: el.querySelector('.faq-aes').value,
+            questionEn: el.querySelector('.faq-qen').value,
+            answerEn: el.querySelector('.faq-aen').value,
+        }));
+    }
+
+    function renderFaqList() {
+        faqList.innerHTML = faqItems.map((it, i) => `
+            <div class="repeat-item" data-id="${it.id || ''}">
+                <div class="repeat-item-toolbar">
+                    <button type="button" data-move="up" title="Subir">↑</button>
+                    <button type="button" data-move="down" title="Bajar">↓</button>
+                    <button type="button" class="remove-btn" data-remove title="Borrar">✕</button>
+                </div>
+                <div class="lang-col-label">Español</div>
+                <div class="field"><label>Pregunta</label><input type="text" class="faq-qes" value="${(it.questionEs || '').replace(/"/g, '&quot;')}" required></div>
+                <div class="field"><label>Respuesta</label><textarea class="faq-aes" required>${it.answerEs || ''}</textarea></div>
+                <div class="lang-col-label">English (opcional)</div>
+                <div class="field"><label>Question</label><input type="text" class="faq-qen" value="${(it.questionEn || '').replace(/"/g, '&quot;')}"></div>
+                <div class="field"><label>Answer</label><textarea class="faq-aen">${it.answerEn || ''}</textarea></div>
+            </div>
+        `).join('');
+
+        [...faqList.querySelectorAll('.repeat-item')].forEach((el, i) => {
+            el.querySelector('[data-move="up"]').addEventListener('click', () => {
+                faqItems = readFaqFromDom();
+                if (i > 0) { [faqItems[i - 1], faqItems[i]] = [faqItems[i], faqItems[i - 1]]; renderFaqList(); }
+            });
+            el.querySelector('[data-move="down"]').addEventListener('click', () => {
+                faqItems = readFaqFromDom();
+                if (i < faqItems.length - 1) { [faqItems[i + 1], faqItems[i]] = [faqItems[i], faqItems[i + 1]]; renderFaqList(); }
+            });
+            el.querySelector('[data-remove]').addEventListener('click', () => {
+                faqItems = readFaqFromDom();
+                faqItems.splice(i, 1);
+                renderFaqList();
+            });
+        });
+    }
+
+    document.getElementById('faqAddBtn').addEventListener('click', () => {
+        faqItems = readFaqFromDom();
+        faqItems.push({ id: 'f' + Date.now(), questionEs: '', answerEs: '', questionEn: '', answerEn: '' });
+        renderFaqList();
+    });
+
+    document.getElementById('faqSaveBtn').addEventListener('click', async () => {
+        const msg = document.getElementById('faqMsg');
+        const items = readFaqFromDom();
+        if (!items.length) { msg.textContent = 'Añade al menos una pregunta.'; msg.className = 'msg error'; return; }
+        msg.textContent = 'Guardando...'; msg.className = 'msg';
+        try {
+            const res = await fetch('/api/home-data', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'faq', items }),
+            });
+            const data = await res.json();
+            if (res.ok) {
+                faqItems = data.faq;
+                msg.textContent = '¡Guardado!'; msg.className = 'msg ok';
+                renderFaqList();
+            } else {
+                msg.textContent = data.error || 'No se ha podido guardar.'; msg.className = 'msg error';
+            }
+        } catch {
+            msg.textContent = 'No hay conexión con el servidor.'; msg.className = 'msg error';
+        }
+    });
+
+    // ===================== EQUIPO =====================
+    const teamList = document.getElementById('teamList');
+    let teamItems = [];
+    const teamPendingPhotos = {};
+
+    async function loadTeam() {
+        teamList.innerHTML = '<p class="empty-note">Cargando...</p>';
+        try {
+            const res = await fetch('/api/home-data?lang=es');
+            const data = await res.json();
+            teamItems = Array.isArray(data.team) ? data.team : [];
+            renderTeamList();
+        } catch {
+            teamList.innerHTML = '<p class="empty-note">No se ha podido cargar el equipo.</p>';
+        }
+    }
+
+    function readTeamFromDom() {
+        return [...teamList.querySelectorAll('.repeat-item')].map((el) => {
+            const id = el.dataset.id;
+            return {
+                id, photo: el.dataset.photo || null,
+                name: el.querySelector('.team-name').value,
+                roleEs: el.querySelector('.team-roles').value, roleEn: el.querySelector('.team-roleen').value,
+                subjectEs: el.querySelector('.team-subes').value, subjectEn: el.querySelector('.team-suben').value,
+                bioEs: el.querySelector('.team-bioes').value, bioEn: el.querySelector('.team-bioen').value,
+            };
+        });
+    }
+
+    function renderTeamList() {
+        teamList.innerHTML = teamItems.map((it) => `
+            <div class="repeat-item" data-id="${it.id}" data-photo="${it.photo || ''}">
+                <div class="repeat-item-toolbar">
+                    <button type="button" data-move="up" title="Subir">↑</button>
+                    <button type="button" data-move="down" title="Bajar">↓</button>
+                    <button type="button" class="remove-btn" data-remove title="Borrar">✕</button>
+                </div>
+                <div class="team-photo-row">
+                    <div class="team-photo-preview">${it.photo ? `<img src="${it.photo}" alt="">` : ''}</div>
+                    <div style="flex:1;">
+                        <div class="field"><label>Nombre</label><input type="text" class="team-name" value="${(it.name || '').replace(/"/g, '&quot;')}" required></div>
+                        <input type="file" class="team-photo-input" accept="image/*">
+                    </div>
+                </div>
+                <div class="form-row-two">
+                    <div class="lang-col-label">Español</div><div class="lang-col-label">English (opcional)</div>
+                    <div class="field"><label>Cargo</label><input type="text" class="team-roles" value="${(it.roleEs || '').replace(/"/g, '&quot;')}"></div>
+                    <div class="field"><label>Role</label><input type="text" class="team-roleen" value="${(it.roleEn || '').replace(/"/g, '&quot;')}"></div>
+                    <div class="field"><label>Especialidad</label><input type="text" class="team-subes" value="${(it.subjectEs || '').replace(/"/g, '&quot;')}"></div>
+                    <div class="field"><label>Subject</label><input type="text" class="team-suben" value="${(it.subjectEn || '').replace(/"/g, '&quot;')}"></div>
+                </div>
+                <div class="form-row-two">
+                    <div class="field"><label>Biografía corta</label><textarea class="team-bioes">${it.bioEs || ''}</textarea></div>
+                    <div class="field"><label>Short bio</label><textarea class="team-bioen">${it.bioEn || ''}</textarea></div>
+                </div>
+            </div>
+        `).join('');
+
+        [...teamList.querySelectorAll('.repeat-item')].forEach((el, i) => {
+            el.querySelector('[data-move="up"]').addEventListener('click', () => {
+                teamItems = readTeamFromDom();
+                if (i > 0) { [teamItems[i - 1], teamItems[i]] = [teamItems[i], teamItems[i - 1]]; renderTeamList(); }
+            });
+            el.querySelector('[data-move="down"]').addEventListener('click', () => {
+                teamItems = readTeamFromDom();
+                if (i < teamItems.length - 1) { [teamItems[i + 1], teamItems[i]] = [teamItems[i], teamItems[i + 1]]; renderTeamList(); }
+            });
+            el.querySelector('[data-remove]').addEventListener('click', () => {
+                teamItems = readTeamFromDom();
+                teamItems.splice(i, 1);
+                delete teamPendingPhotos[el.dataset.id];
+                renderTeamList();
+            });
+            el.querySelector('.team-photo-input').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = () => {
+                    teamPendingPhotos[el.dataset.id] = { base64: reader.result.split(',')[1], type: file.type };
+                    el.querySelector('.team-photo-preview').innerHTML = `<img src="${reader.result}" alt="">`;
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+    }
+
+    document.getElementById('teamAddBtn').addEventListener('click', () => {
+        teamItems = readTeamFromDom();
+        teamItems.push({ id: 't' + Date.now(), name: '', photo: null, roleEs: '', roleEn: '', subjectEs: '', subjectEn: '', bioEs: '', bioEn: '' });
+        renderTeamList();
+    });
+
+    document.getElementById('teamSaveBtn').addEventListener('click', async () => {
+        const msg = document.getElementById('teamMsg');
+        const items = readTeamFromDom().map((it) => {
+            const pending = teamPendingPhotos[it.id];
+            if (pending) return { ...it, photoBase64: pending.base64, photoType: pending.type };
+            return it;
+        });
+        if (!items.length) { msg.textContent = 'Añade al menos un profesor.'; msg.className = 'msg error'; return; }
+        msg.textContent = 'Guardando...'; msg.className = 'msg';
+        try {
+            const res = await fetch('/api/home-data', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'team', items }),
+            });
+            const data = await res.json();
+            if (res.ok) {
+                teamItems = data.team;
+                Object.keys(teamPendingPhotos).forEach((k) => delete teamPendingPhotos[k]);
+                msg.textContent = '¡Guardado!'; msg.className = 'msg ok';
+                renderTeamList();
+            } else {
+                msg.textContent = data.error || 'No se ha podido guardar.'; msg.className = 'msg error';
+            }
+        } catch {
+            msg.textContent = 'No hay conexión con el servidor.'; msg.className = 'msg error';
+        }
+    });
+
+    // ===================== PORTADA (HERO) =====================
+    async function loadHero() {
+        try {
+            const res = await fetch('/api/home-data?lang=es');
+            const data = await res.json();
+            const h = data.hero || {};
+            document.getElementById('heroBeforeEs').value = h.beforeEs || '';
+            document.getElementById('heroHighlightEs').value = h.highlightEs || '';
+            document.getElementById('heroAfterEs').value = h.afterEs || '';
+            document.getElementById('heroLedeEs').value = h.ledeEs || '';
+            document.getElementById('heroBeforeEn').value = h.beforeEn || '';
+            document.getElementById('heroHighlightEn').value = h.highlightEn || '';
+            document.getElementById('heroAfterEn').value = h.afterEn || '';
+            document.getElementById('heroLedeEn').value = h.ledeEn || '';
+        } catch {
+            document.getElementById('heroMsg').textContent = 'No se ha podido cargar el texto actual.';
+            document.getElementById('heroMsg').className = 'msg error';
+        }
+    }
+
+    document.getElementById('heroForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const msg = document.getElementById('heroMsg');
+        msg.textContent = 'Guardando...'; msg.className = 'msg';
+        try {
+            const res = await fetch('/api/home-data', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'hero',
+                    beforeEs: document.getElementById('heroBeforeEs').value,
+                    highlightEs: document.getElementById('heroHighlightEs').value,
+                    afterEs: document.getElementById('heroAfterEs').value,
+                    ledeEs: document.getElementById('heroLedeEs').value,
+                    beforeEn: document.getElementById('heroBeforeEn').value,
+                    highlightEn: document.getElementById('heroHighlightEn').value,
+                    afterEn: document.getElementById('heroAfterEn').value,
+                    ledeEn: document.getElementById('heroLedeEn').value,
+                }),
+            });
+            const data = await res.json();
+            if (res.ok) {
+                msg.textContent = '¡Guardado! Puede tardar unos minutos en verse (caché).'; msg.className = 'msg ok';
+            } else {
+                msg.textContent = data.error || 'No se ha podido guardar.'; msg.className = 'msg error';
+            }
+        } catch {
+            msg.textContent = 'No hay conexión con el servidor.'; msg.className = 'msg error';
+        }
+    });
 
     checkSession();
 </script>

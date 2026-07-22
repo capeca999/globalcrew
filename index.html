@@ -1196,8 +1196,8 @@
     <div class="hero-content">
         <div class="wrap">
             <span class="eyebrow reveal is-visible" data-i18n="hero.eyebrow">CENTRO HOMOLOGADO AESA · TCP</span>
-            <h1 class="reveal is-visible" style="transition-delay:.1s" data-i18n-html="hero.title">Tu futuro, listo para <em>despegar</em>.</h1>
-            <p class="lede reveal is-visible" style="transition-delay:.2s" data-i18n="hero.lede">
+            <h1 class="reveal is-visible" id="heroTitle" style="transition-delay:.1s" data-i18n-html="hero.title">Tu futuro, listo para <em>despegar</em>.</h1>
+            <p class="lede reveal is-visible" id="heroLede" style="transition-delay:.2s" data-i18n="hero.lede">
                 La aventura de tu vida puede empezar hoy. Viajar, descubrir nuevos países, conocer personas de todo el mundo y convertir la aviación en tu profesión. En Global Crew recibirás una formación oficial AESA con un enfoque claro: prepararte para conseguir tu primer trabajo como Tripulante de Cabina y ayudarte a dar el salto a una aerolínea.
             </p>
             <div class="hero-cta reveal is-visible" style="transition-delay:.3s">
@@ -1635,7 +1635,7 @@
             <h2 data-i18n="team.title">Instructores que siguen volando.</h2>
             <p data-i18n="team.subtitle">Profesionales en activo del sector aéreo, cada uno especializado en una parte distinta de tu formación.</p>
         </div>
-        <div class="team-grid">
+        <div class="team-grid" id="teamGrid">
             <div class="crew-card reveal">
                 <img class="crew-photo" src="images/crew-kike.jpg" alt="Kike, director de formación de Global Crew Valencia" loading="lazy">
                 <h4>Kike</h4>
@@ -3532,6 +3532,57 @@
        else on the page throws a JS error. */
 
     /* ===================== ONE COMBINED FETCH FOR ALL BLOB DATA ===================== */
+    function applyFaqData(faq, lang) {
+        if (!Array.isArray(faq) || !faq.length) return;
+        const list = document.getElementById('faqList');
+        if (!list) return;
+        list.innerHTML = faq.map((f) => {
+            const q = lang === 'en' ? (f.questionEn || f.questionEs) : f.questionEs;
+            const a = lang === 'en' ? (f.answerEn || f.answerEs) : f.answerEs;
+            return `
+                <details class="faq-item reveal is-visible" name="faq-group">
+                    <summary class="faq-question">
+                        <span>${q || ''}</span>
+                        <svg class="faq-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                    </summary>
+                    <div class="faq-answer"><p>${a || ''}</p></div>
+                </details>
+            `;
+        }).join('');
+    }
+
+    function applyTeamData(team, lang) {
+        if (!Array.isArray(team) || !team.length) return;
+        const grid = document.getElementById('teamGrid');
+        if (!grid) return;
+        grid.innerHTML = team.map((t, i) => {
+            const role = lang === 'en' ? (t.roleEn || t.roleEs) : t.roleEs;
+            const subject = lang === 'en' ? (t.subjectEn || t.subjectEs) : t.subjectEs;
+            const bio = lang === 'en' ? (t.bioEn || t.bioEs) : t.bioEs;
+            return `
+                <div class="crew-card reveal is-visible" style="transition-delay:${(i * 0.08).toFixed(2)}s">
+                    <img class="crew-photo" src="${t.photo || ''}" alt="${(t.name || '').replace(/"/g, '&quot;')}" loading="lazy">
+                    <h4>${t.name || ''}</h4>
+                    <div class="role">${role || ''}</div>
+                    <span class="crew-subject">${subject || ''}</span>
+                    <p class="crew-bio">${bio || ''}</p>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function applyHeroData(hero, lang) {
+        if (!hero) return;
+        const before = lang === 'en' ? (hero.beforeEn || hero.beforeEs) : hero.beforeEs;
+        const highlight = lang === 'en' ? (hero.highlightEn || hero.highlightEs) : hero.highlightEs;
+        const after = lang === 'en' ? (hero.afterEn || hero.afterEs) : hero.afterEs;
+        const lede = lang === 'en' ? (hero.ledeEn || hero.ledeEs) : hero.ledeEs;
+        const titleEl = document.getElementById('heroTitle');
+        const ledeEl = document.getElementById('heroLede');
+        if (titleEl && highlight) titleEl.innerHTML = `${before || ''} <em>${highlight}</em>${after || ''}`;
+        if (ledeEl && lede) ledeEl.textContent = lede;
+    }
+
     async function loadHomeDataFromBlob(lang) {
         const alumniTrack = document.getElementById('alumniTrack');
         const courseEl = document.getElementById('nextCourseDate');
@@ -3552,6 +3603,9 @@
             if (data.seatmap) {
                 applySeatmapData(data.seatmap);
             }
+            if (data.faq) applyFaqData(data.faq, lang || 'es');
+            if (data.team) applyTeamData(data.team, lang || 'es');
+            if (data.hero) applyHeroData(data.hero, lang || 'es');
         } catch (err) {
             // No API available (e.g. hosted outside Vercel) — keep the built-in examples already in the HTML.
             initSeatmapGallery();
