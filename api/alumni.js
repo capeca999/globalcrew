@@ -77,6 +77,24 @@ function resolveTextPath(index, fullKey, firstKey, isFirstNameUnique) {
   return { path: null, source: null };
 }
 
+async function handleListAirlines(request, response) {
+  try {
+    const { blobs } = await list({ prefix: 'logo/' });
+    const logos = blobs.filter((b) => IMAGE_RE.test(b.pathname));
+    const airlines = logos
+      .map((l) => ({
+        name: baseName(l.pathname).replace(IMAGE_RE, ''),
+        logoUrl: proxiedImageUrl(request, l.pathname),
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name, 'es'));
+
+    response.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
+    return response.status(200).json({ airlines });
+  } catch (err) {
+    return response.status(500).json({ error: err.message, airlines: [] });
+  }
+}
+
 async function handleList(request, response) {
   const debug = request.query && (request.query.debug === '1' || request.query.debug === 'true');
   const lang = request.query && request.query.lang === 'en' ? 'en' : 'es';
@@ -274,9 +292,59 @@ async function handleDelete(request, response) {
   return response.status(200).json({ ok: true });
 }
 
+async function handleSaveAirline(request, response) {
+  const session = requireAuth(request, response);
+  if (!session) return;
+
+  const { airlineName, logoBase64, logoType, originalAirlineName } = request.body || {};
+  if (!airlineName || !airlineName.trim()) return response.status(400).json({ error: 'Falta el nombre de la aerolínea' });
+  if (!logoBase64 && !originalAirlineName) return response.status(400).json({ error: 'Hace falta el logo' });
+
+  const name = airlineName.trim();
+
+  try {
+    // Renaming an airline: clean up the old logo file(s) first.
+    if (originalAirlineName && originalAirlineName !== name) {
+      await Promise.all(IMAGE_EXTS.map((ext) => tryDelete(`logo/${originalAirlineName}.${ext}`)));
+    }
+
+    if (logoBase64) {
+      const ext = (logoType || 'image/png').split('/')[1]?.replace('jpeg', 'jpg') || 'png';
+      const buffer = Buffer.from(logoBase64, 'base64');
+      await put(`logo/${name}.${ext}`, buffer, {
+        access: 'private', contentType: logoType || 'image/png', addRandomSuffix: false, allowOverwrite: true,
+      });
+    }
+
+    return response.status(200).json({ ok: true, name });
+  } catch (err) {
+    return response.status(500).json({ error: err.message });
+  }
+}
+
+async function handleDeleteAirline(request, response) {
+  const session = requireAuth(request, response);
+  if (!session) return;
+
+  const { airlineName } = request.body || {};
+  if (!airlineName) return response.status(400).json({ error: 'Falta la aerolínea a borrar' });
+
+  await Promise.all(IMAGE_EXTS.map((ext) => tryDelete(`logo/${airlineName}.${ext}`)));
+  return response.status(200).json({ ok: true });
+}
+
 export default async function handler(request, response) {
-  if (request.method === 'GET') return handleList(request, response);
-  if (request.method === 'POST') return handleSave(request, response);
-  if (request.method === 'DELETE') return handleDelete(request, response);
+  if (request.method === 'GET') {
+    if (request.query.resource === 'airlines') return handleListAirlines(request, response);
+    return handleList(request, response);
+  }
+  if (request.method === 'POST') {
+    if ((request.body || {}).type === 'airline') return handleSaveAirline(request, response);
+    return handleSave(request, response);
+  }
+  if (request.method === 'DELETE') {
+    if ((request.body || {}).type === 'airline') return handleDeleteAirline(request, response);
+    return handleDelete(request, response);
+  }
   return response.status(405).json({ error: 'Método no permitido' });
 }

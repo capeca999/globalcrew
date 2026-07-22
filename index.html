@@ -2760,28 +2760,30 @@
         ).join('');
         const alumniDots = alumniDotsWrap.querySelectorAll('button');
 
-        function resizeAlumniTrack() {
-            const active = alumniTrack.querySelector('.alumni-slide.active');
-            if (!active) return;
-            // .alumni-slide is absolutely positioned (for the crossfade), so it
-            // can't report its own natural content height directly — measure
-            // via a hidden static clone instead, then size the track to match.
-            const clone = active.cloneNode(true);
-            clone.style.position = 'static';
-            clone.style.opacity = '1';
-            clone.style.visibility = 'hidden';
-            clone.style.pointerEvents = 'none';
-            alumniTrack.appendChild(clone);
-            const h = clone.offsetHeight;
-            alumniTrack.removeChild(clone);
-            alumniTrack.style.minHeight = Math.max(h, 220) + 'px';
+        function fixAlumniTrackHeight() {
+            // .alumni-slide is absolutely positioned (for the crossfade), so the
+            // track can't get its height from content directly. Measure every
+            // slide once (via a hidden static clone) and lock the track to the
+            // TALLEST one, so switching between alumni with shorter/longer
+            // quotes never makes the page shift up or down.
+            let maxH = 0;
+            alumniSlides.forEach((slide) => {
+                const clone = slide.cloneNode(true);
+                clone.style.position = 'static';
+                clone.style.opacity = '1';
+                clone.style.visibility = 'hidden';
+                clone.style.pointerEvents = 'none';
+                alumniTrack.appendChild(clone);
+                maxH = Math.max(maxH, clone.offsetHeight);
+                alumniTrack.removeChild(clone);
+            });
+            alumniTrack.style.minHeight = Math.max(maxH, 220) + 'px';
         }
 
         function showAlumni(i) {
             alumniIndex = (i + alumniSlides.length) % alumniSlides.length;
             alumniSlides.forEach((s, idx) => s.classList.toggle('active', idx === alumniIndex));
             alumniDots.forEach((d, idx) => d.classList.toggle('active', idx === alumniIndex));
-            resizeAlumniTrack();
         }
 
         function resetAlumniAutoplay() {
@@ -2799,8 +2801,8 @@
         alumniCarousel.addEventListener('mouseenter', () => clearInterval(alumniTimer));
         alumniCarousel.addEventListener('mouseleave', resetAlumniAutoplay);
 
-        resizeAlumniTrack();
-        window.addEventListener('resize', resizeAlumniTrack);
+        fixAlumniTrackHeight();
+        window.addEventListener('resize', fixAlumniTrackHeight);
         resetAlumniAutoplay();
     }
 

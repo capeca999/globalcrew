@@ -195,12 +195,15 @@
                         </div>
                         <div class="field">
                             <label for="alumniAirline">Aerolínea</label>
-                            <input type="text" id="alumniAirline" placeholder="Air Arabia" required>
+                            <input type="text" id="alumniAirline" list="airlineOptions" placeholder="Air Arabia" autocomplete="off" required>
+                            <datalist id="airlineOptions"></datalist>
                         </div>
                     </div>
                     <div class="field">
                         <label for="alumniCity">Ciudad (opcional, para el mapa)</label>
-                        <input type="text" id="alumniCity" placeholder="Dubai">
+                        <input type="text" id="alumniCity" list="cityOptions" placeholder="Escribe para buscar... p.ej. Dubai" autocomplete="off">
+                        <datalist id="cityOptions"></datalist>
+                        <p id="alumniCityHint" style="font-family:var(--ff-mono);font-size:.72rem;color:var(--ink-soft);margin-top:6px;"></p>
                     </div>
                     <div class="field">
                         <label for="alumniQuoteEs">Cita en español</label>
@@ -226,6 +229,35 @@
             <div class="panel">
                 <h2>Alumnos publicados</h2>
                 <div id="alumniList"><p class="empty-note">Cargando...</p></div>
+            </div>
+
+            <div class="panel">
+                <h2 id="airlineFormTitle">Añadir aerolínea</h2>
+                <p style="color:var(--ink-soft);font-size:.85rem;margin-bottom:20px;">
+                    El nombre tiene que escribirse igual que en el campo "Aerolínea" del alumno para que el logo aparezca junto a su foto.
+                </p>
+                <form id="airlineForm">
+                    <input type="hidden" id="airlineOriginalName">
+                    <div class="field">
+                        <label for="airlineName">Nombre de la aerolínea</label>
+                        <input type="text" id="airlineName" placeholder="Air Arabia" required>
+                    </div>
+                    <div class="field">
+                        <label for="airlineLogo">Logo</label>
+                        <input type="file" id="airlineLogo" accept="image/*">
+                        <div class="img-preview hidden" id="airlineImgPreviewWrap"><img id="airlineImgPreview" src="" alt=""></div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="airlineSaveBtn" style="width:auto;">Guardar aerolínea</button>
+                        <button type="button" class="btn btn-ghost hidden" id="airlineCancelEditBtn">Cancelar edición</button>
+                        <p class="msg" id="airlineFormMsg"></p>
+                    </div>
+                </form>
+            </div>
+
+            <div class="panel">
+                <h2>Aerolíneas con logo</h2>
+                <div id="airlineList"><p class="empty-note">Cargando...</p></div>
             </div>
         </div>
 
@@ -498,7 +530,7 @@
             document.querySelectorAll('.tab-btn').forEach((b) => b.classList.toggle('active', b === btn));
             document.querySelectorAll('.tab-panel').forEach((p) => p.classList.add('hidden'));
             document.getElementById('tab-' + btn.dataset.tab).classList.remove('hidden');
-            if (btn.dataset.tab === 'alumni' && !alumniLoaded) { alumniLoaded = true; loadAlumni(); }
+            if (btn.dataset.tab === 'alumni' && !alumniLoaded) { alumniLoaded = true; loadAlumni(); loadAirlines(); }
             if (btn.dataset.tab === 'course' && !courseLoaded) { courseLoaded = true; loadCourse(); }
         });
     });
@@ -543,6 +575,7 @@
         alumniCancelEditBtn.classList.add('hidden');
         alumniFormMsg.textContent = '';
         alumniFormMsg.className = 'msg';
+        document.getElementById('alumniCityHint').textContent = '';
     }
     alumniCancelEditBtn.addEventListener('click', resetAlumniForm);
 
@@ -642,6 +675,7 @@
         document.getElementById('alumniName').value = a.name || '';
         document.getElementById('alumniAirline').value = a.airline || '';
         document.getElementById('alumniCity').value = a.city || '';
+        document.getElementById('alumniCity').dispatchEvent(new Event('input'));
         document.getElementById('alumniQuoteEs').value = a.quote || '';
         document.getElementById('alumniQuoteEn').value = '';
         alumniImgPreview.src = a.photoUrl;
@@ -664,6 +698,162 @@
                 loadAlumni();
             } else {
                 alert('No se ha podido borrar al alumno.');
+            }
+        } catch {
+            alert('No hay conexión con el servidor.');
+        }
+    }
+
+    // ===================== AEROLÍNEAS (logos) =====================
+    const airlineForm = document.getElementById('airlineForm');
+    const airlineFormTitle = document.getElementById('airlineFormTitle');
+    const airlineFormMsg = document.getElementById('airlineFormMsg');
+    const airlineSaveBtn = document.getElementById('airlineSaveBtn');
+    const airlineCancelEditBtn = document.getElementById('airlineCancelEditBtn');
+    const airlineLogoInput = document.getElementById('airlineLogo');
+    const airlineImgPreviewWrap = document.getElementById('airlineImgPreviewWrap');
+    const airlineImgPreview = document.getElementById('airlineImgPreview');
+    const airlineList = document.getElementById('airlineList');
+
+    let airlineEditingName = null;
+    let airlinePendingLogoBase64 = null;
+    let airlinePendingLogoType = null;
+
+    airlineLogoInput.addEventListener('change', () => {
+        const file = airlineLogoInput.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+            const dataUrl = reader.result;
+            airlinePendingLogoBase64 = dataUrl.split(',')[1];
+            airlinePendingLogoType = file.type;
+            airlineImgPreview.src = dataUrl;
+            airlineImgPreviewWrap.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    });
+
+    function resetAirlineForm() {
+        airlineForm.reset();
+        airlineEditingName = null;
+        airlinePendingLogoBase64 = null;
+        airlinePendingLogoType = null;
+        airlineImgPreviewWrap.classList.add('hidden');
+        airlineFormTitle.textContent = 'Añadir aerolínea';
+        airlineSaveBtn.textContent = 'Guardar aerolínea';
+        airlineCancelEditBtn.classList.add('hidden');
+        airlineFormMsg.textContent = '';
+        airlineFormMsg.className = 'msg';
+    }
+    airlineCancelEditBtn.addEventListener('click', resetAirlineForm);
+
+    airlineForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        airlineFormMsg.textContent = 'Guardando...';
+        airlineFormMsg.className = 'msg';
+        airlineSaveBtn.disabled = true;
+
+        const payload = {
+            type: 'airline',
+            originalAirlineName: airlineEditingName,
+            airlineName: document.getElementById('airlineName').value,
+        };
+        if (airlinePendingLogoBase64) {
+            payload.logoBase64 = airlinePendingLogoBase64;
+            payload.logoType = airlinePendingLogoType;
+        }
+
+        try {
+            const res = await fetch('/api/alumni', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+            const data = await res.json();
+            if (res.ok) {
+                airlineFormMsg.textContent = '¡Guardado!';
+                airlineFormMsg.className = 'msg ok';
+                resetAirlineForm();
+                loadAirlines();
+            } else if (res.status === 401) {
+                airlineFormMsg.textContent = 'Tu sesión ha caducado. Recarga la página e inicia sesión de nuevo.';
+                airlineFormMsg.className = 'msg error';
+            } else {
+                airlineFormMsg.textContent = data.error || 'No se ha podido guardar.';
+                airlineFormMsg.className = 'msg error';
+            }
+        } catch {
+            airlineFormMsg.textContent = 'No hay conexión con el servidor.';
+            airlineFormMsg.className = 'msg error';
+        } finally {
+            airlineSaveBtn.disabled = false;
+        }
+    });
+
+    async function loadAirlines() {
+        airlineList.innerHTML = '<p class="empty-note">Cargando...</p>';
+        try {
+            const res = await fetch('/api/alumni?resource=airlines');
+            const data = await res.json();
+            const airlines = Array.isArray(data.airlines) ? data.airlines : [];
+
+            // Feed the datalist used by the alumni form's "Aerolínea" field.
+            document.getElementById('airlineOptions').innerHTML =
+                airlines.map((a) => `<option value="${a.name}"></option>`).join('');
+
+            if (!airlines.length) {
+                airlineList.innerHTML = '<p class="empty-note">Todavía no hay ninguna aerolínea con logo.</p>';
+                return;
+            }
+            airlineList.innerHTML = airlines.map((a) => `
+                <div class="post-row">
+                    <img src="${a.logoUrl}" alt="" style="object-fit:contain;background:var(--sky);padding:6px;">
+                    <div class="post-info">
+                        <h3>${a.name}</h3>
+                    </div>
+                    <div class="post-actions">
+                        <button type="button" class="btn btn-ghost" style="padding:8px 14px;font-size:.78rem;" data-airline-edit="${a.name}" data-logo="${a.logoUrl}">Editar</button>
+                        <button type="button" class="btn btn-danger" data-airline-delete="${a.name}">Borrar</button>
+                    </div>
+                </div>
+            `).join('');
+
+            airlineList.querySelectorAll('[data-airline-edit]').forEach((btn) => {
+                btn.addEventListener('click', () => startEditAirline(btn.dataset.airlineEdit, btn.dataset.logo));
+            });
+            airlineList.querySelectorAll('[data-airline-delete]').forEach((btn) => {
+                btn.addEventListener('click', () => deleteAirline(btn.dataset.airlineDelete));
+            });
+        } catch {
+            airlineList.innerHTML = '<p class="empty-note">No se han podido cargar las aerolíneas.</p>';
+        }
+    }
+
+    function startEditAirline(name, logoUrl) {
+        airlineEditingName = name;
+        airlinePendingLogoBase64 = null;
+        airlinePendingLogoType = null;
+        document.getElementById('airlineName').value = name;
+        airlineImgPreview.src = logoUrl;
+        airlineImgPreviewWrap.classList.remove('hidden');
+        airlineFormTitle.textContent = 'Editando aerolínea';
+        airlineSaveBtn.textContent = 'Guardar cambios';
+        airlineCancelEditBtn.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function deleteAirline(name) {
+        if (!confirm('¿Seguro que quieres borrar el logo de "' + name + '"? No se puede deshacer.')) return;
+        try {
+            const res = await fetch('/api/alumni', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'airline', airlineName: name }),
+            });
+            if (res.ok) {
+                loadAirlines();
+            } else {
+                alert('No se ha podido borrar la aerolínea.');
             }
         } catch {
             alert('No hay conexión con el servidor.');
@@ -723,6 +913,35 @@
         } finally {
             courseSaveBtn.disabled = false;
         }
+    });
+
+    // ===================== CITY SEARCH (for the alumni form) =====================
+    let CITY_INDEX = {}; // normalized key -> display name
+    function normalizeCity(str) {
+        return (str || '')
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase().replace(/[^a-z0-9]/g, '');
+    }
+    fetch('/cities.json')
+        .then((res) => res.json())
+        .then((data) => {
+            const list = document.getElementById('cityOptions');
+            const names = Object.values(data).map((c) => c.display).sort((a, b) => a.localeCompare(b, 'es'));
+            list.innerHTML = names.map((n) => `<option value="${n}"></option>`).join('');
+            Object.keys(data).forEach((key) => { CITY_INDEX[key] = data[key].display; });
+        })
+        .catch(() => { /* the city field still works as free text if this fails to load */ });
+
+    const alumniCityInput = document.getElementById('alumniCity');
+    const alumniCityHint = document.getElementById('alumniCityHint');
+    alumniCityInput.addEventListener('input', () => {
+        const val = alumniCityInput.value.trim();
+        if (!val) { alumniCityHint.textContent = ''; return; }
+        const known = CITY_INDEX[normalizeCity(val)];
+        alumniCityHint.textContent = known
+            ? '✓ Aparecerá en el mapa como "' + known + '"'
+            : 'No está en la lista — se guardará, pero no saldrá marcada en el mapa.';
+        alumniCityHint.style.color = known ? '#2E7D4F' : '#B3261E';
     });
 
     checkSession();
