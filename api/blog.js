@@ -36,7 +36,7 @@ async function handleSave(request, response) {
   if (!session) return;
 
   const {
-    slug: incomingSlug, lang, title, category, text,
+    slug: incomingSlug, lang, title, category, text, body,
     imageBase64, imageType, existingImage, publishedAt: incomingPublishedAt,
   } = request.body || {};
 
@@ -65,7 +65,7 @@ async function handleSave(request, response) {
   const now = new Date().toISOString();
   const post = {
     slug, lang: langKey, title: title.trim(), category: category || 'noticias', text: text.trim(),
-    image, author: session.username, publishedAt: incomingPublishedAt || now, updatedAt: now,
+    body: body || '', image, author: session.username, publishedAt: incomingPublishedAt || now, updatedAt: now,
   };
 
   try {

@@ -112,7 +112,23 @@
     .blog-modal-tag{font-family:var(--ff-mono);font-size:.68rem;letter-spacing:.06em;color:var(--coral);text-transform:uppercase;}
     .blog-modal-body h3{font-family:var(--ff-display);font-weight:700;font-size:1.4rem;color:var(--navy-950);margin-top:10px;line-height:1.3;}
     .blog-modal-date{font-family:var(--ff-mono);font-size:.7rem;color:var(--steel);margin-top:10px;}
-    .blog-modal-text{margin-top:18px;color:var(--ink);font-size:1rem;line-height:1.7;white-space:pre-wrap;}
+    .blog-modal-text{margin-top:18px;color:var(--ink);font-size:1rem;line-height:1.7;}
+    .blog-modal-text.is-plain{white-space:pre-wrap;}
+    .blog-modal-text p{margin:0 0 14px;}
+    .blog-modal-text p:last-child{margin-bottom:0;}
+    .blog-modal-text h1,.blog-modal-text h2,.blog-modal-text h3{
+        font-family:var(--ff-display);font-weight:700;color:var(--navy-950);margin:22px 0 10px;line-height:1.3;
+    }
+    .blog-modal-text h1:first-child,.blog-modal-text h2:first-child,.blog-modal-text h3:first-child{margin-top:0;}
+    .blog-modal-text h2{font-size:1.25rem;}
+    .blog-modal-text h3{font-size:1.08rem;}
+    .blog-modal-text ul,.blog-modal-text ol{margin:0 0 14px;padding-left:22px;}
+    .blog-modal-text li{margin-bottom:6px;}
+    .blog-modal-text a{color:var(--coral);text-decoration:underline;}
+    .blog-modal-text blockquote{
+        margin:16px 0;padding:4px 0 4px 16px;border-left:3px solid var(--coral);color:var(--ink-soft);font-style:italic;
+    }
+    .blog-modal-text strong{color:var(--navy-950);}
     .blog-modal-close{
         position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;
         background:rgba(43,38,36,.06);display:flex;align-items:center;justify-content:center;
@@ -131,7 +147,7 @@
             <span class="blog-modal-tag" id="blogModalTag"></span>
             <h3 id="blogModalTitle"></h3>
             <div class="blog-modal-date" id="blogModalDate"></div>
-            <p class="blog-modal-text" id="blogModalText"></p>
+            <div class="blog-modal-text" id="blogModalText"></div>
         </div>
     </div>
 </div>
@@ -239,7 +255,13 @@
         modalTag.textContent = t.filters[post.category] || post.category || '';
         modalTitle.textContent = post.title || '';
         modalDate.textContent = formatDate(post.publishedAt);
-        modalText.textContent = post.text || '';
+        if (post.body) {
+            modalText.classList.remove('is-plain');
+            modalText.innerHTML = post.body;
+        } else {
+            modalText.classList.add('is-plain');
+            modalText.textContent = post.text || '';
+        }
         modalOverlay.classList.add('open');
         document.body.style.overflow = 'hidden';
     }

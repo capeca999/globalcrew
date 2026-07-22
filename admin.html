@@ -7,6 +7,8 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 <style>
     :root{
         --navy-950:#3D0910;--navy-800:#750C1B;--steel:#8C8783;--steel-light:#D6D2CD;
@@ -69,6 +71,10 @@
     .form-row-two{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
     @media (max-width:640px){.form-row-two{grid-template-columns:1fr;}}
     textarea{resize:vertical;min-height:90px;}
+    #postBodyEditor{background:var(--cream);border:1px solid var(--line);border-radius:0 0 10px 10px;min-height:220px;font-family:var(--ff-body);font-size:.95rem;}
+    #postBodyEditor .ql-editor{min-height:220px;}
+    .ql-toolbar.ql-snow{background:#fff;border:1px solid var(--line);border-radius:10px 10px 0 0;border-bottom:none;font-family:var(--ff-body);}
+    .ql-container.ql-snow{border:1px solid var(--line);border-radius:0 0 10px 10px;}
     .img-preview{margin-top:10px;max-width:220px;border-radius:10px;overflow:hidden;border:1px solid var(--line);}
     .img-preview img{width:100%;display:block;}
     .form-actions{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;align-items:center;}
@@ -154,8 +160,38 @@
                     <input type="text" id="postTitleInput" placeholder="Ej: Nueva convocatoria: ya puedes reservar tu plaza" required>
                 </div>
                 <div class="field">
-                    <label for="postText">Texto</label>
+                    <label for="postText">Extracto (lo que se ve en la tarjeta)</label>
                     <textarea id="postText" placeholder="Un párrafo corto, el que se ve en la tarjeta del blog." required></textarea>
+                </div>
+                <div class="field">
+                    <label>Contenido completo (lo que se ve al abrir el artículo — opcional)</label>
+                    <div id="postBodyToolbar">
+                        <span class="ql-formats">
+                            <button class="ql-bold"></button>
+                            <button class="ql-italic"></button>
+                            <button class="ql-underline"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <select class="ql-header">
+                                <option value="2">Título</option>
+                                <option value="3">Subtítulo</option>
+                                <option selected></option>
+                            </select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-list" value="ordered"></button>
+                            <button class="ql-list" value="bullet"></button>
+                            <button class="ql-blockquote"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-link"></button>
+                            <button class="ql-clean"></button>
+                        </span>
+                    </div>
+                    <div id="postBodyEditor"></div>
+                    <p style="font-family:var(--ff-mono);font-size:.72rem;color:var(--ink-soft);margin-top:8px;">
+                        Si lo dejas vacío, al abrir el artículo se mostrará solo el extracto de arriba.
+                    </p>
                 </div>
                 <div class="field">
                     <label for="postImage">Foto</label>
@@ -360,6 +396,12 @@
     const imgPreviewWrap = document.getElementById('imgPreviewWrap');
     const imgPreview = document.getElementById('imgPreview');
 
+    const postBodyEditor = new Quill('#postBodyEditor', {
+        theme: 'snow',
+        modules: { toolbar: '#postBodyToolbar' },
+        placeholder: 'Escribe aquí el artículo completo, con negrita, cursiva, títulos, enlaces...',
+    });
+
     let editingSlug = null;
     let editingExistingImage = null;
     let pendingImageBase64 = null;
@@ -381,6 +423,7 @@
 
     function resetForm() {
         postForm.reset();
+        postBodyEditor.setContents([]);
         editingSlug = null;
         editingExistingImage = null;
         pendingImageBase64 = null;
@@ -401,12 +444,14 @@
         formMsg.className = 'msg';
         saveBtn.disabled = true;
 
+        const bodyHtml = postBodyEditor.getText().trim() ? postBodyEditor.root.innerHTML : '';
         const payload = {
             slug: editingSlug,
             lang: document.getElementById('postLang').value,
             category: document.getElementById('postCategory').value,
             title: document.getElementById('postTitleInput').value,
             text: document.getElementById('postText').value,
+            body: bodyHtml,
             existingImage: editingExistingImage,
         };
         if (pendingImageBase64) {
@@ -491,6 +536,7 @@
         document.getElementById('postCategory').value = post.category;
         document.getElementById('postTitleInput').value = post.title;
         document.getElementById('postText').value = post.text;
+        postBodyEditor.root.innerHTML = post.body || '';
         if (post.image) {
             imgPreview.src = post.image;
             imgPreviewWrap.classList.remove('hidden');
