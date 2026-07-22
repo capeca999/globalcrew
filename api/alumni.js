@@ -1,7 +1,6 @@
-import { list, put, del } from '@vercel/blob';
 import CITIES from './_cities.js';
 import { requireAuth, getSession } from './_auth.js';
-import { fetchPublicText, BLOB_TOKEN } from './_blog-utils.js';
+import { fetchPublicText, listObjects, putObject, deleteObject } from './_blog-utils.js';
 
 // One function handles all alumni-related operations, picked by HTTP method:
 //   GET    /api/alumni?lang=es                -> list alumni (public)
@@ -34,7 +33,7 @@ function lookupCity(cityName) {
 }
 
 // Builds "full name" and "first name" lookup indexes, storing each text
-// blob's public URL (so we can fetch its contents directly, no SDK read).
+// blob's public URL (so we can fetch its contents directly, no extra call).
 function buildTextIndex(texts, stripRe) {
   const byFullName = {};
   const byFirstName = {};
@@ -63,8 +62,8 @@ async function handleList(request, response) {
   const lang = request.query && request.query.lang === 'en' ? 'en' : 'es';
 
   try {
-    // One list() call for the whole store instead of two prefixed ones.
-    const { blobs: allBlobs } = await list({ token: BLOB_TOKEN });
+    // One listObjects() call for the whole bucket instead of two prefixed ones.
+    const allBlobs = await listObjects('');
     const blobs = allBlobs.filter((b) => b.pathname.startsWith('alumnoscontratados/'));
     const logoBlobs = allBlobs.filter((b) => b.pathname.startsWith('logo/'));
 
@@ -164,7 +163,7 @@ async function handleList(request, response) {
 
 async function handleListAirlines(request, response) {
   try {
-    const { blobs } = await list({ prefix: 'logo/', token: BLOB_TOKEN });
+    const blobs = await listObjects('logo/');
     const logos = blobs.filter((b) => IMAGE_RE.test(b.pathname));
     const airlines = logos
       .map((l) => ({ name: baseName(l.pathname).replace(IMAGE_RE, ''), logoUrl: l.url }))
@@ -181,14 +180,6 @@ function buildIdentity(name, airline, city) {
   const parts = [name.trim(), airline.trim()];
   if (city && city.trim()) parts.push(city.trim());
   return parts.join(', ');
-}
-
-async function tryDelete(path) {
-  try {
-    await del(path, { token: BLOB_TOKEN });
-  } catch {
-    // Fine if it didn't exist.
-  }
 }
 
 async function handleSave(request, response) {
@@ -214,30 +205,24 @@ async function handleSave(request, response) {
   try {
     if (identityChanged) {
       await Promise.all([
-        ...IMAGE_EXTS.map((ext) => tryDelete(`alumnoscontratados/${originalIdentity}.${ext}`)),
-        tryDelete(`alumnoscontratados/${originalIdentity}.txt`),
-        tryDelete(`alumnoscontratados/${originalIdentity}.en.txt`),
+        ...IMAGE_EXTS.map((ext) => deleteObject(`alumnoscontratados/${originalIdentity}.${ext}`)),
+        deleteObject(`alumnoscontratados/${originalIdentity}.txt`),
+        deleteObject(`alumnoscontratados/${originalIdentity}.en.txt`),
       ]);
     }
 
     if (photoBase64) {
       const ext = (photoType || 'image/jpeg').split('/')[1]?.replace('jpeg', 'jpg') || 'jpg';
       const buffer = Buffer.from(photoBase64, 'base64');
-      await put(`alumnoscontratados/${identity}.${ext}`, buffer, {
-        access: 'public', contentType: photoType || 'image/jpeg', addRandomSuffix: false, allowOverwrite: true, token: BLOB_TOKEN,
-      });
+      await putObject(`alumnoscontratados/${identity}.${ext}`, buffer, photoType || 'image/jpeg');
     }
 
-    await put(`alumnoscontratados/${identity}.txt`, quoteEs.trim(), {
-      access: 'public', contentType: 'text/plain; charset=utf-8', addRandomSuffix: false, allowOverwrite: true, token: BLOB_TOKEN,
-    });
+    await putObject(`alumnoscontratados/${identity}.txt`, quoteEs.trim(), 'text/plain; charset=utf-8');
 
     if (quoteEn && quoteEn.trim()) {
-      await put(`alumnoscontratados/${identity}.en.txt`, quoteEn.trim(), {
-        access: 'public', contentType: 'text/plain; charset=utf-8', addRandomSuffix: false, allowOverwrite: true, token: BLOB_TOKEN,
-      });
+      await putObject(`alumnoscontratados/${identity}.en.txt`, quoteEn.trim(), 'text/plain; charset=utf-8');
     } else if (!isNew) {
-      await tryDelete(`alumnoscontratados/${identity}.en.txt`);
+      await deleteObject(`alumnoscontratados/${identity}.en.txt`);
     }
 
     return response.status(200).json({ ok: true, identity });
@@ -254,9 +239,9 @@ async function handleDelete(request, response) {
   if (!identity) return response.status(400).json({ error: 'Falta el alumno a borrar' });
 
   await Promise.all([
-    ...IMAGE_EXTS.map((ext) => tryDelete(`alumnoscontratados/${identity}.${ext}`)),
-    tryDelete(`alumnoscontratados/${identity}.txt`),
-    tryDelete(`alumnoscontratados/${identity}.en.txt`),
+    ...IMAGE_EXTS.map((ext) => deleteObject(`alumnoscontratados/${identity}.${ext}`)),
+    deleteObject(`alumnoscontratados/${identity}.txt`),
+    deleteObject(`alumnoscontratados/${identity}.en.txt`),
   ]);
 
   return response.status(200).json({ ok: true });
@@ -274,15 +259,13 @@ async function handleSaveAirline(request, response) {
 
   try {
     if (originalAirlineName && originalAirlineName !== name) {
-      await Promise.all(IMAGE_EXTS.map((ext) => tryDelete(`logo/${originalAirlineName}.${ext}`)));
+      await Promise.all(IMAGE_EXTS.map((ext) => deleteObject(`logo/${originalAirlineName}.${ext}`)));
     }
 
     if (logoBase64) {
       const ext = (logoType || 'image/png').split('/')[1]?.replace('jpeg', 'jpg') || 'png';
       const buffer = Buffer.from(logoBase64, 'base64');
-      await put(`logo/${name}.${ext}`, buffer, {
-        access: 'public', contentType: logoType || 'image/png', addRandomSuffix: false, allowOverwrite: true, token: BLOB_TOKEN,
-      });
+      await putObject(`logo/${name}.${ext}`, buffer, logoType || 'image/png');
     }
 
     return response.status(200).json({ ok: true, name });
@@ -298,7 +281,7 @@ async function handleDeleteAirline(request, response) {
   const { airlineName } = request.body || {};
   if (!airlineName) return response.status(400).json({ error: 'Falta la aerolínea a borrar' });
 
-  await Promise.all(IMAGE_EXTS.map((ext) => tryDelete(`logo/${airlineName}.${ext}`)));
+  await Promise.all(IMAGE_EXTS.map((ext) => deleteObject(`logo/${airlineName}.${ext}`)));
   return response.status(200).json({ ok: true });
 }
 

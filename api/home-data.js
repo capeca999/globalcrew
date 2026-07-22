@@ -1,6 +1,5 @@
-import { list } from '@vercel/blob';
 import CITIES from './_cities.js';
-import { fetchPublicText, BLOB_TOKEN } from './_blog-utils.js';
+import { fetchPublicText, listObjects } from './_blog-utils.js';
 
 // ---- Shared matchers ----
 const IMAGE_RE = /\.(jpe?g|png|webp)$/i;
@@ -62,8 +61,8 @@ export default async function handler(request, response) {
   const lang = request.query && request.query.lang === 'en' ? 'en' : 'es';
 
   try {
-    // ---- ONE list() call for the entire store ----
-    const { blobs: allBlobs } = await list({ token: BLOB_TOKEN });
+    // ---- ONE listObjects() call for the entire bucket ----
+    const allBlobs = await listObjects('');
 
     const inFolder = (b, folder) => b.pathname.startsWith(folder);
 

@@ -1,6 +1,5 @@
-import { list, put } from '@vercel/blob';
 import { requireAuth, getSession } from './_auth.js';
-import { fetchPublicText, BLOB_TOKEN } from './_blog-utils.js';
+import { fetchPublicText, listObjects, putObject } from './_blog-utils.js';
 
 // One function handles both operations, picked by HTTP method:
 //   GET  /api/proximo-curso?lang=es  -> read the current announcement (public)
@@ -19,7 +18,7 @@ async function handleRead(request, response) {
   const lang = request.query && request.query.lang === 'en' ? 'en' : 'es';
 
   try {
-    const { blobs } = await list({ prefix: 'proximoscursos/', token: BLOB_TOKEN });
+    const blobs = await listObjects('proximoscursos/');
 
     if (!blobs.length) {
       return response.status(200).json({ text: '' });
@@ -54,13 +53,9 @@ async function handleSave(request, response) {
 
   try {
     const stamp = Date.now();
-    await put(`proximoscursos/convocatoria-${stamp}.txt`, textEs.trim(), {
-      access: 'public', contentType: 'text/plain; charset=utf-8', addRandomSuffix: false, token: BLOB_TOKEN,
-    });
+    await putObject(`proximoscursos/convocatoria-${stamp}.txt`, textEs.trim(), 'text/plain; charset=utf-8');
     if (textEn && textEn.trim()) {
-      await put(`proximoscursos/convocatoria-${stamp}.en.txt`, textEn.trim(), {
-        access: 'public', contentType: 'text/plain; charset=utf-8', addRandomSuffix: false, token: BLOB_TOKEN,
-      });
+      await putObject(`proximoscursos/convocatoria-${stamp}.en.txt`, textEn.trim(), 'text/plain; charset=utf-8');
     }
     return response.status(200).json({ ok: true });
   } catch (err) {

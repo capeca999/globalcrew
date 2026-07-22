@@ -1,16 +1,13 @@
-import { list, put, del } from '@vercel/blob';
 import { requireAuth, getSession } from './_auth.js';
-import { slugify, fetchPublicJson, BLOB_TOKEN } from './_blog-utils.js';
+import { slugify, fetchPublicJson, listObjects, putObject, deleteObject } from './_blog-utils.js';
 
 // One function handles all blog operations, picked by HTTP method:
 //   GET    /api/blog?lang=es                 -> list posts, resolved to one language
 //   GET    /api/blog?slug=xxx                -> one post, BOTH languages included
-//                                                (so blog-post.html can switch language
-//                                                without another request)
 //   POST   /api/blog        (auth)           -> create/update a post (both languages at once)
 //   DELETE /api/blog        (auth)           -> delete a post
 //
-// Each post is now a single JSON blob at blog/{slug}.json with the shape:
+// Each post is a single JSON object at blog/{slug}.json with the shape:
 //   { slug, category, image, es: {title,text,body}, en: {title,text,body}, author, publishedAt, updatedAt }
 export const config = { api: { bodyParser: { sizeLimit: '8mb' } } };
 
@@ -35,19 +32,14 @@ async function handleGetOne(request, response) {
   const slug = request.query.slug;
 
   try {
-    const { blobs } = await list({ prefix: `blog/${slug}.json`, token: BLOB_TOKEN });
+    const blobs = await listObjects(`blog/${slug}.json`);
     const match = blobs.find((b) => b.pathname === `blog/${slug}.json`);
     if (!match) return response.status(404).json({ error: 'Artículo no encontrado' });
 
     const post = await fetchPublicJson(match.url);
     if (!post) return response.status(404).json({ error: 'Artículo no encontrado' });
 
-    // A logged-in admin (checking their own edit, or right after a delete)
-    // always gets a fresh read — only public, unauthenticated visitors get
-    // the 10-minute cache.
     response.setHeader('Cache-Control', getSession(request) ? 'no-store' : 's-maxage=600, stale-while-revalidate=3600');
-    // Full bilingual object — the caller (blog-post.html, or the admin edit
-    // form) picks which language block to show/edit.
     return response.status(200).json({ post });
   } catch (err) {
     return response.status(500).json({ error: err.message });
@@ -61,7 +53,7 @@ async function handleList(request, response) {
   const category = request.query.category || null;
 
   try {
-    const { blobs } = await list({ prefix: 'blog/', token: BLOB_TOKEN });
+    const blobs = await listObjects('blog/');
     const jsonBlobs = blobs.filter((b) => b.pathname.endsWith('.json'));
 
     const rawPosts = (await Promise.all(jsonBlobs.map((b) => fetchPublicJson(b.url)))).filter(Boolean);
@@ -71,8 +63,6 @@ async function handleList(request, response) {
     }
     posts.sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0));
 
-    // Same idea: the admin panel's own listing (right after adding/editing/
-    // deleting a post) always gets a fresh read; public visitors get the cache.
     response.setHeader('Cache-Control', getSession(request) ? 'no-store' : 's-maxage=600, stale-while-revalidate=3600');
     return response.status(200).json({ posts });
   } catch (err) {
@@ -101,9 +91,7 @@ async function handleSave(request, response) {
     try {
       const ext = (imageType || 'image/jpeg').split('/')[1]?.replace('jpeg', 'jpg') || 'jpg';
       const buffer = Buffer.from(imageBase64, 'base64');
-      const uploaded = await put(`blog-images/${slug}-${Date.now()}.${ext}`, buffer, {
-        access: 'public', contentType: imageType || 'image/jpeg', token: BLOB_TOKEN,
-      });
+      const uploaded = await putObject(`blog-images/${slug}-${Date.now()}.${ext}`, buffer, imageType || 'image/jpeg');
       image = uploaded.url;
     } catch (err) {
       return response.status(500).json({ error: `No se pudo subir la imagen: ${err.message}` });
@@ -123,9 +111,7 @@ async function handleSave(request, response) {
   };
 
   try {
-    await put(`blog/${slug}.json`, JSON.stringify(post), {
-      access: 'public', contentType: 'application/json', addRandomSuffix: false, allowOverwrite: true, token: BLOB_TOKEN,
-    });
+    await putObject(`blog/${slug}.json`, JSON.stringify(post), 'application/json');
     return response.status(200).json({ ok: true, post });
   } catch (err) {
     return response.status(500).json({ error: err.message });
@@ -140,7 +126,7 @@ async function handleDelete(request, response) {
   if (!slug) return response.status(400).json({ error: 'Falta el slug del artículo' });
 
   try {
-    await del(`blog/${slug}.json`, { token: BLOB_TOKEN });
+    await deleteObject(`blog/${slug}.json`);
     return response.status(200).json({ ok: true });
   } catch (err) {
     return response.status(500).json({ error: err.message });

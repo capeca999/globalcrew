@@ -1,8 +1,71 @@
-// The Blob store is now PUBLIC (store "globalcrewpublic"), so this token
-// must be passed explicitly to every @vercel/blob call in every file —
-// otherwise the SDK falls back to the default BLOB_READ_WRITE_TOKEN env
-// var, which would point at the old private store instead.
-export const BLOB_TOKEN = process.env.publicblob_READ_WRITE_TOKEN;
+import { S3Client, ListObjectsV2Command, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+
+// ---- R2 config (all from Vercel environment variables) ----
+// R2_ACCOUNT_ID        -> your Cloudflare account ID
+// R2_ACCESS_KEY_ID      -> from an R2 API token (Object Read & Write)
+// R2_SECRET_ACCESS_KEY  -> from the same R2 API token
+// R2_BUCKET_NAME        -> the bucket name, e.g. "globalcrew"
+// R2_PUBLIC_URL         -> the bucket's public base URL, no trailing slash —
+//                          either the "pub-xxxx.r2.dev" address Cloudflare
+//                          gives you when you enable public access on the
+//                          bucket, or your own custom domain if you set one up.
+const BUCKET = process.env.R2_BUCKET_NAME;
+const PUBLIC_BASE = (process.env.R2_PUBLIC_URL || '').replace(/\/$/, '');
+
+export const s3 = new S3Client({
+  region: 'auto',
+  endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+  credentials: {
+    accessKeyId: process.env.R2_ACCESS_KEY_ID,
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+  },
+});
+
+export function publicUrl(key) {
+  return `${PUBLIC_BASE}/${key}`;
+}
+
+// Mimics the old `list({ prefix })` from @vercel/blob: returns a flat array
+// of { pathname, uploadedAt, url }, handling pagination transparently
+// (S3-style listing caps out at 1000 keys per page).
+export async function listObjects(prefix) {
+  const out = [];
+  let ContinuationToken;
+  do {
+    const res = await s3.send(new ListObjectsV2Command({
+      Bucket: BUCKET,
+      Prefix: prefix || undefined,
+      ContinuationToken,
+    }));
+    (res.Contents || []).forEach((obj) => {
+      out.push({ pathname: obj.Key, uploadedAt: obj.LastModified, url: publicUrl(obj.Key) });
+    });
+    ContinuationToken = res.IsTruncated ? res.NextContinuationToken : undefined;
+  } while (ContinuationToken);
+  return out;
+}
+
+// Mimics the old `put(path, body, { contentType })`. R2/S3 always
+// overwrites by key — there's no "random suffix" concept to worry about.
+export async function putObject(key, body, contentType) {
+  await s3.send(new PutObjectCommand({
+    Bucket: BUCKET,
+    Key: key,
+    Body: body,
+    ContentType: contentType,
+  }));
+  return { url: publicUrl(key), pathname: key };
+}
+
+// Mimics the old `del(path)`. Doesn't throw if the object doesn't exist,
+// same forgiving behavior the rest of the code already relies on.
+export async function deleteObject(key) {
+  try {
+    await s3.send(new DeleteObjectCommand({ Bucket: BUCKET, Key: key }));
+  } catch {
+    // fine if it didn't exist
+  }
+}
 
 export function slugify(str) {
   return (str || '')
@@ -13,8 +76,8 @@ export function slugify(str) {
     .slice(0, 80);
 }
 
-// Public blobs are fetchable directly at their URL, no SDK round-trip (and
-// no Advanced Operation) needed just to read a text file's contents.
+// Public objects are fetched straight from their URL — a normal HTTP
+// request, not billed as an R2 "Class A" operation the way list/put/delete are.
 export async function fetchPublicText(url) {
   if (!url) return '';
   try {
@@ -26,7 +89,6 @@ export async function fetchPublicText(url) {
   }
 }
 
-// Same idea for the JSON blog-post files.
 export async function fetchPublicJson(url) {
   if (!url) return null;
   try {
