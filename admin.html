@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 <style>
     :root{
@@ -143,6 +144,10 @@
             <div class="field">
                 <label for="loginPass">Contraseña</label>
                 <input type="password" id="loginPass" autocomplete="current-password" required>
+            </div>
+            <div class="field">
+                <!-- Replace YOUR_SITE_KEY_HERE with the site key from google.com/recaptcha/admin, registered for globalcrewtcp.com -->
+                <div class="g-recaptcha" data-sitekey="6Ld66V8tAAAAADcKjQpa_D7nedeixVdb4K97xVB6"></div>
             </div>
             <button type="submit" class="btn btn-primary">Entrar</button>
             <p class="msg error" id="loginMsg"></p>
@@ -524,22 +529,30 @@
         loginMsg.textContent = '';
         const username = document.getElementById('loginUser').value.trim();
         const password = document.getElementById('loginPass').value;
+        const recaptchaToken = typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse() : '';
+
+        if (!recaptchaToken) {
+            loginMsg.textContent = 'Marca la casilla "No soy un robot" antes de entrar.';
+            return;
+        }
 
         try {
             const res = await fetch('/api/admin-auth', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password }),
+                body: JSON.stringify({ username, password, recaptchaToken }),
             });
             const data = await res.json();
             if (res.ok) {
                 document.getElementById('loginPass').value = '';
-                showDashboard(data.username);
+                showDashboard(data.username, data.budget);
             } else {
                 loginMsg.textContent = data.error || 'No se ha podido iniciar sesión.';
+                if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
             }
         } catch {
             loginMsg.textContent = 'No hay conexión con el servidor.';
+            if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
         }
     });
 

@@ -4,6 +4,31 @@ import {
 } from './_auth.js';
 import { peekWriteBudget } from './_blog-utils.js';
 
+// Verifies the reCAPTCHA token with Google before we even look at the
+// username/password. RECAPTCHA_SECRET_KEY is a Vercel environment variable —
+// get it (and the public site key used in admin.html) from
+// https://www.google.com/recaptcha/admin, registered for globalcrewtcp.com
+async function verifyRecaptcha(token, remoteIp) {
+  const secret = process.env.RECAPTCHA_SECRET_KEY;
+  if (!secret) return true; // fail open if it hasn't been configured yet, so setup isn't blocked
+  if (!token) return false;
+
+  try {
+    const params = new URLSearchParams({ secret, response: token });
+    if (remoteIp) params.append('remoteip', remoteIp);
+
+    const res = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString(),
+    });
+    const data = await res.json();
+    return data.success === true;
+  } catch {
+    return false;
+  }
+}
+
 // One function handles all three admin-auth operations, picked by HTTP method,
 // so this only counts as a single Serverless Function against Vercel's limit:
 //   GET    /api/admin-auth  -> "am I logged in?"      (was admin-me.js)
@@ -18,9 +43,15 @@ export default async function handler(request, response) {
   }
 
   if (request.method === 'POST') {
-    const { username, password } = request.body || {};
+    const { username, password, recaptchaToken } = request.body || {};
     if (!username || !password) {
       return response.status(400).json({ error: 'Faltan usuario o contraseña' });
+    }
+
+    const remoteIp = request.headers['x-forwarded-for']?.split(',')[0]?.trim();
+    const captchaOk = await verifyRecaptcha(recaptchaToken, remoteIp);
+    if (!captchaOk) {
+      return response.status(400).json({ error: 'No se ha podido verificar que no eres un robot. Inténtalo de nuevo.' });
     }
 
     const lockout = await checkLoginLockout(username);
