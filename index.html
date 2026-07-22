@@ -3392,7 +3392,7 @@
 
         async function load() {
             try {
-                const res = await fetch(`/api/blog-list?lang=${currentLang}`);
+                const res = await fetch(`/api/blog?lang=${currentLang}`);
                 const data = await res.json();
                 const posts = (Array.isArray(data.posts) ? data.posts : []).slice(0, 3);
 

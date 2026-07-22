@@ -284,7 +284,7 @@
         const grid = document.getElementById('blogGrid');
         grid.innerHTML = `<div class="blog-loading">${TXT[currentLang].loading}</div>`;
         try {
-            const res = await fetch(`/api/blog-list?lang=${currentLang}`);
+            const res = await fetch(`/api/blog?lang=${currentLang}`);
             const data = await res.json();
             allPosts = Array.isArray(data.posts) ? data.posts : [];
             render();

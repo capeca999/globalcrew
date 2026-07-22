@@ -265,7 +265,7 @@
 
     async function checkSession() {
         try {
-            const res = await fetch('/api/admin-me');
+            const res = await fetch('/api/admin-auth');
             const data = await res.json();
             if (data.authenticated) {
                 showDashboard(data.username);
@@ -295,7 +295,7 @@
         const username = document.getElementById('loginUser').value.trim();
         const password = document.getElementById('loginPass').value;
         try {
-            const res = await fetch('/api/admin-login', {
+            const res = await fetch('/api/admin-auth', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
@@ -313,7 +313,7 @@
     });
 
     document.getElementById('logoutBtn').addEventListener('click', async () => {
-        await fetch('/api/admin-logout', { method: 'POST' });
+        await fetch('/api/admin-auth', { method: 'DELETE' });
         showLogin();
     });
 
@@ -382,7 +382,7 @@
         }
 
         try {
-            const res = await fetch('/api/blog-save', {
+            const res = await fetch('/api/blog', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
@@ -416,7 +416,7 @@
     async function loadPosts() {
         postList.innerHTML = '<p class="empty-note">Cargando...</p>';
         try {
-            const res = await fetch('/api/blog-list?lang=' + listLangFilter.value);
+            const res = await fetch('/api/blog?lang=' + listLangFilter.value);
             const data = await res.json();
             const posts = Array.isArray(data.posts) ? data.posts : [];
             if (!posts.length) {
@@ -473,8 +473,8 @@
     async function deletePost(slug, lang) {
         if (!confirm('¿Seguro que quieres borrar este artículo? No se puede deshacer.')) return;
         try {
-            const res = await fetch('/api/blog-delete', {
-                method: 'POST',
+            const res = await fetch('/api/blog', {
+                method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ slug, lang }),
             });
@@ -566,7 +566,7 @@
         }
 
         try {
-            const res = await fetch('/api/alumni-save', {
+            const res = await fetch('/api/alumni', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
@@ -655,8 +655,8 @@
     async function deleteAlumni(identity) {
         if (!confirm('¿Seguro que quieres borrar a este alumno? Se borrará su foto y su cita. No se puede deshacer.')) return;
         try {
-            const res = await fetch('/api/alumni-delete', {
-                method: 'POST',
+            const res = await fetch('/api/alumni', {
+                method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ identity }),
             });
@@ -698,7 +698,7 @@
         courseSaveBtn.disabled = true;
 
         try {
-            const res = await fetch('/api/course-save', {
+            const res = await fetch('/api/proximo-curso', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

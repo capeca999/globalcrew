@@ -1,5 +1,5 @@
 import { list, get } from '@vercel/blob';
-import CITIES from './cities.js';
+import CITIES from './_cities.js';
 
 // ---- Shared matchers ----
 const IMAGE_RE = /\.(jpe?g|png|webp)$/i;
@@ -217,9 +217,9 @@ export default async function handler(request, response) {
 
     // ================= RESPONSE =================
     if (!debug) {
-      // 1 hour cache: fewer Advanced Operations, still fresh enough for how
-      // often this content actually changes. Vercel serves the cached
-      // version instantly and revalidates in the background afterwards.
+      // 5 minute cache: still far fewer Advanced Operations than no caching
+      // at all, but changes (next course date, new alumni, etc.) show up
+      // in minutes instead of up to an hour.
       response.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=86400');
     }
 
