@@ -8,7 +8,31 @@ import { slugify, fetchPublicJson, BLOB_TOKEN } from './_blog-utils.js';
 //   DELETE /api/blog        (auth)        -> delete a post
 export const config = { api: { bodyParser: { sizeLimit: '8mb' } } };
 
+async function handleGetOne(request, response) {
+  const lang = request.query.lang === 'en' ? 'en' : 'es';
+  const slug = request.query.slug;
+
+  try {
+    // A direct fetch by known path is one Advanced Operation less than a
+    // full list() — the JSON blob's public URL follows the same pattern
+    // blog.js always saves it under.
+    const { blobs } = await list({ prefix: `blog/${lang}/${slug}.json`, token: BLOB_TOKEN });
+    const match = blobs.find((b) => b.pathname === `blog/${lang}/${slug}.json`);
+    if (!match) return response.status(404).json({ error: 'Artículo no encontrado' });
+
+    const post = await fetchPublicJson(match.url);
+    if (!post) return response.status(404).json({ error: 'Artículo no encontrado' });
+
+    response.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=3600');
+    return response.status(200).json({ post });
+  } catch (err) {
+    return response.status(500).json({ error: err.message });
+  }
+}
+
 async function handleList(request, response) {
+  if (request.query.slug) return handleGetOne(request, response);
+
   const lang = request.query.lang === 'en' ? 'en' : 'es';
   const category = request.query.category || null;
 

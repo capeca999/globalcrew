@@ -95,62 +95,9 @@
     }
     .blog-error{grid-column:1/-1;text-align:center;padding:40px 20px;color:#B3261E;font-family:var(--ff-mono);font-size:.85rem;}
 
-    /* ---- full post modal ---- */
-    .blog-modal-overlay{
-        position:fixed;inset:0;z-index:200;background:rgba(36,30,28,.7);display:flex;align-items:center;
-        justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .25s var(--ease);
-    }
-    .blog-modal-overlay.open{opacity:1;pointer-events:auto;}
-    .blog-modal{
-        background:#fff;border-radius:var(--radius-lg);max-width:640px;width:100%;max-height:86vh;overflow-y:auto;
-        position:relative;transform:translateY(16px);transition:transform .25s var(--ease);
-    }
-    .blog-modal-overlay.open .blog-modal{transform:translateY(0);}
-    .blog-modal-img{aspect-ratio:16/9;overflow:hidden;background:#ddd;}
-    .blog-modal-img img{width:100%;height:100%;object-fit:cover;display:block;}
-    .blog-modal-body{padding:28px 30px 34px;}
-    .blog-modal-tag{font-family:var(--ff-mono);font-size:.68rem;letter-spacing:.06em;color:var(--coral);text-transform:uppercase;}
-    .blog-modal-body h3{font-family:var(--ff-display);font-weight:700;font-size:1.4rem;color:var(--navy-950);margin-top:10px;line-height:1.3;}
-    .blog-modal-date{font-family:var(--ff-mono);font-size:.7rem;color:var(--steel);margin-top:10px;}
-    .blog-modal-text{margin-top:18px;color:var(--ink);font-size:1rem;line-height:1.7;}
-    .blog-modal-text.is-plain{white-space:pre-wrap;}
-    .blog-modal-text p{margin:0 0 14px;}
-    .blog-modal-text p:last-child{margin-bottom:0;}
-    .blog-modal-text h1,.blog-modal-text h2,.blog-modal-text h3{
-        font-family:var(--ff-display);font-weight:700;color:var(--navy-950);margin:22px 0 10px;line-height:1.3;
-    }
-    .blog-modal-text h1:first-child,.blog-modal-text h2:first-child,.blog-modal-text h3:first-child{margin-top:0;}
-    .blog-modal-text h2{font-size:1.25rem;}
-    .blog-modal-text h3{font-size:1.08rem;}
-    .blog-modal-text ul,.blog-modal-text ol{margin:0 0 14px;padding-left:22px;}
-    .blog-modal-text li{margin-bottom:6px;}
-    .blog-modal-text a{color:var(--coral);text-decoration:underline;}
-    .blog-modal-text blockquote{
-        margin:16px 0;padding:4px 0 4px 16px;border-left:3px solid var(--coral);color:var(--ink-soft);font-style:italic;
-    }
-    .blog-modal-text strong{color:var(--navy-950);}
-    .blog-modal-close{
-        position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;
-        background:rgba(43,38,36,.06);display:flex;align-items:center;justify-content:center;
-        font-size:1.1rem;color:var(--ink);line-height:1;
-    }
-    .blog-modal-close:hover{background:rgba(43,38,36,.12);}
 </style>
 </head>
 <body>
-
-<div class="blog-modal-overlay" id="blogModalOverlay">
-    <div class="blog-modal">
-        <button type="button" class="blog-modal-close" id="blogModalClose" aria-label="Cerrar">✕</button>
-        <div class="blog-modal-img hidden" id="blogModalImgWrap"><img id="blogModalImg" src="" alt=""></div>
-        <div class="blog-modal-body">
-            <span class="blog-modal-tag" id="blogModalTag"></span>
-            <h3 id="blogModalTitle"></h3>
-            <div class="blog-modal-date" id="blogModalDate"></div>
-            <div class="blog-modal-text" id="blogModalText"></div>
-        </div>
-    </div>
-</div>
 
 <header class="mini-nav">
     <div class="wrap">
@@ -209,7 +156,6 @@
     let currentLang = localStorage.getItem('gcLang') || 'es';
     let currentFilter = 'todas';
     let allPosts = [];
-    let currentPosts = [];
 
     function applyStaticText() {
         const t = TXT[currentLang];
@@ -233,48 +179,6 @@
         return d.toLocaleDateString(currentLang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
     }
 
-    // ---- full post modal ----
-    const modalOverlay = document.getElementById('blogModalOverlay');
-    const modalImgWrap = document.getElementById('blogModalImgWrap');
-    const modalImg = document.getElementById('blogModalImg');
-    const modalTag = document.getElementById('blogModalTag');
-    const modalTitle = document.getElementById('blogModalTitle');
-    const modalDate = document.getElementById('blogModalDate');
-    const modalText = document.getElementById('blogModalText');
-
-    function openModal(post) {
-        if (!post) return;
-        const t = TXT[currentLang];
-        if (post.image) {
-            modalImg.src = post.image;
-            modalImg.alt = post.title || '';
-            modalImgWrap.classList.remove('hidden');
-        } else {
-            modalImgWrap.classList.add('hidden');
-        }
-        modalTag.textContent = t.filters[post.category] || post.category || '';
-        modalTitle.textContent = post.title || '';
-        modalDate.textContent = formatDate(post.publishedAt);
-        if (post.body) {
-            modalText.classList.remove('is-plain');
-            modalText.innerHTML = post.body;
-        } else {
-            modalText.classList.add('is-plain');
-            modalText.textContent = post.text || '';
-        }
-        modalOverlay.classList.add('open');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal() {
-        modalOverlay.classList.remove('open');
-        document.body.style.overflow = '';
-    }
-
-    document.getElementById('blogModalClose').addEventListener('click', closeModal);
-    modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-
     function render() {
         const grid = document.getElementById('blogGrid');
         const t = TXT[currentLang];
@@ -285,21 +189,16 @@
             return;
         }
 
-        grid.innerHTML = posts.map((p, i) => `
-            <article class="blog-card" data-index="${i}">
+        grid.innerHTML = posts.map((p) => `
+            <a class="blog-card" href="blog-post.html?slug=${encodeURIComponent(p.slug)}&lang=${currentLang}">
                 ${p.image ? `<div class="blog-card-img"><img src="${p.image}" alt="${(p.title || '').replace(/"/g, '&quot;')}" loading="lazy"></div>` : ''}
                 <span class="blog-card-tag">${t.filters[p.category] || p.category || ''}</span>
                 <h3>${p.title || ''}</h3>
                 <p class="blog-card-text">${p.text || ''}</p>
                 <span class="blog-card-readmore">${t.readMore} <svg viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                 <span class="blog-card-date">${formatDate(p.publishedAt)}</span>
-            </article>
+            </a>
         `).join('');
-
-        currentPosts = posts;
-        grid.querySelectorAll('.blog-card').forEach((card) => {
-            card.addEventListener('click', () => openModal(currentPosts[Number(card.dataset.index)]));
-        });
     }
 
     async function loadPosts() {
