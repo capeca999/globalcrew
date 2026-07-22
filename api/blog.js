@@ -3,27 +3,48 @@ import { requireAuth } from './_auth.js';
 import { slugify, fetchPublicJson, BLOB_TOKEN } from './_blog-utils.js';
 
 // One function handles all blog operations, picked by HTTP method:
-//   GET    /api/blog?lang=es              -> list posts
-//   POST   /api/blog        (auth)        -> create/update post
-//   DELETE /api/blog        (auth)        -> delete a post
+//   GET    /api/blog?lang=es                 -> list posts, resolved to one language
+//   GET    /api/blog?slug=xxx                -> one post, BOTH languages included
+//                                                (so blog-post.html can switch language
+//                                                without another request)
+//   POST   /api/blog        (auth)           -> create/update a post (both languages at once)
+//   DELETE /api/blog        (auth)           -> delete a post
+//
+// Each post is now a single JSON blob at blog/{slug}.json with the shape:
+//   { slug, category, image, es: {title,text,body}, en: {title,text,body}, author, publishedAt, updatedAt }
 export const config = { api: { bodyParser: { sizeLimit: '8mb' } } };
 
+function resolveForLang(post, lang) {
+  const primary = post[lang] || {};
+  const other = post[lang === 'en' ? 'es' : 'en'] || {};
+  return {
+    slug: post.slug,
+    category: post.category,
+    image: post.image || null,
+    title: primary.title || other.title || '',
+    text: primary.text || other.text || '',
+    body: primary.body || other.body || '',
+    hasEs: !!(post.es && post.es.title),
+    hasEn: !!(post.en && post.en.title),
+    publishedAt: post.publishedAt,
+    updatedAt: post.updatedAt,
+  };
+}
+
 async function handleGetOne(request, response) {
-  const lang = request.query.lang === 'en' ? 'en' : 'es';
   const slug = request.query.slug;
 
   try {
-    // A direct fetch by known path is one Advanced Operation less than a
-    // full list() — the JSON blob's public URL follows the same pattern
-    // blog.js always saves it under.
-    const { blobs } = await list({ prefix: `blog/${lang}/${slug}.json`, token: BLOB_TOKEN });
-    const match = blobs.find((b) => b.pathname === `blog/${lang}/${slug}.json`);
+    const { blobs } = await list({ prefix: `blog/${slug}.json`, token: BLOB_TOKEN });
+    const match = blobs.find((b) => b.pathname === `blog/${slug}.json`);
     if (!match) return response.status(404).json({ error: 'Artículo no encontrado' });
 
     const post = await fetchPublicJson(match.url);
     if (!post) return response.status(404).json({ error: 'Artículo no encontrado' });
 
     response.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=3600');
+    // Full bilingual object — the caller (blog-post.html, or the admin edit
+    // form) picks which language block to show/edit.
     return response.status(200).json({ post });
   } catch (err) {
     return response.status(500).json({ error: err.message });
@@ -37,12 +58,11 @@ async function handleList(request, response) {
   const category = request.query.category || null;
 
   try {
-    const { blobs } = await list({ prefix: `blog/${lang}/`, token: BLOB_TOKEN });
+    const { blobs } = await list({ prefix: 'blog/', token: BLOB_TOKEN });
     const jsonBlobs = blobs.filter((b) => b.pathname.endsWith('.json'));
 
-    // Public blobs are fetched straight from their URL — no SDK read, no
-    // Advanced Operation, just a normal HTTP request per post.
-    let posts = (await Promise.all(jsonBlobs.map((b) => fetchPublicJson(b.url)))).filter(Boolean);
+    const rawPosts = (await Promise.all(jsonBlobs.map((b) => fetchPublicJson(b.url)))).filter(Boolean);
+    let posts = rawPosts.map((p) => resolveForLang(p, lang));
     if (category && category !== 'todas') {
       posts = posts.filter((p) => p.category === category);
     }
@@ -60,24 +80,23 @@ async function handleSave(request, response) {
   if (!session) return;
 
   const {
-    slug: incomingSlug, lang, title, category, text, body,
+    slug: incomingSlug, category,
+    titleEs, textEs, bodyEs,
+    titleEn, textEn, bodyEn,
     imageBase64, imageType, existingImage, publishedAt: incomingPublishedAt,
   } = request.body || {};
 
-  const langKey = lang === 'en' ? 'en' : 'es';
-  if (!title || !title.trim()) return response.status(400).json({ error: 'Falta el título' });
-  if (!text || !text.trim()) return response.status(400).json({ error: 'Falta el texto' });
+  if (!titleEs || !titleEs.trim()) return response.status(400).json({ error: 'Falta el título en español' });
+  if (!textEs || !textEs.trim()) return response.status(400).json({ error: 'Falta el extracto en español' });
 
-  const slug = incomingSlug || slugify(title) || `post-${Date.now()}`;
+  const slug = incomingSlug || slugify(titleEs) || `post-${Date.now()}`;
 
-  // existingImage now carries the direct public URL from a previous save
-  // (kept as-is when the person edits a post without changing the photo).
   let image = existingImage || null;
   if (imageBase64) {
     try {
       const ext = (imageType || 'image/jpeg').split('/')[1]?.replace('jpeg', 'jpg') || 'jpg';
       const buffer = Buffer.from(imageBase64, 'base64');
-      const uploaded = await put(`blog-images/${langKey}-${slug}-${Date.now()}.${ext}`, buffer, {
+      const uploaded = await put(`blog-images/${slug}-${Date.now()}.${ext}`, buffer, {
         access: 'public', contentType: imageType || 'image/jpeg', token: BLOB_TOKEN,
       });
       image = uploaded.url;
@@ -88,12 +107,18 @@ async function handleSave(request, response) {
 
   const now = new Date().toISOString();
   const post = {
-    slug, lang: langKey, title: title.trim(), category: category || 'noticias', text: text.trim(),
-    body: body || '', image, author: session.username, publishedAt: incomingPublishedAt || now, updatedAt: now,
+    slug,
+    category: category || 'noticias',
+    image,
+    es: { title: titleEs.trim(), text: textEs.trim(), body: bodyEs || '' },
+    en: (titleEn && titleEn.trim()) ? { title: titleEn.trim(), text: (textEn || '').trim(), body: bodyEn || '' } : null,
+    author: session.username,
+    publishedAt: incomingPublishedAt || now,
+    updatedAt: now,
   };
 
   try {
-    await put(`blog/${langKey}/${slug}.json`, JSON.stringify(post), {
+    await put(`blog/${slug}.json`, JSON.stringify(post), {
       access: 'public', contentType: 'application/json', addRandomSuffix: false, allowOverwrite: true, token: BLOB_TOKEN,
     });
     return response.status(200).json({ ok: true, post });
@@ -106,12 +131,11 @@ async function handleDelete(request, response) {
   const session = requireAuth(request, response);
   if (!session) return;
 
-  const { slug, lang } = request.body || {};
+  const { slug } = request.body || {};
   if (!slug) return response.status(400).json({ error: 'Falta el slug del artículo' });
-  const langKey = lang === 'en' ? 'en' : 'es';
 
   try {
-    await del(`blog/${langKey}/${slug}.json`, { token: BLOB_TOKEN });
+    await del(`blog/${slug}.json`, { token: BLOB_TOKEN });
     return response.status(200).json({ ok: true });
   } catch (err) {
     return response.status(500).json({ error: err.message });

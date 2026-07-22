@@ -71,10 +71,17 @@
     .form-row-two{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
     @media (max-width:640px){.form-row-two{grid-template-columns:1fr;}}
     textarea{resize:vertical;min-height:90px;}
-    #postBodyEditor{background:var(--cream);border:1px solid var(--line);border-radius:0 0 10px 10px;min-height:220px;font-family:var(--ff-body);font-size:.95rem;}
-    #postBodyEditor .ql-editor{min-height:220px;}
+    [id^="postBodyEditor"]{background:var(--cream);border:1px solid var(--line);border-radius:0 0 10px 10px;min-height:220px;font-family:var(--ff-body);font-size:.95rem;}
+    [id^="postBodyEditor"] .ql-editor{min-height:220px;}
     .ql-toolbar.ql-snow{background:#fff;border:1px solid var(--line);border-radius:10px 10px 0 0;border-bottom:none;font-family:var(--ff-body);}
     .ql-container.ql-snow{border:1px solid var(--line);border-radius:0 0 10px 10px;}
+    .lang-tabs{display:flex;gap:6px;margin:22px 0 18px;}
+    .lang-tab-btn{
+        font-family:var(--ff-display);font-weight:600;font-size:.85rem;color:var(--ink-soft);
+        border:1px solid var(--line);border-radius:100px;padding:8px 16px;background:var(--cream);
+        cursor:pointer;transition:background .2s,color .2s;
+    }
+    .lang-tab-btn.active{background:var(--navy-800);color:#fff;border-color:var(--navy-800);}
     .img-preview{margin-top:10px;max-width:220px;border-radius:10px;overflow:hidden;border:1px solid var(--line);}
     .img-preview img{width:100%;display:block;}
     .form-actions{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;align-items:center;}
@@ -137,62 +144,103 @@
             <h2 id="formTitle">Nuevo artículo</h2>
             <form id="postForm">
                 <input type="hidden" id="postSlug">
-                <div class="form-row-two">
+                <div class="field">
+                    <label for="postCategory">Categoría</label>
+                    <select id="postCategory">
+                        <option value="noticias">Noticias</option>
+                        <option value="vida">Vida del TCP</option>
+                        <option value="curso">Curso TCP</option>
+                        <option value="curiosidades">Curiosidades</option>
+                    </select>
+                </div>
+
+                <div class="lang-tabs">
+                    <button type="button" class="lang-tab-btn active" data-langtab="es">Español</button>
+                    <button type="button" class="lang-tab-btn" data-langtab="en">English <span style="opacity:.6;font-weight:400;">(opcional)</span></button>
+                </div>
+
+                <div class="lang-tab-panel" id="langtab-es">
                     <div class="field">
-                        <label for="postLang">Idioma</label>
-                        <select id="postLang">
-                            <option value="es">Español</option>
-                            <option value="en">English</option>
-                        </select>
+                        <label for="postTitleEs">Titular (español)</label>
+                        <input type="text" id="postTitleEs" placeholder="Ej: Nueva convocatoria: ya puedes reservar tu plaza" required>
                     </div>
                     <div class="field">
-                        <label for="postCategory">Categoría</label>
-                        <select id="postCategory">
-                            <option value="noticias">Noticias</option>
-                            <option value="vida">Vida del TCP</option>
-                            <option value="curso">Curso TCP</option>
-                            <option value="curiosidades">Curiosidades</option>
-                        </select>
+                        <label for="postTextEs">Extracto (lo que se ve en la tarjeta)</label>
+                        <textarea id="postTextEs" placeholder="Un párrafo corto, el que se ve en la tarjeta del blog." required></textarea>
+                    </div>
+                    <div class="field">
+                        <label>Contenido completo (lo que se ve al abrir el artículo — opcional)</label>
+                        <div id="postBodyToolbarEs">
+                            <span class="ql-formats">
+                                <button class="ql-bold"></button>
+                                <button class="ql-italic"></button>
+                                <button class="ql-underline"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <select class="ql-header">
+                                    <option value="2">Título</option>
+                                    <option value="3">Subtítulo</option>
+                                    <option selected></option>
+                                </select>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-list" value="ordered"></button>
+                                <button class="ql-list" value="bullet"></button>
+                                <button class="ql-blockquote"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-link"></button>
+                                <button class="ql-clean"></button>
+                            </span>
+                        </div>
+                        <div id="postBodyEditorEs"></div>
+                        <p style="font-family:var(--ff-mono);font-size:.72rem;color:var(--ink-soft);margin-top:8px;">
+                            Si lo dejas vacío, al abrir el artículo se mostrará solo el extracto de arriba.
+                        </p>
                     </div>
                 </div>
-                <div class="field">
-                    <label for="postTitleInput">Titular</label>
-                    <input type="text" id="postTitleInput" placeholder="Ej: Nueva convocatoria: ya puedes reservar tu plaza" required>
-                </div>
-                <div class="field">
-                    <label for="postText">Extracto (lo que se ve en la tarjeta)</label>
-                    <textarea id="postText" placeholder="Un párrafo corto, el que se ve en la tarjeta del blog." required></textarea>
-                </div>
-                <div class="field">
-                    <label>Contenido completo (lo que se ve al abrir el artículo — opcional)</label>
-                    <div id="postBodyToolbar">
-                        <span class="ql-formats">
-                            <button class="ql-bold"></button>
-                            <button class="ql-italic"></button>
-                            <button class="ql-underline"></button>
-                        </span>
-                        <span class="ql-formats">
-                            <select class="ql-header">
-                                <option value="2">Título</option>
-                                <option value="3">Subtítulo</option>
-                                <option selected></option>
-                            </select>
-                        </span>
-                        <span class="ql-formats">
-                            <button class="ql-list" value="ordered"></button>
-                            <button class="ql-list" value="bullet"></button>
-                            <button class="ql-blockquote"></button>
-                        </span>
-                        <span class="ql-formats">
-                            <button class="ql-link"></button>
-                            <button class="ql-clean"></button>
-                        </span>
+
+                <div class="lang-tab-panel hidden" id="langtab-en">
+                    <div class="field">
+                        <label for="postTitleEn">Titular (inglés)</label>
+                        <input type="text" id="postTitleEn" placeholder="E.g. New intake: reserve your seat now">
                     </div>
-                    <div id="postBodyEditor"></div>
-                    <p style="font-family:var(--ff-mono);font-size:.72rem;color:var(--ink-soft);margin-top:8px;">
-                        Si lo dejas vacío, al abrir el artículo se mostrará solo el extracto de arriba.
-                    </p>
+                    <div class="field">
+                        <label for="postTextEn">Extracto (inglés)</label>
+                        <textarea id="postTextEn" placeholder="A short paragraph, shown on the blog card."></textarea>
+                    </div>
+                    <div class="field">
+                        <label>Contenido completo (inglés — opcional)</label>
+                        <div id="postBodyToolbarEn">
+                            <span class="ql-formats">
+                                <button class="ql-bold"></button>
+                                <button class="ql-italic"></button>
+                                <button class="ql-underline"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <select class="ql-header">
+                                    <option value="2">Heading</option>
+                                    <option value="3">Subheading</option>
+                                    <option selected></option>
+                                </select>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-list" value="ordered"></button>
+                                <button class="ql-list" value="bullet"></button>
+                                <button class="ql-blockquote"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-link"></button>
+                                <button class="ql-clean"></button>
+                            </span>
+                        </div>
+                        <div id="postBodyEditorEn"></div>
+                        <p style="font-family:var(--ff-mono);font-size:.72rem;color:var(--ink-soft);margin-top:8px;">
+                            Si lo dejas en blanco, esa entrada se mostrará en español también cuando alguien la vea en inglés.
+                        </p>
+                    </div>
                 </div>
+
                 <div class="field">
                     <label for="postImage">Foto</label>
                     <input type="file" id="postImage" accept="image/*">
@@ -209,6 +257,7 @@
         <div class="panel">
             <h2>Artículos publicados</h2>
             <div style="margin-bottom:16px;">
+                <label style="font-family:var(--ff-mono);font-size:.72rem;color:var(--ink-soft);display:block;margin-bottom:6px;">Vista previa en:</label>
                 <select id="listLangFilter" style="font-family:var(--ff-mono);font-size:.8rem;padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:var(--cream);">
                     <option value="es">Español</option>
                     <option value="en">English</option>
@@ -396,10 +445,23 @@
     const imgPreviewWrap = document.getElementById('imgPreviewWrap');
     const imgPreview = document.getElementById('imgPreview');
 
-    const postBodyEditor = new Quill('#postBodyEditor', {
+    const postBodyEditorEs = new Quill('#postBodyEditorEs', {
         theme: 'snow',
-        modules: { toolbar: '#postBodyToolbar' },
+        modules: { toolbar: '#postBodyToolbarEs' },
         placeholder: 'Escribe aquí el artículo completo, con negrita, cursiva, títulos, enlaces...',
+    });
+    const postBodyEditorEn = new Quill('#postBodyEditorEn', {
+        theme: 'snow',
+        modules: { toolbar: '#postBodyToolbarEn' },
+        placeholder: 'Write the full article here, with bold, italics, headings, links...',
+    });
+
+    document.querySelectorAll('.lang-tab-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.lang-tab-btn').forEach((b) => b.classList.toggle('active', b === btn));
+            document.getElementById('langtab-es').classList.toggle('hidden', btn.dataset.langtab !== 'es');
+            document.getElementById('langtab-en').classList.toggle('hidden', btn.dataset.langtab !== 'en');
+        });
     });
 
     let editingSlug = null;
@@ -423,7 +485,9 @@
 
     function resetForm() {
         postForm.reset();
-        postBodyEditor.setContents([]);
+        postBodyEditorEs.setContents([]);
+        postBodyEditorEn.setContents([]);
+        document.querySelector('.lang-tab-btn[data-langtab="es"]').click();
         editingSlug = null;
         editingExistingImage = null;
         pendingImageBase64 = null;
@@ -444,14 +508,17 @@
         formMsg.className = 'msg';
         saveBtn.disabled = true;
 
-        const bodyHtml = postBodyEditor.getText().trim() ? postBodyEditor.root.innerHTML : '';
+        const bodyEsHtml = postBodyEditorEs.getText().trim() ? postBodyEditorEs.root.innerHTML : '';
+        const bodyEnHtml = postBodyEditorEn.getText().trim() ? postBodyEditorEn.root.innerHTML : '';
         const payload = {
             slug: editingSlug,
-            lang: document.getElementById('postLang').value,
             category: document.getElementById('postCategory').value,
-            title: document.getElementById('postTitleInput').value,
-            text: document.getElementById('postText').value,
-            body: bodyHtml,
+            titleEs: document.getElementById('postTitleEs').value,
+            textEs: document.getElementById('postTextEs').value,
+            bodyEs: bodyEsHtml,
+            titleEn: document.getElementById('postTitleEn').value,
+            textEn: document.getElementById('postTextEn').value,
+            bodyEn: bodyEnHtml,
             existingImage: editingExistingImage,
         };
         if (pendingImageBase64) {
@@ -498,7 +565,7 @@
             const data = await res.json();
             const posts = Array.isArray(data.posts) ? data.posts : [];
             if (!posts.length) {
-                postList.innerHTML = '<p class="empty-note">Todavía no hay artículos en este idioma.</p>';
+                postList.innerHTML = '<p class="empty-note">Todavía no hay artículos.</p>';
                 return;
             }
             postList.innerHTML = posts.map((p) => `
@@ -506,23 +573,34 @@
                     ${p.image ? `<img src="${p.image}" alt="">` : '<div style="width:64px;height:48px;background:var(--sky);border-radius:8px;flex-shrink:0;"></div>'}
                     <div class="post-info">
                         <h3>${p.title}</h3>
-                        <div class="post-meta">${CATEGORY_LABELS[p.category] || p.category} · ${new Date(p.publishedAt).toLocaleDateString('es-ES')}</div>
+                        <div class="post-meta">${CATEGORY_LABELS[p.category] || p.category} · ${new Date(p.publishedAt).toLocaleDateString('es-ES')} · ${p.hasEs ? 'ES' : ''}${p.hasEs && p.hasEn ? ' + ' : ''}${p.hasEn ? 'EN' : ''}</div>
                     </div>
                     <div class="post-actions">
-                        <button type="button" class="btn btn-ghost" style="padding:8px 14px;font-size:.78rem;" data-edit="${p.slug}" data-lang="${p.lang}">Editar</button>
-                        <button type="button" class="btn btn-danger" data-delete="${p.slug}" data-lang="${p.lang}">Borrar</button>
+                        <button type="button" class="btn btn-ghost" style="padding:8px 14px;font-size:.78rem;" data-edit="${p.slug}">Editar</button>
+                        <button type="button" class="btn btn-danger" data-delete="${p.slug}">Borrar</button>
                     </div>
                 </div>
             `).join('');
 
             postList.querySelectorAll('[data-edit]').forEach((btn) => {
-                btn.addEventListener('click', () => startEdit(posts.find((p) => p.slug === btn.dataset.edit)));
+                btn.addEventListener('click', () => editPostBySlug(btn.dataset.edit));
             });
             postList.querySelectorAll('[data-delete]').forEach((btn) => {
-                btn.addEventListener('click', () => deletePost(btn.dataset.delete, btn.dataset.lang));
+                btn.addEventListener('click', () => deletePost(btn.dataset.delete));
             });
         } catch {
             postList.innerHTML = '<p class="empty-note">No se han podido cargar los artículos.</p>';
+        }
+    }
+
+    async function editPostBySlug(slug) {
+        try {
+            const res = await fetch('/api/blog?slug=' + encodeURIComponent(slug));
+            const data = await res.json();
+            if (res.ok && data.post) startEdit(data.post);
+            else alert('No se ha podido cargar el artículo para editarlo.');
+        } catch {
+            alert('No hay conexión con el servidor.');
         }
     }
 
@@ -532,11 +610,18 @@
         editingExistingImage = post.image || null;
         pendingImageBase64 = null;
         pendingImageType = null;
-        document.getElementById('postLang').value = post.lang;
         document.getElementById('postCategory').value = post.category;
-        document.getElementById('postTitleInput').value = post.title;
-        document.getElementById('postText').value = post.text;
-        postBodyEditor.root.innerHTML = post.body || '';
+
+        const es = post.es || {};
+        const en = post.en || {};
+        document.getElementById('postTitleEs').value = es.title || '';
+        document.getElementById('postTextEs').value = es.text || '';
+        postBodyEditorEs.root.innerHTML = es.body || '';
+        document.getElementById('postTitleEn').value = en.title || '';
+        document.getElementById('postTextEn').value = en.text || '';
+        postBodyEditorEn.root.innerHTML = en.body || '';
+        document.querySelector('.lang-tab-btn[data-langtab="es"]').click();
+
         if (post.image) {
             imgPreview.src = post.image;
             imgPreviewWrap.classList.remove('hidden');
@@ -549,13 +634,13 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    async function deletePost(slug, lang) {
+    async function deletePost(slug) {
         if (!confirm('¿Seguro que quieres borrar este artículo? No se puede deshacer.')) return;
         try {
             const res = await fetch('/api/blog', {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ slug, lang }),
+                body: JSON.stringify({ slug }),
             });
             if (res.ok) {
                 loadPosts();

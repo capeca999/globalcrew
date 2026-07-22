@@ -20,11 +20,11 @@
     a{text-decoration:none;color:inherit;}
     .hidden{display:none !important;}
     .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
-    @media (max-width:640px){.wrap{padding:0 20px;}}
+    @media (max-width:640px){.wrap{padding:0 20px;} .mini-nav .wrap{padding:0 20px;}}
 
     /* ---- nav ---- */
     .mini-nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0;background:var(--navy-950);}
-    .mini-nav .wrap{display:flex;align-items:center;justify-content:space-between;}
+    .mini-nav .wrap{display:flex;align-items:center;justify-content:space-between;max-width:none;width:100%;padding:0 32px;}
     .mini-logo{display:flex;align-items:center;gap:11px;color:var(--cream);}
     .mini-logo-mark{width:38px;height:38px;border-radius:50%;overflow:hidden;flex-shrink:0;background:rgba(247,241,236,.08);}
     .mini-logo-mark img{width:100%;height:100%;object-fit:cover;display:block;}
@@ -41,8 +41,14 @@
     }
     .lang-toggle .lang-opt.active{background:var(--coral);color:#fff;font-weight:700;}
     .lang-toggle:hover .lang-opt:not(.active){color:rgba(247,241,236,.85);}
-    .back-link{font-family:var(--ff-mono);font-size:.72rem;letter-spacing:.05em;color:rgba(247,241,236,.75);}
-    .back-link:hover{color:#fff;}
+    .back-link{
+        display:flex;align-items:center;gap:8px;font-family:var(--ff-display);font-weight:600;font-size:.82rem;
+        color:#fff;background:rgba(247,241,236,.08);border:1px solid rgba(247,241,236,.2);
+        padding:9px 18px 9px 14px;border-radius:100px;transition:background .25s var(--ease),border-color .25s,transform .25s var(--ease);
+    }
+    .back-link svg{width:15px;height:15px;flex-shrink:0;transition:transform .3s var(--ease);}
+    .back-link:hover{background:var(--coral);border-color:var(--coral);transform:translateY(-2px);}
+    .back-link:hover svg{transform:translateX(-3px);}
 
     /* ---- header ---- */
     .blog-header{background:var(--navy-950);padding:50px 0 70px;color:#fff;}
@@ -109,7 +115,7 @@
             <button type="button" class="lang-toggle" id="langToggle" aria-label="Cambiar idioma / Switch language">
                 <span class="lang-opt lang-es active" data-lang="es">ES</span><span class="lang-opt lang-en" data-lang="en">EN</span>
             </button>
-            <a href="index.html" class="back-link" id="backLink">← Volver a la web</a>
+            <a href="index.html" class="back-link" id="backLink"><svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M5 12L11 6M5 12L11 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="backLinkText">Volver a la web</span></a>
         </div>
     </div>
 </header>
@@ -140,14 +146,14 @@
         es: {
             eyebrow: 'BLOG', title: 'Consejos, noticias y la vida real de un TCP.',
             subtitle: 'Novedades de la escuela, próximas convocatorias y todo lo que te ayude a conocer mejor cómo es de verdad este trabajo.',
-            back: '← Volver a la web', loading: 'Cargando artículos...', readMore: 'Leer más',
+            back: 'Volver a la web', loading: 'Cargando artículos...', readMore: 'Leer más',
             empty: 'Todavía no hay artículos en esta categoría.', error: 'No se han podido cargar los artículos. Inténtalo de nuevo en un momento.',
             filters: { todas: 'Todas', noticias: 'Noticias', vida: 'Vida del TCP', curso: 'Curso TCP', curiosidades: 'Curiosidades' }
         },
         en: {
             eyebrow: 'BLOG', title: 'Tips, news and the real life of a Cabin Crew member.',
             subtitle: 'School updates, upcoming intakes and everything that helps you get to know what this job is really like.',
-            back: '← Back to the website', loading: 'Loading articles...', readMore: 'Read more',
+            back: 'Back to the website', loading: 'Loading articles...', readMore: 'Read more',
             empty: 'No articles in this category yet.', error: "Couldn't load the articles. Please try again in a moment.",
             filters: { todas: 'All', noticias: 'News', vida: 'Cabin Crew Life', curso: 'Cabin Crew Course', curiosidades: 'Curiosities' }
         }
@@ -163,7 +169,7 @@
         document.getElementById('txtEyebrow').textContent = t.eyebrow;
         document.getElementById('txtTitle').textContent = t.title;
         document.getElementById('txtSubtitle').textContent = t.subtitle;
-        document.getElementById('backLink').textContent = t.back;
+        document.getElementById('backLinkText').textContent = t.back;
         document.querySelectorAll('.blog-filter').forEach((btn) => {
             btn.textContent = t.filters[btn.dataset.filter];
         });
