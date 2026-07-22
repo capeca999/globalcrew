@@ -1,5 +1,6 @@
-import { list, get } from '@vercel/blob';
-import CITIES from './cities.js';
+import { list } from '@vercel/blob';
+import CITIES from './_cities.js';
+import { fetchPublicText, BLOB_TOKEN } from './_blog-utils.js';
 
 // ---- Shared matchers ----
 const IMAGE_RE = /\.(jpe?g|png|webp)$/i;
@@ -26,34 +27,16 @@ function lookupCity(cityName) {
   return { name: entry.display, lat: entry.lat, lon: entry.lon };
 }
 
-async function fetchBlobText(pathname) {
-  try {
-    const result = await get(pathname, { access: 'private' });
-    if (!result) return { text: '', error: 'not_found' };
-    const text = await new Response(result.stream).text();
-    return { text: text.trim(), error: null };
-  } catch (err) {
-    return { text: '', error: err.message };
-  }
-}
-
-function proxiedImageUrl(request, pathname) {
-  const host = request.headers['x-forwarded-host'] || request.headers.host;
-  const protocol = request.headers['x-forwarded-proto'] || 'https';
-  const base = host ? `${protocol}://${host}` : '';
-  return `${base}/api/blob-image?path=${encodeURIComponent(pathname)}`;
-}
-
 function buildTextIndex(texts, stripRe) {
   const byFullName = {};
   const byFirstName = {};
   for (const t of texts) {
     const raw = baseName(t.pathname).replace(stripRe, '').trim();
     const fullKey = normalize(raw);
-    byFullName[fullKey] = t.pathname;
+    byFullName[fullKey] = t.url;
     const firstKey = normalize(raw.split(',')[0]);
     if (!(firstKey in byFirstName)) {
-      byFirstName[firstKey] = t.pathname;
+      byFirstName[firstKey] = t.url;
     } else {
       byFirstName[firstKey] = null; // ambiguous, disable fallback
     }
@@ -61,26 +44,17 @@ function buildTextIndex(texts, stripRe) {
   return { byFullName, byFirstName };
 }
 
-function resolveTextPath(index, fullKey, firstKey, isFirstNameUnique) {
-  if (index.byFullName[fullKey]) return { path: index.byFullName[fullKey], source: 'full_name' };
-  if (isFirstNameUnique && index.byFirstName[firstKey]) return { path: index.byFirstName[firstKey], source: 'first_name_fallback' };
-  return { path: null, source: null };
+function resolveTextUrl(index, fullKey, firstKey, isFirstNameUnique) {
+  if (index.byFullName[fullKey]) return { url: index.byFullName[fullKey], source: 'full_name' };
+  if (isFirstNameUnique && index.byFirstName[firstKey]) return { url: index.byFirstName[firstKey], source: 'first_name_fallback' };
+  return { url: null, source: null };
 }
 
-// Turns "PacoPinazo.txt" / "Pau Llorens.txt" into a clean display name.
-function nameFromFilename(raw) {
-  let name = raw.replace(/,+/g, ' ').replace(/\s+/g, ' ').trim();
-  if (!name.includes(' ')) {
-    name = name.replace(/([a-z\u00e0-\u00fc])([A-Z\u00c0-\u00dc])/g, '$1 $2');
-  }
-  return name;
-}
-
+// Picks the most recently uploaded text file and returns its contents.
 async function mostRecentText(blobs) {
   if (!blobs.length) return '';
   const sorted = [...blobs].sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
-  const result = await fetchBlobText(sorted[0].pathname);
-  return result.text;
+  return fetchPublicText(sorted[0].url);
 }
 
 export default async function handler(request, response) {
@@ -89,7 +63,7 @@ export default async function handler(request, response) {
 
   try {
     // ---- ONE list() call for the entire store ----
-    const { blobs: allBlobs } = await list();
+    const { blobs: allBlobs } = await list({ token: BLOB_TOKEN });
 
     const inFolder = (b, folder) => b.pathname.startsWith(folder);
 
@@ -97,8 +71,6 @@ export default async function handler(request, response) {
     const alumniEsTexts = allBlobs.filter((b) => inFolder(b, 'alumnoscontratados/') && ES_TEXT_RE.test(b.pathname));
     const alumniEnTexts = allBlobs.filter((b) => inFolder(b, 'alumnoscontratados/') && EN_TEXT_RE.test(b.pathname));
     const logos = allBlobs.filter((b) => inFolder(b, 'logo/') && IMAGE_RE.test(b.pathname));
-    const testiEsTexts = allBlobs.filter((b) => inFolder(b, 'testimonios/') && ES_TEXT_RE.test(b.pathname));
-    const testiEnTexts = allBlobs.filter((b) => inFolder(b, 'testimonios/') && EN_TEXT_RE.test(b.pathname));
     const courseBlobs = allBlobs.filter((b) => inFolder(b, 'proximoscursos/'));
 
     // ================= ALUMNI =================
@@ -107,7 +79,7 @@ export default async function handler(request, response) {
 
     const logoByAirline = {};
     for (const l of logos) {
-      logoByAirline[normalize(baseName(l.pathname).replace(IMAGE_RE, ''))] = l.pathname;
+      logoByAirline[normalize(baseName(l.pathname).replace(IMAGE_RE, ''))] = l.url;
     }
 
     const firstNameCounts = {};
@@ -132,37 +104,29 @@ export default async function handler(request, response) {
         const isFirstNameUnique = firstNameCounts[firstKey] === 1;
 
         let resolved = lang === 'en'
-          ? resolveTextPath(enIndex, fullKey, firstKey, isFirstNameUnique)
-          : { path: null, source: null };
+          ? resolveTextUrl(enIndex, fullKey, firstKey, isFirstNameUnique)
+          : { url: null, source: null };
         let usedLang = 'en';
-        if (!resolved.path) {
-          resolved = resolveTextPath(esIndex, fullKey, firstKey, isFirstNameUnique);
+        if (!resolved.url) {
+          resolved = resolveTextUrl(esIndex, fullKey, firstKey, isFirstNameUnique);
           usedLang = 'es';
         }
 
-        let quote = '';
-        let fetchError = null;
-        if (resolved.path) {
-          const result = await fetchBlobText(resolved.path);
-          quote = result.text;
-          fetchError = result.error;
-        } else {
-          fetchError = 'no_matching_txt_file';
-        }
+        let quote = resolved.url ? await fetchPublicText(resolved.url) : '';
         if (!quote) {
           quote = lang === 'en'
             ? (airline ? `Former Global Crew student, now hired at ${airline}.` : 'Former Global Crew student, already flying!')
             : (airline ? `Antiguo alumno de Global Crew, ahora contratado en ${airline}.` : 'Antiguo alumno de Global Crew, ¡ya está volando!');
         }
 
-        const logoPath = airline ? logoByAirline[normalize(airline)] : null;
+        const logoUrl = airline ? logoByAirline[normalize(airline)] : null;
         const city = lookupCity(cityName);
 
         if (debug) {
           debugAlumni.push({
             imageFile: baseName(img.pathname), name, airline, cityName,
             cityMatched: !!city, requestedLang: lang, usedLang,
-            matchedTextFile: resolved.path, matchSource: resolved.source, fetchError,
+            matchedTextUrl: resolved.url, matchSource: resolved.source,
             firstNameIsAmbiguous: !isFirstNameUnique
           });
         }
@@ -172,37 +136,13 @@ export default async function handler(request, response) {
           city: city ? city.name : null,
           cityLat: city ? city.lat : null,
           cityLon: city ? city.lon : null,
-          photoUrl: proxiedImageUrl(request, img.pathname),
-          airlineLogoUrl: logoPath ? proxiedImageUrl(request, logoPath) : null,
+          photoUrl: img.url,
+          airlineLogoUrl: logoUrl || null,
           uploadedAt: img.uploadedAt
         };
       })
     );
     alumni.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
-
-    // ================= TESTIMONIALS =================
-    const testiEnByName = {};
-    for (const t of testiEnTexts) {
-      const raw = baseName(t.pathname).replace(EN_TEXT_RE, '');
-      testiEnByName[normalize(nameFromFilename(raw))] = t;
-    }
-
-    const testimonials = await Promise.all(
-      testiEsTexts.map(async (t) => {
-        const rawName = baseName(t.pathname).replace(ES_TEXT_RE, '');
-        const name = nameFromFilename(rawName);
-        const key = normalize(name);
-
-        let sourceBlob = t;
-        if (lang === 'en' && testiEnByName[key]) sourceBlob = testiEnByName[key];
-
-        const result = await fetchBlobText(sourceBlob.pathname);
-        return { name, quote: result.text, uploadedAt: t.uploadedAt };
-      })
-    );
-    const cleanedTestimonials = testimonials
-      .filter((t) => t.quote)
-      .sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
 
     // ================= NEXT COURSE DATE =================
     const courseEsTexts = courseBlobs.filter((b) => ES_TEXT_RE.test(b.pathname));
@@ -217,13 +157,10 @@ export default async function handler(request, response) {
 
     // ================= RESPONSE =================
     if (!debug) {
-      // 1 hour cache: fewer Advanced Operations, still fresh enough for how
-      // often this content actually changes. Vercel serves the cached
-      // version instantly and revalidates in the background afterwards.
-      response.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
+      response.setHeader('Cache-Control', 's-maxage=900, stale-while-revalidate=86400');
     }
 
-    const payload = { alumni, testimonials: cleanedTestimonials, nextCourseText };
+    const payload = { alumni, nextCourseText };
     if (debug) {
       payload.debug = {
         lang,
@@ -235,6 +172,6 @@ export default async function handler(request, response) {
     }
     return response.status(200).json(payload);
   } catch (err) {
-    return response.status(500).json({ error: err.message, alumni: [], testimonials: [], nextCourseText: '' });
+    return response.status(500).json({ error: err.message, alumni: [], nextCourseText: '' });
   }
 }
