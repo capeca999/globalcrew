@@ -381,26 +381,26 @@
         .stat-num{font-family:var(--ff-display);font-size:2.6rem;font-weight:700;color:var(--navy-800);}
         .stat-num span{color:var(--steel);}
         .stat-label{font-family:var(--ff-mono);font-size:.72rem;letter-spacing:.08em;color:var(--ink-soft);text-transform:uppercase;margin-top:8px;}
-        .stats-tagline{
-            text-align:center;margin-top:38px;font-family:var(--ff-mono);font-size:.8rem;
-            letter-spacing:.04em;color:var(--navy-800);
-        }
-        .stats-tagline svg{color:var(--steel);}
-        .stats-vr-banner{
+        .stats-tagline-banner{
             display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
-            max-width:640px;margin:20px auto 0;padding:14px 26px;border-radius:100px;
+            max-width:640px;margin:38px auto 0;padding:14px 26px;border-radius:100px;
             background:var(--navy-950);color:#fff;text-align:center;
             box-shadow:0 16px 32px -16px rgba(61,9,16,.5);
         }
-        .stats-vr-banner svg{width:19px;height:19px;color:var(--coral);flex-shrink:0;}
-        .stats-vr-banner span{font-family:var(--ff-display);font-weight:600;font-size:.88rem;letter-spacing:.01em;}
-        .stats-vr-banner .stats-vr-tag{
-            font-family:var(--ff-mono);font-size:.62rem;letter-spacing:.08em;color:var(--coral);
-            text-transform:uppercase;background:rgba(228,87,46,.15);padding:3px 9px;border-radius:100px;
+        .stats-tagline-banner svg{width:19px;height:19px;color:var(--coral);flex-shrink:0;transform:rotate(90deg);}
+        .stats-tagline-banner span{font-family:var(--ff-display);font-weight:600;font-size:.88rem;letter-spacing:.01em;}
+        .stats-vr-note{
+            text-align:center;margin-top:14px;font-family:var(--ff-mono);font-size:.7rem;
+            letter-spacing:.02em;color:var(--ink-soft);display:flex;align-items:center;justify-content:center;gap:7px;
+        }
+        .stats-vr-note svg{width:14px;height:14px;color:var(--steel);flex-shrink:0;}
+        .stats-vr-note .stats-vr-tag{
+            font-family:var(--ff-mono);font-size:.58rem;letter-spacing:.06em;color:var(--coral);
+            text-transform:uppercase;background:rgba(228,87,46,.12);padding:2px 7px;border-radius:100px;
         }
         @media (max-width:560px){
-            .stats-vr-banner{padding:12px 18px;gap:8px;}
-            .stats-vr-banner span{font-size:.8rem;}
+            .stats-tagline-banner{padding:12px 18px;gap:8px;}
+            .stats-tagline-banner span{font-size:.8rem;}
         }
 
         /* ===================== COURSES — boarding pass cards ===================== */
@@ -1239,12 +1239,15 @@
                 <div class="stat-label" data-i18n="stats.execWeeks">Semanas, duración curso TCP</div>
             </div>
         </div>
-        <p class="stats-tagline reveal" style="transition-delay:.4s"><svg viewBox="0 0 24 24" style="width:15px;height:15px;transform:rotate(90deg);vertical-align:-2px;margin-right:6px;"><use href="#icon-plane"/></svg><span data-i18n="stats.tagline">La escuela TCP de Valencia con más alumnos volando</span></p>
-        <div class="stats-vr-banner reveal" style="transition-delay:.5s">
+        <div class="stats-tagline-banner reveal" style="transition-delay:.4s">
+            <svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+            <span data-i18n="stats.tagline">La escuela TCP de Valencia con más alumnos volando</span>
+        </div>
+        <p class="stats-vr-note reveal" style="transition-delay:.5s">
             <svg viewBox="0 0 24 24"><use href="#icon-vr"/></svg>
             <span data-i18n="stats.vrNote">Primera escuela de España con formación en Realidad Virtual: incendios y evacuación</span>
             <span class="stats-vr-tag" data-i18n="stats.vrTag">NOVEDAD</span>
-        </div>
+        </p>
     </div>
 </section>
 <div class="route-divider" data-wp="2">
@@ -1423,49 +1426,113 @@
                     <div class="seatmap-row">
                         <span class="seatmap-rownum">1</span>
                         <div class="seatmap-block">
-                            <button type="button" class="seat" data-cap="practicals.c1"><img src="images/practicals-extintor.jpg" alt="Simulador de extinción de incendios" loading="lazy"><span class="seat-id">1A</span></button>
-                            <button type="button" class="seat" data-cap="practicals.c2"><img src="images/practicals-salvavidas.jpg" alt="Simulador de supervivencia en el agua" loading="lazy"><span class="seat-id">1B</span></button>
+                            <button type="button" class="seat seat-empty" data-seat-id="1A">
+                                <img class="seat-photo" src="" alt="" loading="lazy" style="display:none;">
+                                <svg class="seat-empty-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                                <span class="seat-id">1A</span>
+                            </button>
+                            <button type="button" class="seat seat-empty" data-seat-id="1B">
+                                <img class="seat-photo" src="" alt="" loading="lazy" style="display:none;">
+                                <svg class="seat-empty-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                                <span class="seat-id">1B</span>
+                            </button>
                         </div>
                         <div class="seatmap-aisle"></div>
                         <div class="seatmap-block">
-                            <button type="button" class="seat" data-cap="practicals.c3"><img src="images/practicals-exit-sign.jpg" alt="Simulador de señalización de emergencia" style="object-position:top;" loading="lazy"><span class="seat-id">1C</span></button>
-                            <button type="button" class="seat" data-cap="practicals.c4"><img src="images/practicals-oxigeno.jpg" alt="Simulador de material de emergencia" loading="lazy"><span class="seat-id">1D</span></button>
+                            <button type="button" class="seat seat-empty" data-seat-id="1C">
+                                <img class="seat-photo" src="" alt="" loading="lazy" style="display:none;">
+                                <svg class="seat-empty-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                                <span class="seat-id">1C</span>
+                            </button>
+                            <button type="button" class="seat seat-empty" data-seat-id="1D">
+                                <img class="seat-photo" src="" alt="" loading="lazy" style="display:none;">
+                                <svg class="seat-empty-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                                <span class="seat-id">1D</span>
+                            </button>
                         </div>
                     </div>
                     <div class="seatmap-row">
                         <span class="seatmap-rownum">2</span>
                         <div class="seatmap-block">
-                            <button type="button" class="seat" data-cap="practicals.c5"><img src="images/practicals-tarjeta.jpg" alt="Simulador de procedimientos de cabina" loading="lazy"><span class="seat-id">2A</span></button>
-                            <button type="button" class="seat" data-cap="practicals.c6"><img src="images/practicals-avion.jpg" alt="Aula de conocimientos de aviación" style="object-position:top;" loading="lazy"><span class="seat-id">2B</span></button>
+                            <button type="button" class="seat seat-empty" data-seat-id="2A">
+                                <img class="seat-photo" src="" alt="" loading="lazy" style="display:none;">
+                                <svg class="seat-empty-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                                <span class="seat-id">2A</span>
+                            </button>
+                            <button type="button" class="seat seat-empty" data-seat-id="2B">
+                                <img class="seat-photo" src="" alt="" loading="lazy" style="display:none;">
+                                <svg class="seat-empty-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                                <span class="seat-id">2B</span>
+                            </button>
                         </div>
                         <div class="seatmap-aisle"></div>
                         <div class="seatmap-block">
-                            <button type="button" class="seat" data-cap="seatmap.cap6"><img src="images/footer-group.jpg" alt="Nuestra escuela en Valencia" loading="lazy"><span class="seat-id">2C</span></button>
-                            <div class="seat seat-empty" aria-hidden="true" title="Próximamente más fotos"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
+                            <button type="button" class="seat seat-empty" data-seat-id="2C">
+                                <img class="seat-photo" src="" alt="" loading="lazy" style="display:none;">
+                                <svg class="seat-empty-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                                <span class="seat-id">2C</span>
+                            </button>
+                            <button type="button" class="seat seat-empty" data-seat-id="2D">
+                                <img class="seat-photo" src="" alt="" loading="lazy" style="display:none;">
+                                <svg class="seat-empty-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                                <span class="seat-id">2D</span>
+                            </button>
                         </div>
                     </div>
                     <div class="seatmap-row">
                         <span class="seatmap-rownum">3</span>
                         <div class="seatmap-block">
-                            <div class="seat seat-empty" aria-hidden="true" title="Próximamente más fotos"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-                            <div class="seat seat-empty" aria-hidden="true" title="Próximamente más fotos"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
+                            <button type="button" class="seat seat-empty" data-seat-id="3A">
+                                <img class="seat-photo" src="" alt="" loading="lazy" style="display:none;">
+                                <svg class="seat-empty-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                                <span class="seat-id">3A</span>
+                            </button>
+                            <button type="button" class="seat seat-empty" data-seat-id="3B">
+                                <img class="seat-photo" src="" alt="" loading="lazy" style="display:none;">
+                                <svg class="seat-empty-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                                <span class="seat-id">3B</span>
+                            </button>
                         </div>
                         <div class="seatmap-aisle"></div>
                         <div class="seatmap-block">
-                            <div class="seat seat-empty" aria-hidden="true" title="Próximamente más fotos"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-                            <div class="seat seat-empty" aria-hidden="true" title="Próximamente más fotos"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
+                            <button type="button" class="seat seat-empty" data-seat-id="3C">
+                                <img class="seat-photo" src="" alt="" loading="lazy" style="display:none;">
+                                <svg class="seat-empty-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                                <span class="seat-id">3C</span>
+                            </button>
+                            <button type="button" class="seat seat-empty" data-seat-id="3D">
+                                <img class="seat-photo" src="" alt="" loading="lazy" style="display:none;">
+                                <svg class="seat-empty-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                                <span class="seat-id">3D</span>
+                            </button>
                         </div>
                     </div>
                     <div class="seatmap-row">
                         <span class="seatmap-rownum">4</span>
                         <div class="seatmap-block">
-                            <div class="seat seat-empty" aria-hidden="true" title="Próximamente más fotos"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-                            <div class="seat seat-empty" aria-hidden="true" title="Próximamente más fotos"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
+                            <button type="button" class="seat seat-empty" data-seat-id="4A">
+                                <img class="seat-photo" src="" alt="" loading="lazy" style="display:none;">
+                                <svg class="seat-empty-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                                <span class="seat-id">4A</span>
+                            </button>
+                            <button type="button" class="seat seat-empty" data-seat-id="4B">
+                                <img class="seat-photo" src="" alt="" loading="lazy" style="display:none;">
+                                <svg class="seat-empty-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                                <span class="seat-id">4B</span>
+                            </button>
                         </div>
                         <div class="seatmap-aisle"></div>
                         <div class="seatmap-block">
-                            <div class="seat seat-empty" aria-hidden="true" title="Próximamente más fotos"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
-                            <div class="seat seat-empty" aria-hidden="true" title="Próximamente más fotos"><svg viewBox="0 0 24 24"><use href="#icon-plane"/></svg></div>
+                            <button type="button" class="seat seat-empty" data-seat-id="4C">
+                                <img class="seat-photo" src="" alt="" loading="lazy" style="display:none;">
+                                <svg class="seat-empty-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                                <span class="seat-id">4C</span>
+                            </button>
+                            <button type="button" class="seat seat-empty" data-seat-id="4D">
+                                <img class="seat-photo" src="" alt="" loading="lazy" style="display:none;">
+                                <svg class="seat-empty-icon" viewBox="0 0 24 24"><use href="#icon-plane"/></svg>
+                                <span class="seat-id">4D</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -2872,7 +2939,8 @@
     }
 
     /* ===================== SEAT MAP GALLERY ===================== */
-    (function initSeatmapGallery() {
+    let seatmapGalleryBound = false;
+    function initSeatmapGallery() {
         const seats = [...document.querySelectorAll('.seatmap-cabin .seat:not(.seat-empty)')];
         const lightbox = document.getElementById('seatmapLightbox');
         if (!seats.length || !lightbox) return;
@@ -2891,7 +2959,7 @@
             imgEl.src = img.src;
             imgEl.alt = img.alt;
             seatEl.textContent = btn.querySelector('.seat-id').textContent;
-            capEl.textContent = I18N[currentLang][btn.dataset.cap] || img.alt;
+            capEl.textContent = btn.dataset.caption || img.alt;
         }
         function open(i) {
             current = i;
@@ -2906,7 +2974,12 @@
         function next() { current = (current + 1) % seats.length; render(); }
         function prev() { current = (current - 1 + seats.length) % seats.length; render(); }
 
+        // The seat buttons themselves get re-created each time real data
+        // loads in, so it's safe (and necessary) to (re)bind these.
         seats.forEach((btn, i) => btn.addEventListener('click', () => open(i)));
+
+        if (seatmapGalleryBound) return; // the lightbox controls below only need binding once
+        seatmapGalleryBound = true;
         closeBtn.addEventListener('click', close);
         nextBtn.addEventListener('click', next);
         prevBtn.addEventListener('click', prev);
@@ -2917,7 +2990,32 @@
             if (e.key === 'ArrowRight') next();
             if (e.key === 'ArrowLeft') prev();
         });
-    })();
+    }
+
+    // Fills in each seat's photo/caption from the server, then wires up the gallery.
+    function applySeatmapData(seatmap) {
+        if (!Array.isArray(seatmap)) return;
+        seatmap.forEach((s) => {
+            const btn = document.querySelector(`.seat[data-seat-id="${s.id}"]`);
+            if (!btn) return;
+            const img = btn.querySelector('.seat-photo');
+            const icon = btn.querySelector('.seat-empty-icon');
+            if (s.image) {
+                img.src = s.image;
+                img.alt = s.caption || '';
+                img.style.display = '';
+                if (icon) icon.style.display = 'none';
+                btn.classList.remove('seat-empty');
+                btn.dataset.caption = s.caption || '';
+            } else {
+                img.removeAttribute('src');
+                img.style.display = 'none';
+                if (icon) icon.style.display = '';
+                btn.classList.add('seat-empty');
+            }
+        });
+        initSeatmapGallery();
+    }
 
     /* ===================== NEXT COURSE DATE (from Blob) ===================== */
     let bpCourseDate = 'SEPTIEMBRE 2026';
@@ -3451,8 +3549,12 @@
                 bpCourseDate = data.nextCourseText;
                 if (courseEl) courseEl.innerHTML = highlightStars(data.nextCourseText);
             }
+            if (data.seatmap) {
+                applySeatmapData(data.seatmap);
+            }
         } catch (err) {
             // No API available (e.g. hosted outside Vercel) — keep the built-in examples already in the HTML.
+            initSeatmapGallery();
         } finally {
             initAlumniCarousel();
             if (!alumniGalleryData.length) alumniGalleryData = buildAlumniFallbackFromDOM();

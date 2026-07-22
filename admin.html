@@ -96,6 +96,22 @@
     .post-row .post-meta{font-family:var(--ff-mono);font-size:.68rem;color:var(--ink-soft);margin-top:3px;}
     .post-row .post-actions{display:flex;gap:8px;flex-shrink:0;}
     .empty-note{color:var(--ink-soft);font-family:var(--ff-mono);font-size:.82rem;text-align:center;padding:20px 0;}
+
+    .seats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+    @media (max-width:900px){.seats-grid{grid-template-columns:repeat(2,1fr);}}
+    .seat-card{border:1px solid var(--line);border-radius:var(--radius-md);padding:14px;background:var(--cream);}
+    .seat-card-label{font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.05em;color:var(--ink-soft);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+    .seat-card-label b{color:var(--navy-950);font-size:.8rem;}
+    .seat-card-img{aspect-ratio:4/3;border-radius:8px;overflow:hidden;background:#fff;border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+    .seat-card-img img{width:100%;height:100%;object-fit:cover;}
+    .seat-card-img.empty svg{width:26px;height:26px;color:var(--steel);}
+    .seat-card input[type="text"]{
+        width:100%;font-size:.8rem;padding:8px 10px;border:1px solid var(--line);border-radius:8px;
+        background:#fff;margin-bottom:8px;font-family:var(--ff-body);
+    }
+    .seat-card input[type="file"]{font-size:.72rem;width:100%;margin-bottom:8px;}
+    .seat-card-actions{display:flex;gap:6px;}
+    .seat-card-actions button{flex:1;font-size:.72rem;padding:7px 8px;}
 </style>
 </head>
 <body>
@@ -137,6 +153,7 @@
             <button type="button" class="tab-btn active" data-tab="blog">Blog</button>
             <button type="button" class="tab-btn" data-tab="alumni">Alumnos contratados</button>
             <button type="button" class="tab-btn" data-tab="course">Próximo curso</button>
+            <button type="button" class="tab-btn" data-tab="seats">Asientos</button>
         </div>
 
         <div class="tab-panel" id="tab-blog">
@@ -368,6 +385,17 @@
                         <p class="msg" id="courseFormMsg"></p>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- ===================== SEATS TAB ===================== -->
+        <div class="tab-panel hidden" id="tab-seats">
+            <div class="panel">
+                <h2>Elige qué foto tiene cada asiento</h2>
+                <p style="color:var(--ink-soft);font-size:.85rem;margin-bottom:20px;">
+                    Son los 16 sitios del mapa de asientos de la home ("Elige tu asiento y conoce nuestras instalaciones"). Sube una foto a cada uno, con un texto corto que la describa. Los que dejes vacíos se ven como el icono a rayas de "próximamente".
+                </p>
+                <div class="seats-grid" id="seatsGrid"></div>
             </div>
         </div>
     </div>
@@ -661,6 +689,7 @@
     // ---- Tabs ----
     let alumniLoaded = false;
     let courseLoaded = false;
+    let seatsLoaded = false;
     document.querySelectorAll('.tab-btn').forEach((btn) => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.tab-btn').forEach((b) => b.classList.toggle('active', b === btn));
@@ -668,6 +697,7 @@
             document.getElementById('tab-' + btn.dataset.tab).classList.remove('hidden');
             if (btn.dataset.tab === 'alumni' && !alumniLoaded) { alumniLoaded = true; loadAlumni(); loadAirlines(); }
             if (btn.dataset.tab === 'course' && !courseLoaded) { courseLoaded = true; loadCourse(); }
+            if (btn.dataset.tab === 'seats' && !seatsLoaded) { seatsLoaded = true; loadSeats(); }
         });
     });
 
@@ -1079,6 +1109,119 @@
             : 'No está en la lista — se guardará, pero no saldrá marcada en el mapa.';
         alumniCityHint.style.color = known ? '#2E7D4F' : '#B3261E';
     });
+
+    // ===================== ASIENTOS (seat map photos) =====================
+    const SEAT_IDS = ['1A', '1B', '1C', '1D', '2A', '2B', '2C', '2D', '3A', '3B', '3C', '3D', '4A', '4B', '4C', '4D'];
+    const seatsGrid = document.getElementById('seatsGrid');
+    const seatPendingImages = {}; // seatId -> { base64, type } for photos picked but not yet saved
+
+    async function loadSeats() {
+        seatsGrid.innerHTML = '<p class="empty-note">Cargando...</p>';
+        try {
+            const res = await fetch('/api/home-data?lang=es');
+            const data = await res.json();
+            const seatmap = Array.isArray(data.seatmap) ? data.seatmap : SEAT_IDS.map((id) => ({ id, image: null, caption: '' }));
+            renderSeats(seatmap);
+        } catch {
+            seatsGrid.innerHTML = '<p class="empty-note">No se han podido cargar los asientos.</p>';
+        }
+    }
+
+    function renderSeats(seatmap) {
+        seatsGrid.innerHTML = seatmap.map((s) => `
+            <div class="seat-card" data-seat="${s.id}">
+                <div class="seat-card-label"><b>${s.id}</b></div>
+                <div class="seat-card-img ${s.image ? '' : 'empty'}" id="seatImgWrap-${s.id}">
+                    ${s.image
+                        ? `<img id="seatImg-${s.id}" src="${s.image}" alt="">`
+                        : `<svg viewBox="0 0 24 24" fill="none"><path d="M3 8C3 6.9 3.9 6 5 6H19C20.1 6 21 6.9 21 8V15C21 16.1 20.1 17 19 17H16.5C15.8 17 15.2 16.6 14.9 16L14 14.3C13.6 13.5 12.4 13.5 12 14.3L11.1 16C10.8 16.6 10.2 17 9.5 17H5C3.9 17 3 16.1 3 15V8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>`}
+                </div>
+                <input type="text" id="seatCaption-${s.id}" placeholder="Descripción corta" value="${(s.caption || '').replace(/"/g, '&quot;')}">
+                <input type="file" accept="image/*" id="seatFile-${s.id}">
+                <div class="seat-card-actions">
+                    <button type="button" class="btn btn-primary" style="padding:8px;" data-seat-save="${s.id}">Guardar</button>
+                    <button type="button" class="btn btn-danger" data-seat-clear="${s.id}">Quitar</button>
+                </div>
+            </div>
+        `).join('');
+
+        SEAT_IDS.forEach((id) => {
+            const fileInput = document.getElementById(`seatFile-${id}`);
+            fileInput.addEventListener('change', () => {
+                const file = fileInput.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = () => {
+                    seatPendingImages[id] = { base64: reader.result.split(',')[1], type: file.type };
+                    const wrap = document.getElementById(`seatImgWrap-${id}`);
+                    wrap.classList.remove('empty');
+                    wrap.innerHTML = `<img id="seatImg-${id}" src="${reader.result}" alt="">`;
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        document.querySelectorAll('[data-seat-save]').forEach((btn) => {
+            btn.addEventListener('click', () => saveSeat(btn.dataset.seatSave));
+        });
+        document.querySelectorAll('[data-seat-clear]').forEach((btn) => {
+            btn.addEventListener('click', () => clearSeat(btn.dataset.seatClear));
+        });
+    }
+
+    async function saveSeat(seatId) {
+        const btn = document.querySelector(`[data-seat-save="${seatId}"]`);
+        const caption = document.getElementById(`seatCaption-${seatId}`).value;
+        const pending = seatPendingImages[seatId];
+
+        btn.disabled = true;
+        btn.textContent = 'Guardando...';
+        try {
+            const payload = { seatId, caption };
+            if (pending) {
+                payload.imageBase64 = pending.base64;
+                payload.imageType = pending.type;
+            }
+            const res = await fetch('/api/home-data', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+            if (res.ok) {
+                delete seatPendingImages[seatId];
+                btn.textContent = '¡Guardado!';
+                setTimeout(() => { btn.textContent = 'Guardar'; }, 1500);
+            } else {
+                const data = await res.json();
+                alert(data.error || 'No se ha podido guardar el asiento.');
+                btn.textContent = 'Guardar';
+            }
+        } catch {
+            alert('No hay conexión con el servidor.');
+            btn.textContent = 'Guardar';
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    async function clearSeat(seatId) {
+        if (!confirm(`¿Quitar la foto del asiento ${seatId}?`)) return;
+        try {
+            const res = await fetch('/api/home-data', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ seatId }),
+            });
+            if (res.ok) {
+                delete seatPendingImages[seatId];
+                loadSeats();
+            } else {
+                alert('No se ha podido quitar la foto.');
+            }
+        } catch {
+            alert('No hay conexión con el servidor.');
+        }
+    }
 
     checkSession();
 </script>

@@ -1,10 +1,15 @@
 import CITIES from './_cities.js';
-import { fetchPublicText, listObjects } from './_blog-utils.js';
+import { requireAuth, getSession } from './_auth.js';
+import { fetchPublicText, fetchPublicJson, listObjects, putObject, checkWriteBudget, publicUrl } from './_blog-utils.js';
 
 // ---- Shared matchers ----
 const IMAGE_RE = /\.(jpe?g|png|webp)$/i;
 const EN_TEXT_RE = /\.en\.txt$/i;
 const ES_TEXT_RE = /(?<!\.en)\.txt$/i;
+
+// The 16 slots in the seat-map gallery on the homepage: 4 rows, A-D each.
+const SEAT_IDS = ['1A', '1B', '1C', '1D', '2A', '2B', '2C', '2D', '3A', '3B', '3C', '3D', '4A', '4B', '4C', '4D'];
+const SEATMAP_KEY = 'seatmap/seats.json';
 
 function baseName(pathname) {
   return pathname.split('/').pop();
@@ -56,7 +61,7 @@ async function mostRecentText(blobs) {
   return fetchPublicText(sorted[0].url);
 }
 
-export default async function handler(request, response) {
+async function handleRead(request, response) {
   const debug = request.query && (request.query.debug === '1' || request.query.debug === 'true');
   const lang = request.query && request.query.lang === 'en' ? 'en' : 'es';
 
@@ -154,12 +159,21 @@ export default async function handler(request, response) {
       nextCourseText = await mostRecentText(courseEsTexts.length ? courseEsTexts : courseBlobs);
     }
 
+    // ================= SEAT MAP =================
+    // Known exact path, so this is fetched directly by URL — no listing needed.
+    const seatmapData = (await fetchPublicJson(publicUrl(SEATMAP_KEY))) || {};
+    const seatmap = SEAT_IDS.map((id) => ({
+      id,
+      image: seatmapData[id]?.image || null,
+      caption: seatmapData[id]?.caption || '',
+    }));
+
     // ================= RESPONSE =================
     if (!debug) {
-      response.setHeader('Cache-Control', 's-maxage=900, stale-while-revalidate=86400');
+      response.setHeader('Cache-Control', getSession(request) ? 'no-store' : 's-maxage=900, stale-while-revalidate=86400');
     }
 
-    const payload = { alumni, nextCourseText };
+    const payload = { alumni, nextCourseText, seatmap };
     if (debug) {
       payload.debug = {
         lang,
@@ -171,6 +185,72 @@ export default async function handler(request, response) {
     }
     return response.status(200).json(payload);
   } catch (err) {
-    return response.status(500).json({ error: err.message, alumni: [], nextCourseText: '' });
+    return response.status(500).json({ error: err.message, alumni: [], nextCourseText: '', seatmap: [] });
   }
+}
+
+async function handleSaveSeat(request, response) {
+  const session = requireAuth(request, response);
+  if (!session) return;
+
+  const budget = await checkWriteBudget();
+  if (!budget.allowed) {
+    return response.status(503).json({ error: 'Se ha alcanzado el límite de seguridad de operaciones de este mes. Vuelve a intentarlo el mes que viene, o contacta con el desarrollador.' });
+  }
+
+  const { seatId, caption, imageBase64, imageType } = request.body || {};
+  if (!seatId || !SEAT_IDS.includes(seatId)) {
+    return response.status(400).json({ error: 'Asiento no válido' });
+  }
+
+  try {
+    const seatmapData = (await fetchPublicJson(publicUrl(SEATMAP_KEY))) || {};
+    const existing = seatmapData[seatId] || {};
+
+    let image = existing.image || null;
+    if (imageBase64) {
+      const ext = (imageType || 'image/jpeg').split('/')[1]?.replace('jpeg', 'jpg') || 'jpg';
+      const buffer = Buffer.from(imageBase64, 'base64');
+      const uploaded = await putObject(`seatmap-images/${seatId}-${Date.now()}.${ext}`, buffer, imageType || 'image/jpeg');
+      image = uploaded.url;
+    }
+
+    seatmapData[seatId] = { image, caption: caption !== undefined ? caption : (existing.caption || '') };
+    await putObject(SEATMAP_KEY, JSON.stringify(seatmapData), 'application/json');
+
+    return response.status(200).json({ ok: true, seat: seatmapData[seatId] });
+  } catch (err) {
+    return response.status(500).json({ error: err.message });
+  }
+}
+
+async function handleDeleteSeat(request, response) {
+  const session = requireAuth(request, response);
+  if (!session) return;
+
+  const budget = await checkWriteBudget();
+  if (!budget.allowed) {
+    return response.status(503).json({ error: 'Se ha alcanzado el límite de seguridad de operaciones de este mes. Vuelve a intentarlo el mes que viene, o contacta con el desarrollador.' });
+  }
+
+  const { seatId } = request.body || {};
+  if (!seatId || !SEAT_IDS.includes(seatId)) {
+    return response.status(400).json({ error: 'Asiento no válido' });
+  }
+
+  try {
+    const seatmapData = (await fetchPublicJson(publicUrl(SEATMAP_KEY))) || {};
+    delete seatmapData[seatId];
+    await putObject(SEATMAP_KEY, JSON.stringify(seatmapData), 'application/json');
+    return response.status(200).json({ ok: true });
+  } catch (err) {
+    return response.status(500).json({ error: err.message });
+  }
+}
+
+export default async function handler(request, response) {
+  if (request.method === 'GET') return handleRead(request, response);
+  if (request.method === 'POST') return handleSaveSeat(request, response);
+  if (request.method === 'DELETE') return handleDeleteSeat(request, response);
+  return response.status(405).json({ error: 'Método no permitido' });
 }
