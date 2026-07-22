@@ -7,7 +7,6 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <style>
     :root{
         --navy-950:#3D0910;--navy-800:#750C1B;--steel:#8C8783;--steel-light:#D6D2CD;
@@ -101,10 +100,6 @@
             <div class="field">
                 <label for="loginPass">Contraseña</label>
                 <input type="password" id="loginPass" autocomplete="current-password" required>
-            </div>
-            <div class="field">
-                <!-- Replace YOUR_SITE_KEY_HERE with the site key from google.com/recaptcha/admin — see the setup note at the end of the chat. -->
-                <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div>
             </div>
             <button type="submit" class="btn btn-primary">Entrar</button>
             <p class="msg error" id="loginMsg"></p>
@@ -331,18 +326,12 @@
         loginMsg.textContent = '';
         const username = document.getElementById('loginUser').value.trim();
         const password = document.getElementById('loginPass').value;
-        const recaptchaToken = typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse() : '';
-
-        if (!recaptchaToken) {
-            loginMsg.textContent = 'Marca la casilla "No soy un robot" antes de entrar.';
-            return;
-        }
 
         try {
             const res = await fetch('/api/admin-auth', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password, recaptchaToken }),
+                body: JSON.stringify({ username, password }),
             });
             const data = await res.json();
             if (res.ok) {
@@ -350,11 +339,9 @@
                 showDashboard(data.username);
             } else {
                 loginMsg.textContent = data.error || 'No se ha podido iniciar sesión.';
-                if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
             }
         } catch {
             loginMsg.textContent = 'No hay conexión con el servidor.';
-            if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
         }
     });
 
@@ -497,7 +484,7 @@
     function startEdit(post) {
         if (!post) return;
         editingSlug = post.slug;
-        editingExistingImage = post.imagePath || null;
+        editingExistingImage = post.image || null;
         pendingImageBase64 = null;
         pendingImageType = null;
         document.getElementById('postLang').value = post.lang;

@@ -17,6 +17,7 @@ export default async function handler(request, response) {
     if (!username || !password) {
       return response.status(400).json({ error: 'Faltan usuario o contraseña' });
     }
+
     if (!verifyCredentials(username, password)) {
       // Same message whether the user doesn't exist or the password is wrong.
       return response.status(401).json({ error: 'Usuario o contraseña incorrectos' });
