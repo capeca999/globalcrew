@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { fetchPublicJson, publicUrl, putObject } from './_blog-utils.js';
 
 // ---- Config ----
 const SESSION_MAX_AGE = 60 * 60 * 8; // 8 hours
@@ -28,6 +29,59 @@ export function verifyCredentials(username, password) {
   const b = Buffer.from(String(expectedHash));
   if (a.length !== b.length) return false;
   return crypto.timingSafeEqual(a, b);
+}
+
+// ===================== LOGIN LOCKOUT =====================
+// Tracks failed login attempts per username in a small object in R2. After
+// too many wrong passwords in a row, that username is locked out for a
+// cooldown period — this is what actually stops someone from just
+// script-guessing passwords forever. A correct login clears the count.
+const LOGIN_ATTEMPTS_KEY = '_system/login-attempts.json';
+const MAX_FAILED_ATTEMPTS = 5;
+const LOCKOUT_MS = 15 * 60 * 1000; // 15 minutes
+
+async function getAttemptsData() {
+  const data = await fetchPublicJson(publicUrl(LOGIN_ATTEMPTS_KEY));
+  return data || {};
+}
+
+async function saveAttemptsData(data) {
+  try {
+    await putObject(LOGIN_ATTEMPTS_KEY, JSON.stringify(data), 'application/json');
+  } catch {
+    // Best-effort — don't let a bookkeeping failure block the login flow.
+  }
+}
+
+// Call before checking the password. If locked, refuse immediately without
+// even looking at the password attempt.
+export async function checkLoginLockout(username) {
+  const data = await getAttemptsData();
+  const entry = data[username];
+  if (entry && entry.lockedUntil && Date.now() < entry.lockedUntil) {
+    return { locked: true, minutesLeft: Math.ceil((entry.lockedUntil - Date.now()) / 60000) };
+  }
+  return { locked: false };
+}
+
+export async function recordFailedLogin(username) {
+  const data = await getAttemptsData();
+  const entry = data[username] || { count: 0 };
+  entry.count = (entry.count || 0) + 1;
+  if (entry.count >= MAX_FAILED_ATTEMPTS) {
+    entry.lockedUntil = Date.now() + LOCKOUT_MS;
+    entry.count = 0;
+  }
+  data[username] = entry;
+  await saveAttemptsData(data);
+}
+
+export async function recordSuccessfulLogin(username) {
+  const data = await getAttemptsData();
+  if (data[username]) {
+    delete data[username];
+    await saveAttemptsData(data);
+  }
 }
 
 function sign(payload) {

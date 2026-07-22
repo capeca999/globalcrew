@@ -385,7 +385,7 @@
             const res = await fetch('/api/admin-auth');
             const data = await res.json();
             if (data.authenticated) {
-                showDashboard(data.username);
+                showDashboard(data.username, data.budget);
             } else {
                 showLogin();
             }
@@ -399,10 +399,14 @@
         dashboard.classList.add('hidden');
     }
 
-    function showDashboard(username) {
+    function showDashboard(username, budget) {
         loginScreen.classList.add('hidden');
         dashboard.classList.remove('hidden');
         whoami.textContent = 'Conectado como ' + username;
+        if (budget) {
+            const pct = Math.round((budget.count / budget.limit) * 100);
+            whoami.textContent += ` · Uso este mes: ${budget.count.toLocaleString('es-ES')} / ${budget.limit.toLocaleString('es-ES')} (${pct}%)`;
+        }
         loadPosts();
     }
 

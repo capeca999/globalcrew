@@ -99,3 +99,59 @@ export async function fetchPublicJson(url) {
     return null;
   }
 }
+
+// ===================== WRITE BUDGET CIRCUIT BREAKER =====================
+// R2's free tier is 1,000,000 "Class A" operations/month (list/put/delete).
+// This tracks how many WRITE operations (put/delete) we've made this
+// calendar month, in a small object inside the bucket itself, and refuses
+// further writes once we get close to the limit — so a leaked password or
+// a scripted abuse of the admin endpoints can't run up a real bill, it just
+// makes the panel say "try again next month" instead.
+//
+// Reading the counter is free (plain fetch on its public URL). Only the
+// write-back costs 1 extra Class A operation per protected action — a
+// reasonable trade given writes are already rare (an admin publishing or
+// editing something), not part of the high-volume public read traffic.
+const USAGE_COUNTER_KEY = '_system/usage-counter.json';
+const SAFETY_THRESHOLD = 900000; // stop 100k below the real 1,000,000 free-tier cap
+
+function currentMonthKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+}
+
+// Read-only peek at the current count, without incrementing it — used to
+// show Kike the current usage in the admin panel.
+export async function peekWriteBudget() {
+  const month = currentMonthKey();
+  const counter = await fetchPublicJson(publicUrl(USAGE_COUNTER_KEY));
+  if (!counter || counter.month !== month) {
+    return { count: 0, limit: SAFETY_THRESHOLD };
+  }
+  return { count: counter.writeCount, limit: SAFETY_THRESHOLD };
+}
+
+// Call this at the top of any handler that performs a put/delete. If
+// `allowed` comes back false, refuse the request instead of writing.
+export async function checkWriteBudget() {
+  const month = currentMonthKey();
+  let counter = await fetchPublicJson(publicUrl(USAGE_COUNTER_KEY));
+
+  if (!counter || counter.month !== month) {
+    counter = { month, writeCount: 0 };
+  }
+
+  if (counter.writeCount >= SAFETY_THRESHOLD) {
+    return { allowed: false, count: counter.writeCount, limit: SAFETY_THRESHOLD };
+  }
+
+  counter.writeCount += 1;
+  counter.updatedAt = new Date().toISOString();
+  try {
+    await putObject(USAGE_COUNTER_KEY, JSON.stringify(counter), 'application/json');
+  } catch {
+    // If bookkeeping itself fails, don't block the person's action over it —
+    // fail open rather than lock out the admin panel over a glitch.
+  }
+  return { allowed: true, count: counter.writeCount, limit: SAFETY_THRESHOLD };
+}

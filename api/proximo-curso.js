@@ -1,5 +1,5 @@
 import { requireAuth, getSession } from './_auth.js';
-import { fetchPublicText, listObjects, putObject } from './_blog-utils.js';
+import { fetchPublicText, listObjects, putObject, checkWriteBudget } from './_blog-utils.js';
 
 // One function handles both operations, picked by HTTP method:
 //   GET  /api/proximo-curso?lang=es  -> read the current announcement (public)
@@ -45,6 +45,11 @@ async function handleRead(request, response) {
 async function handleSave(request, response) {
   const session = requireAuth(request, response);
   if (!session) return;
+
+  const budget = await checkWriteBudget();
+  if (!budget.allowed) {
+    return response.status(503).json({ error: 'Se ha alcanzado el límite de seguridad de operaciones de este mes. Vuelve a intentarlo el mes que viene, o contacta con el desarrollador.' });
+  }
 
   const { textEs, textEn } = request.body || {};
   if (!textEs || !textEs.trim()) {

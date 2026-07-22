@@ -1,5 +1,5 @@
 import { requireAuth, getSession } from './_auth.js';
-import { slugify, fetchPublicJson, listObjects, putObject, deleteObject } from './_blog-utils.js';
+import { slugify, fetchPublicJson, listObjects, putObject, deleteObject, checkWriteBudget } from './_blog-utils.js';
 
 // One function handles all blog operations, picked by HTTP method:
 //   GET    /api/blog?lang=es                 -> list posts, resolved to one language
@@ -74,6 +74,11 @@ async function handleSave(request, response) {
   const session = requireAuth(request, response);
   if (!session) return;
 
+  const budget = await checkWriteBudget();
+  if (!budget.allowed) {
+    return response.status(503).json({ error: 'Se ha alcanzado el límite de seguridad de operaciones de este mes. Vuelve a intentarlo el mes que viene, o contacta con el desarrollador.' });
+  }
+
   const {
     slug: incomingSlug, category,
     titleEs, textEs, bodyEs,
@@ -121,6 +126,11 @@ async function handleSave(request, response) {
 async function handleDelete(request, response) {
   const session = requireAuth(request, response);
   if (!session) return;
+
+  const budget = await checkWriteBudget();
+  if (!budget.allowed) {
+    return response.status(503).json({ error: 'Se ha alcanzado el límite de seguridad de operaciones de este mes. Vuelve a intentarlo el mes que viene, o contacta con el desarrollador.' });
+  }
 
   const { slug } = request.body || {};
   if (!slug) return response.status(400).json({ error: 'Falta el slug del artículo' });

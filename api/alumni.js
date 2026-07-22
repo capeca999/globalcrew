@@ -1,6 +1,6 @@
 import CITIES from './_cities.js';
 import { requireAuth, getSession } from './_auth.js';
-import { fetchPublicText, listObjects, putObject, deleteObject } from './_blog-utils.js';
+import { fetchPublicText, listObjects, putObject, deleteObject, checkWriteBudget } from './_blog-utils.js';
 
 // One function handles all alumni-related operations, picked by HTTP method:
 //   GET    /api/alumni?lang=es                -> list alumni (public)
@@ -186,6 +186,11 @@ async function handleSave(request, response) {
   const session = requireAuth(request, response);
   if (!session) return;
 
+  const budget = await checkWriteBudget();
+  if (!budget.allowed) {
+    return response.status(503).json({ error: 'Se ha alcanzado el límite de seguridad de operaciones de este mes. Vuelve a intentarlo el mes que viene, o contacta con el desarrollador.' });
+  }
+
   const {
     originalIdentity, name, airline, city, quoteEs, quoteEn, photoBase64, photoType,
   } = request.body || {};
@@ -235,6 +240,11 @@ async function handleDelete(request, response) {
   const session = requireAuth(request, response);
   if (!session) return;
 
+  const budget = await checkWriteBudget();
+  if (!budget.allowed) {
+    return response.status(503).json({ error: 'Se ha alcanzado el límite de seguridad de operaciones de este mes. Vuelve a intentarlo el mes que viene, o contacta con el desarrollador.' });
+  }
+
   const { identity } = request.body || {};
   if (!identity) return response.status(400).json({ error: 'Falta el alumno a borrar' });
 
@@ -250,6 +260,11 @@ async function handleDelete(request, response) {
 async function handleSaveAirline(request, response) {
   const session = requireAuth(request, response);
   if (!session) return;
+
+  const budget = await checkWriteBudget();
+  if (!budget.allowed) {
+    return response.status(503).json({ error: 'Se ha alcanzado el límite de seguridad de operaciones de este mes. Vuelve a intentarlo el mes que viene, o contacta con el desarrollador.' });
+  }
 
   const { airlineName, logoBase64, logoType, originalAirlineName } = request.body || {};
   if (!airlineName || !airlineName.trim()) return response.status(400).json({ error: 'Falta el nombre de la aerolínea' });
@@ -277,6 +292,11 @@ async function handleSaveAirline(request, response) {
 async function handleDeleteAirline(request, response) {
   const session = requireAuth(request, response);
   if (!session) return;
+
+  const budget = await checkWriteBudget();
+  if (!budget.allowed) {
+    return response.status(503).json({ error: 'Se ha alcanzado el límite de seguridad de operaciones de este mes. Vuelve a intentarlo el mes que viene, o contacta con el desarrollador.' });
+  }
 
   const { airlineName } = request.body || {};
   if (!airlineName) return response.status(400).json({ error: 'Falta la aerolínea a borrar' });
