@@ -1,5 +1,5 @@
 import { list, put } from '@vercel/blob';
-import { requireAuth } from './_auth.js';
+import { requireAuth, getSession } from './_auth.js';
 import { fetchPublicText, BLOB_TOKEN } from './_blog-utils.js';
 
 // One function handles both operations, picked by HTTP method:
@@ -36,7 +36,7 @@ async function handleRead(request, response) {
       text = await fetchPublicText(mostRecentUrl(esTexts.length ? esTexts : blobs));
     }
 
-    response.setHeader('Cache-Control', 's-maxage=900, stale-while-revalidate=3600');
+    response.setHeader('Cache-Control', getSession(request) ? 'no-store' : 's-maxage=900, stale-while-revalidate=3600');
     return response.status(200).json({ text });
   } catch (err) {
     return response.status(500).json({ error: err.message, text: '' });

@@ -1,5 +1,5 @@
 import { list, put, del } from '@vercel/blob';
-import { requireAuth } from './_auth.js';
+import { requireAuth, getSession } from './_auth.js';
 import { slugify, fetchPublicJson, BLOB_TOKEN } from './_blog-utils.js';
 
 // One function handles all blog operations, picked by HTTP method:
@@ -42,7 +42,10 @@ async function handleGetOne(request, response) {
     const post = await fetchPublicJson(match.url);
     if (!post) return response.status(404).json({ error: 'Artículo no encontrado' });
 
-    response.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=3600');
+    // A logged-in admin (checking their own edit, or right after a delete)
+    // always gets a fresh read — only public, unauthenticated visitors get
+    // the 10-minute cache.
+    response.setHeader('Cache-Control', getSession(request) ? 'no-store' : 's-maxage=600, stale-while-revalidate=3600');
     // Full bilingual object — the caller (blog-post.html, or the admin edit
     // form) picks which language block to show/edit.
     return response.status(200).json({ post });
@@ -68,7 +71,9 @@ async function handleList(request, response) {
     }
     posts.sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0));
 
-    response.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=3600');
+    // Same idea: the admin panel's own listing (right after adding/editing/
+    // deleting a post) always gets a fresh read; public visitors get the cache.
+    response.setHeader('Cache-Control', getSession(request) ? 'no-store' : 's-maxage=600, stale-while-revalidate=3600');
     return response.status(200).json({ posts });
   } catch (err) {
     return response.status(500).json({ error: err.message, posts: [] });

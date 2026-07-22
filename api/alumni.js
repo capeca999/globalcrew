@@ -1,6 +1,6 @@
 import { list, put, del } from '@vercel/blob';
 import CITIES from './_cities.js';
-import { requireAuth } from './_auth.js';
+import { requireAuth, getSession } from './_auth.js';
 import { fetchPublicText, BLOB_TOKEN } from './_blog-utils.js';
 
 // One function handles all alumni-related operations, picked by HTTP method:
@@ -144,7 +144,7 @@ async function handleList(request, response) {
     alumni.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
 
     if (!debug) {
-      response.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
+      response.setHeader('Cache-Control', getSession(request) ? 'no-store' : 's-maxage=300, stale-while-revalidate=600');
     }
 
     const payload = { alumni };
@@ -170,7 +170,7 @@ async function handleListAirlines(request, response) {
       .map((l) => ({ name: baseName(l.pathname).replace(IMAGE_RE, ''), logoUrl: l.url }))
       .sort((a, b) => a.name.localeCompare(b.name, 'es'));
 
-    response.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
+    response.setHeader('Cache-Control', getSession(request) ? 'no-store' : 's-maxage=300, stale-while-revalidate=600');
     return response.status(200).json({ airlines });
   } catch (err) {
     return response.status(500).json({ error: err.message, airlines: [] });
