@@ -128,6 +128,16 @@
     .team-photo-preview{width:70px;height:70px;border-radius:12px;overflow:hidden;background:#fff;border:1px solid var(--line);flex-shrink:0;}
     .team-photo-preview img{width:100%;height:100%;object-fit:cover;}
 
+    .season-options{display:flex;gap:14px;flex-wrap:wrap;}
+    .season-option{
+        flex:1;min-width:140px;display:flex;flex-direction:column;align-items:center;gap:8px;
+        padding:24px 16px;border:2px solid var(--line);border-radius:var(--radius-md);background:var(--cream);
+        cursor:pointer;transition:border-color .2s,background .2s,transform .2s;font-family:var(--ff-display);font-weight:600;
+    }
+    .season-option:hover{transform:translateY(-2px);}
+    .season-option.active{border-color:var(--navy-950);background:#fff;box-shadow:0 8px 20px -12px rgba(43,38,36,.25);}
+    .season-emoji{font-size:2.2rem;}
+
     /* ===================== MOBILE ===================== */
     @media (max-width:640px){
         .wrap{padding:24px 16px 60px;}
@@ -190,7 +200,7 @@
             </div>
             <div class="field">
                 <!-- Replace YOUR_SITE_KEY_HERE with the site key from google.com/recaptcha/admin, registered for globalcrewtcp.com -->
-                <div class="g-recaptcha" data-sitekey="6Ld66V8tAAAAADcKjQpa_D7nedeixVdb4K97xVB6"></div>
+                <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div>
             </div>
             <button type="submit" class="btn btn-primary">Entrar</button>
             <p class="msg error" id="loginMsg"></p>
@@ -220,6 +230,7 @@
             <button type="button" class="tab-btn" data-tab="faq">Preguntas frecuentes</button>
             <button type="button" class="tab-btn" data-tab="team">Equipo</button>
             <button type="button" class="tab-btn" data-tab="hero">Portada</button>
+            <button type="button" class="tab-btn" data-tab="season">Temporada 🎄🎃</button>
         </div>
 
         <div class="tab-panel" id="tab-blog">
@@ -533,6 +544,31 @@
                         <p class="msg" id="heroMsg"></p>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- ===================== SEASON TAB ===================== -->
+        <div class="tab-panel hidden" id="tab-season">
+            <div class="panel">
+                <h2>Modo de temporada</h2>
+                <p style="color:var(--ink-soft);font-size:.85rem;margin-bottom:20px;">
+                    Añade un efecto decorativo sutil a toda la web pública (copos de nieve o murciélagos). Se puede cambiar o quitar cuando quieras.
+                </p>
+                <div class="season-options">
+                    <button type="button" class="season-option" data-theme="none">
+                        <span class="season-emoji">🚫</span>
+                        <span>Normal</span>
+                    </button>
+                    <button type="button" class="season-option" data-theme="christmas">
+                        <span class="season-emoji">🎄</span>
+                        <span>Navidad</span>
+                    </button>
+                    <button type="button" class="season-option" data-theme="halloween">
+                        <span class="season-emoji">🎃</span>
+                        <span>Halloween</span>
+                    </button>
+                </div>
+                <p class="msg" id="seasonMsg" style="margin-top:16px;"></p>
             </div>
         </div>
     </div>
@@ -853,6 +889,7 @@
     let faqLoaded = false;
     let teamLoaded = false;
     let heroLoaded = false;
+    let seasonLoaded = false;
     document.querySelectorAll('.tab-btn').forEach((btn) => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.tab-btn').forEach((b) => b.classList.toggle('active', b === btn));
@@ -864,6 +901,7 @@
             if (btn.dataset.tab === 'faq' && !faqLoaded) { faqLoaded = true; loadFaq(); }
             if (btn.dataset.tab === 'team' && !teamLoaded) { teamLoaded = true; loadTeam(); }
             if (btn.dataset.tab === 'hero' && !heroLoaded) { heroLoaded = true; loadHero(); }
+            if (btn.dataset.tab === 'season' && !seasonLoaded) { seasonLoaded = true; loadSeason(); }
         });
     });
 
@@ -1647,6 +1685,47 @@
         } catch {
             msg.textContent = 'No hay conexión con el servidor.'; msg.className = 'msg error';
         }
+    });
+
+    // ===================== TEMPORADA =====================
+    async function loadSeason() {
+        try {
+            const res = await fetch('/api/home-data?lang=es');
+            const data = await res.json();
+            markActiveSeason(data.theme || 'none');
+        } catch {
+            markActiveSeason('none');
+        }
+    }
+
+    function markActiveSeason(theme) {
+        document.querySelectorAll('.season-option').forEach((btn) => {
+            btn.classList.toggle('active', btn.dataset.theme === theme);
+        });
+    }
+
+    document.querySelectorAll('.season-option').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+            const msg = document.getElementById('seasonMsg');
+            const theme = btn.dataset.theme;
+            markActiveSeason(theme);
+            msg.textContent = 'Guardando...'; msg.className = 'msg';
+            try {
+                const res = await fetch('/api/home-data', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'theme', theme }),
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    msg.textContent = '¡Guardado! Puede tardar unos minutos en verse en la web (caché).';
+                    msg.className = 'msg ok';
+                } else {
+                    msg.textContent = data.error || 'No se ha podido guardar.'; msg.className = 'msg error';
+                }
+            } catch {
+                msg.textContent = 'No hay conexión con el servidor.'; msg.className = 'msg error';
+            }
+        });
     });
 
     checkSession();

@@ -13,6 +13,7 @@ const SEATMAP_KEY = 'seatmap/seats.json';
 const FAQ_KEY = 'faq/questions.json';
 const TEAM_KEY = 'team/members.json';
 const HERO_KEY = 'hero/content.json';
+const THEME_KEY = 'site/theme.json';
 
 // Defaults match exactly what was already hardcoded on the site, so nothing
 // changes visually until Kike actually edits something from the panel.
@@ -186,11 +187,12 @@ async function handleRead(request, response) {
     // ================= SEAT MAP / FAQ / TEAM / HERO =================
     // All known exact paths, fetched directly by URL — no listing needed.
     // Fetched in parallel since they're independent of each other.
-    const [seatmapDataRaw, faqRaw, teamRaw, heroRaw] = await Promise.all([
+    const [seatmapDataRaw, faqRaw, teamRaw, heroRaw, themeRaw] = await Promise.all([
       fetchPublicJson(publicUrl(SEATMAP_KEY)),
       fetchPublicJson(publicUrl(FAQ_KEY)),
       fetchPublicJson(publicUrl(TEAM_KEY)),
       fetchPublicJson(publicUrl(HERO_KEY)),
+      fetchPublicJson(publicUrl(THEME_KEY)),
     ]);
     const seatmapData = seatmapDataRaw || {};
     const seatmap = SEAT_IDS.map((id) => ({
@@ -199,13 +201,14 @@ async function handleRead(request, response) {
     const faq = faqRaw || DEFAULT_FAQ;
     const team = teamRaw || DEFAULT_TEAM;
     const hero = heroRaw || DEFAULT_HERO;
+    const theme = (themeRaw && themeRaw.theme) || 'none';
 
     // ================= RESPONSE =================
     if (!debug) {
       response.setHeader('Cache-Control', getSession(request) ? 'no-store' : 's-maxage=900, stale-while-revalidate=86400');
     }
 
-    const payload = { alumni, nextCourseText, seatmap, faq, team, hero };
+    const payload = { alumni, nextCourseText, seatmap, faq, team, hero, theme };
     if (debug) {
       payload.debug = {
         lang,
@@ -217,7 +220,7 @@ async function handleRead(request, response) {
     }
     return response.status(200).json(payload);
   } catch (err) {
-    return response.status(500).json({ error: err.message, alumni: [], nextCourseText: '', seatmap: [], faq: DEFAULT_FAQ, team: DEFAULT_TEAM, hero: DEFAULT_HERO });
+    return response.status(500).json({ error: err.message, alumni: [], nextCourseText: '', seatmap: [], faq: DEFAULT_FAQ, team: DEFAULT_TEAM, hero: DEFAULT_HERO, theme: 'none' });
   }
 }
 
@@ -310,6 +313,16 @@ async function handleSaveHero(request, response) {
   return response.status(200).json({ ok: true, hero });
 }
 
+const VALID_THEMES = ['none', 'christmas', 'halloween'];
+async function handleSaveTheme(request, response) {
+  const { theme } = request.body || {};
+  if (!VALID_THEMES.includes(theme)) {
+    return response.status(400).json({ error: 'Tema no válido' });
+  }
+  await putObject(THEME_KEY, JSON.stringify({ theme }), 'application/json');
+  return response.status(200).json({ ok: true, theme });
+}
+
 async function handlePost(request, response) {
   const session = requireAuth(request, response);
   if (!session) return;
@@ -324,6 +337,7 @@ async function handlePost(request, response) {
     if (type === 'faq') return await handleSaveFaq(request, response);
     if (type === 'team') return await handleSaveTeam(request, response);
     if (type === 'hero') return await handleSaveHero(request, response);
+    if (type === 'theme') return await handleSaveTheme(request, response);
     return await handleSaveSeat(request, response); // default: seat (no type sent, matches existing admin.html)
   } catch (err) {
     return response.status(500).json({ error: err.message });
