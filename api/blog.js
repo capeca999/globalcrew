@@ -24,6 +24,7 @@ function resolveForLang(post, lang) {
     hasEs: !!(post.es && post.es.title),
     hasEn: !!(post.en && post.en.title),
     publishedAt: post.publishedAt,
+    isScheduled: !!(post.publishedAt && new Date(post.publishedAt) > new Date()),
     updatedAt: post.updatedAt,
   };
 }
@@ -39,7 +40,14 @@ async function handleGetOne(request, response) {
     const post = await fetchPublicJson(match.url);
     if (!post) return response.status(404).json({ error: 'Artículo no encontrado' });
 
-    response.setHeader('Cache-Control', getSession(request) ? 'no-store' : 's-maxage=600, stale-while-revalidate=3600');
+    const isAdmin = !!getSession(request);
+    const isScheduledForLater = post.publishedAt && new Date(post.publishedAt) > new Date();
+    if (isScheduledForLater && !isAdmin) {
+      // Not published yet for the public — treat it the same as not existing.
+      return response.status(404).json({ error: 'Artículo no encontrado' });
+    }
+
+    response.setHeader('Cache-Control', isAdmin ? 'no-store' : 's-maxage=600, stale-while-revalidate=3600');
     return response.status(200).json({ post });
   } catch (err) {
     return response.status(500).json({ error: err.message });
@@ -57,13 +65,16 @@ async function handleList(request, response) {
     const jsonBlobs = blobs.filter((b) => b.pathname.endsWith('.json'));
 
     const rawPosts = (await Promise.all(jsonBlobs.map((b) => fetchPublicJson(b.url)))).filter(Boolean);
-    let posts = rawPosts.map((p) => resolveForLang(p, lang));
+    const isAdmin = !!getSession(request);
+    let posts = rawPosts
+      .filter((p) => isAdmin || !p.publishedAt || new Date(p.publishedAt) <= new Date())
+      .map((p) => resolveForLang(p, lang));
     if (category && category !== 'todas') {
       posts = posts.filter((p) => p.category === category);
     }
     posts.sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0));
 
-    response.setHeader('Cache-Control', getSession(request) ? 'no-store' : 's-maxage=600, stale-while-revalidate=3600');
+    response.setHeader('Cache-Control', isAdmin ? 'no-store' : 's-maxage=600, stale-while-revalidate=3600');
     return response.status(200).json({ posts });
   } catch (err) {
     return response.status(500).json({ error: err.message, posts: [] });

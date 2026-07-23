@@ -236,6 +236,13 @@
                         <option value="curiosidades">Curiosidades</option>
                     </select>
                 </div>
+                <div class="field">
+                    <label for="postPublishedAt">Fecha y hora de publicación</label>
+                    <input type="datetime-local" id="postPublishedAt">
+                    <p style="font-family:var(--ff-mono);font-size:.72rem;color:var(--ink-soft);margin-top:6px;">
+                        Déjalo en el momento actual para publicarlo ya. Pon una fecha/hora futura para programarlo — no se verá en la web pública hasta entonces.
+                    </p>
+                </div>
 
                 <div class="lang-tabs">
                     <button type="button" class="lang-tab-btn active" data-langtab="es">Español</button>
@@ -625,6 +632,7 @@
         modules: { toolbar: '#postBodyToolbarEn' },
         placeholder: 'Write the full article here, with bold, italics, headings, links...',
     });
+    document.getElementById('postPublishedAt').value = toLocalDatetimeValue(new Date());
 
     document.querySelectorAll('.lang-tab-btn').forEach((btn) => {
         btn.addEventListener('click', () => {
@@ -653,11 +661,19 @@
         reader.readAsDataURL(file);
     });
 
+    // Formats a Date as the local "YYYY-MM-DDTHH:mm" string <input type="datetime-local"> expects.
+    function toLocalDatetimeValue(date) {
+        const d = new Date(date);
+        const pad = (n) => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+
     function resetForm() {
         postForm.reset();
         postBodyEditorEs.setContents([]);
         postBodyEditorEn.setContents([]);
         document.querySelector('.lang-tab-btn[data-langtab="es"]').click();
+        document.getElementById('postPublishedAt').value = toLocalDatetimeValue(new Date());
         editingSlug = null;
         editingExistingImage = null;
         pendingImageBase64 = null;
@@ -680,6 +696,7 @@
 
         const bodyEsHtml = postBodyEditorEs.getText().trim() ? postBodyEditorEs.root.innerHTML : '';
         const bodyEnHtml = postBodyEditorEn.getText().trim() ? postBodyEditorEn.root.innerHTML : '';
+        const publishedAtInput = document.getElementById('postPublishedAt').value;
         const payload = {
             slug: editingSlug,
             category: document.getElementById('postCategory').value,
@@ -690,6 +707,7 @@
             textEn: document.getElementById('postTextEn').value,
             bodyEn: bodyEnHtml,
             existingImage: editingExistingImage,
+            publishedAt: publishedAtInput ? new Date(publishedAtInput).toISOString() : undefined,
         };
         if (pendingImageBase64) {
             payload.imageBase64 = pendingImageBase64;
@@ -743,7 +761,10 @@
                     ${p.image ? `<img src="${p.image}" alt="">` : '<div style="width:64px;height:48px;background:var(--sky);border-radius:8px;flex-shrink:0;"></div>'}
                     <div class="post-info">
                         <h3>${p.title}</h3>
-                        <div class="post-meta">${CATEGORY_LABELS[p.category] || p.category} · ${new Date(p.publishedAt).toLocaleDateString('es-ES')} · ${p.hasEs ? 'ES' : ''}${p.hasEs && p.hasEn ? ' + ' : ''}${p.hasEn ? 'EN' : ''}</div>
+                        <div class="post-meta">
+                            ${CATEGORY_LABELS[p.category] || p.category} · ${new Date(p.publishedAt).toLocaleDateString('es-ES')} · ${p.hasEs ? 'ES' : ''}${p.hasEs && p.hasEn ? ' + ' : ''}${p.hasEn ? 'EN' : ''}
+                            ${p.isScheduled ? `<span style="color:var(--coral);font-weight:600;"> · Programado para ${new Date(p.publishedAt).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>` : ''}
+                        </div>
                     </div>
                     <div class="post-actions">
                         <button type="button" class="btn btn-ghost" style="padding:8px 14px;font-size:.78rem;" data-edit="${p.slug}">Editar</button>
@@ -781,6 +802,7 @@
         pendingImageBase64 = null;
         pendingImageType = null;
         document.getElementById('postCategory').value = post.category;
+        document.getElementById('postPublishedAt').value = toLocalDatetimeValue(post.publishedAt ? new Date(post.publishedAt) : new Date());
 
         const es = post.es || {};
         const en = post.en || {};
