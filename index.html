@@ -148,7 +148,7 @@
 
         /* ===================== NAV ===================== */
         .nav{
-            position:fixed;top:var(--announce-h);left:0;right:0;z-index:160;
+            position:fixed;top:var(--announce-h);left:0;right:0;z-index:100;
             display:flex;align-items:center;justify-content:space-between;
             padding:22px 32px;transition:padding .35s var(--ease),background .35s var(--ease),box-shadow .35s,top .3s var(--ease);
         }
@@ -156,6 +156,12 @@
             padding:14px 32px;background:rgba(61,9,16,.88);backdrop-filter:blur(10px);
             box-shadow:0 8px 30px -14px rgba(0,0,0,.5);
         }
+        /* While the mobile menu is open, the nav needs to sit ABOVE it (z-index
+           160 > mobile-menu's 150) purely so the burger button stays clickable
+           to close it again — but the logo has nothing to do showing through
+           on top of the open menu, so it's hidden for as long as it's open. */
+        .nav.menu-open{z-index:160;}
+        .nav.menu-open .logo{opacity:0;pointer-events:none;}
         .logo{display:flex;align-items:center;gap:10px;color:var(--cream);}
         .logo svg{width:30px;height:30px;color:var(--steel);flex-shrink:0;}
         .logo img{flex-shrink:0;}
@@ -1277,7 +1283,7 @@
                 <div class="stat-label" data-i18n="stats.students">Alumnos formados</div>
             </div>
             <div class="stat-card reveal" style="transition-delay:.2s">
-                <div class="stat-num"><span data-count="90">0</span>%</div>
+                <div class="stat-num"><span data-count="94">0</span>%</div>
                 <div class="stat-label" data-i18n="stats.employability">Empleabilidad</div>
             </div>
             <div class="stat-card reveal" style="transition-delay:.3s">
@@ -2552,8 +2558,14 @@
 
     const burger = document.getElementById('burgerBtn');
     const mobileMenu = document.getElementById('mobileMenu');
-    burger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
-    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.remove('open')));
+    burger.addEventListener('click', () => {
+        mobileMenu.classList.toggle('open');
+        nav.classList.toggle('menu-open', mobileMenu.classList.contains('open'));
+    });
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        nav.classList.remove('menu-open');
+    }));
 
     /* ===================== REVEAL ON SCROLL ===================== */
     const revealEls = document.querySelectorAll('.reveal:not(.is-visible)');
