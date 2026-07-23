@@ -200,7 +200,7 @@
             </div>
             <div class="field">
                 <!-- Replace YOUR_SITE_KEY_HERE with the site key from google.com/recaptcha/admin, registered for globalcrewtcp.com -->
-                <div class="g-recaptcha" data-sitekey="6Ld66V8tAAAAADcKjQpa_D7nedeixVdb4K97xVB6"></div>
+                <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div>
             </div>
             <button type="submit" class="btn btn-primary">Entrar</button>
             <p class="msg error" id="loginMsg"></p>
@@ -231,6 +231,7 @@
             <button type="button" class="tab-btn" data-tab="team">Equipo</button>
             <button type="button" class="tab-btn" data-tab="hero">Portada</button>
             <button type="button" class="tab-btn" data-tab="season">Temporada 🎄🎃</button>
+            <button type="button" class="tab-btn" data-tab="mapPoints">Puntos del mapa</button>
         </div>
 
         <div class="tab-panel" id="tab-blog">
@@ -571,6 +572,38 @@
                 <p class="msg" id="seasonMsg" style="margin-top:16px;"></p>
             </div>
         </div>
+
+        <!-- ===================== MAP POINTS TAB ===================== -->
+        <div class="tab-panel hidden" id="tab-mapPoints">
+            <div class="panel">
+                <h2>Añadir un punto al mapa</h2>
+                <p style="color:var(--ink-soft);font-size:.85rem;margin-bottom:20px;">
+                    Para marcar una ciudad en el mapa de la home sin necesidad de crear un alumno con foto y cita — se suman a los puntos que ya salen automáticamente de los alumnos contratados.
+                </p>
+                <form id="mapPointForm">
+                    <div class="form-row-two">
+                        <div class="field">
+                            <label for="mapPointCity">Ciudad</label>
+                            <input type="text" id="mapPointCity" list="cityOptions" placeholder="Escribe para buscar... p.ej. Dubai" autocomplete="off" required>
+                        </div>
+                        <div class="field">
+                            <label for="mapPointLabel">Etiqueta (opcional, ej. aerolínea)</label>
+                            <input type="text" id="mapPointLabel" placeholder="Ej: Ryanair">
+                        </div>
+                    </div>
+                    <p id="mapPointCityHint" style="font-family:var(--ff-mono);font-size:.72rem;color:var(--ink-soft);margin-top:-8px;margin-bottom:14px;"></p>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="mapPointSaveBtn" style="width:auto;">Añadir punto</button>
+                        <p class="msg" id="mapPointMsg"></p>
+                    </div>
+                </form>
+            </div>
+
+            <div class="panel">
+                <h2>Puntos añadidos manualmente</h2>
+                <div id="mapPointsList"><p class="empty-note">Cargando...</p></div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -890,6 +923,7 @@
     let teamLoaded = false;
     let heroLoaded = false;
     let seasonLoaded = false;
+    let mapPointsLoaded = false;
     document.querySelectorAll('.tab-btn').forEach((btn) => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.tab-btn').forEach((b) => b.classList.toggle('active', b === btn));
@@ -902,6 +936,7 @@
             if (btn.dataset.tab === 'team' && !teamLoaded) { teamLoaded = true; loadTeam(); }
             if (btn.dataset.tab === 'hero' && !heroLoaded) { heroLoaded = true; loadHero(); }
             if (btn.dataset.tab === 'season' && !seasonLoaded) { seasonLoaded = true; loadSeason(); }
+            if (btn.dataset.tab === 'mapPoints' && !mapPointsLoaded) { mapPointsLoaded = true; loadMapPoints(); }
         });
     });
 
@@ -1727,6 +1762,99 @@
             }
         });
     });
+
+    // ===================== PUNTOS DEL MAPA =====================
+    const mapPointCityInput = document.getElementById('mapPointCity');
+    const mapPointCityHint = document.getElementById('mapPointCityHint');
+    mapPointCityInput.addEventListener('input', () => {
+        const val = mapPointCityInput.value.trim();
+        if (!val) { mapPointCityHint.textContent = ''; return; }
+        const known = CITY_INDEX[normalizeCity(val)];
+        mapPointCityHint.textContent = known
+            ? '✓ Se marcará como "' + known + '"'
+            : 'No está en la lista — prueba a escribirla igual que en el buscador (o revisa que no tenga una errata).';
+        mapPointCityHint.style.color = known ? '#2E7D4F' : '#B3261E';
+    });
+
+    document.getElementById('mapPointForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const msg = document.getElementById('mapPointMsg');
+        const btn = document.getElementById('mapPointSaveBtn');
+        msg.textContent = 'Guardando...'; msg.className = 'msg';
+        btn.disabled = true;
+        try {
+            const res = await fetch('/api/home-data', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'mapPoint',
+                    city: mapPointCityInput.value,
+                    label: document.getElementById('mapPointLabel').value,
+                }),
+            });
+            const data = await res.json();
+            if (res.ok) {
+                msg.textContent = '¡Añadido! Puede tardar unos minutos en verse en la web (caché).';
+                msg.className = 'msg ok';
+                document.getElementById('mapPointForm').reset();
+                mapPointCityHint.textContent = '';
+                loadMapPoints();
+            } else {
+                msg.textContent = data.error || 'No se ha podido guardar.'; msg.className = 'msg error';
+            }
+        } catch {
+            msg.textContent = 'No hay conexión con el servidor.'; msg.className = 'msg error';
+        } finally {
+            btn.disabled = false;
+        }
+    });
+
+    async function loadMapPoints() {
+        const list = document.getElementById('mapPointsList');
+        list.innerHTML = '<p class="empty-note">Cargando...</p>';
+        try {
+            const res = await fetch('/api/home-data?lang=es');
+            const data = await res.json();
+            const points = Array.isArray(data.mapPoints) ? data.mapPoints : [];
+            if (!points.length) {
+                list.innerHTML = '<p class="empty-note">Todavía no has añadido ningún punto manual.</p>';
+                return;
+            }
+            list.innerHTML = points.map((p) => `
+                <div class="post-row">
+                    <div style="width:64px;height:48px;background:var(--sky);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">📍</div>
+                    <div class="post-info">
+                        <h3>${p.city}</h3>
+                        <div class="post-meta">${p.label || 'Sin etiqueta'}</div>
+                    </div>
+                    <div class="post-actions">
+                        <button type="button" class="btn btn-danger" data-delete-point="${p.id}">Borrar</button>
+                    </div>
+                </div>
+            `).join('');
+            list.querySelectorAll('[data-delete-point]').forEach((btn) => {
+                btn.addEventListener('click', () => deleteMapPoint(btn.dataset.deletePoint));
+            });
+        } catch {
+            list.innerHTML = '<p class="empty-note">No se han podido cargar los puntos.</p>';
+        }
+    }
+
+    async function deleteMapPoint(id) {
+        if (!confirm('¿Seguro que quieres borrar este punto del mapa?')) return;
+        try {
+            const res = await fetch('/api/home-data', {
+                method: 'DELETE', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'mapPoint', id }),
+            });
+            if (res.ok) {
+                loadMapPoints();
+            } else {
+                alert('No se ha podido borrar el punto.');
+            }
+        } catch {
+            alert('No hay conexión con el servidor.');
+        }
+    }
 
     checkSession();
 </script>

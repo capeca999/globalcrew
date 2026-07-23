@@ -14,6 +14,7 @@ const FAQ_KEY = 'faq/questions.json';
 const TEAM_KEY = 'team/members.json';
 const HERO_KEY = 'hero/content.json';
 const THEME_KEY = 'site/theme.json';
+const MAP_POINTS_KEY = 'map-points/points.json';
 
 // Defaults match exactly what was already hardcoded on the site, so nothing
 // changes visually until Kike actually edits something from the panel.
@@ -187,12 +188,13 @@ async function handleRead(request, response) {
     // ================= SEAT MAP / FAQ / TEAM / HERO =================
     // All known exact paths, fetched directly by URL — no listing needed.
     // Fetched in parallel since they're independent of each other.
-    const [seatmapDataRaw, faqRaw, teamRaw, heroRaw, themeRaw] = await Promise.all([
+    const [seatmapDataRaw, faqRaw, teamRaw, heroRaw, themeRaw, mapPointsRaw] = await Promise.all([
       fetchPublicJson(publicUrl(SEATMAP_KEY)),
       fetchPublicJson(publicUrl(FAQ_KEY)),
       fetchPublicJson(publicUrl(TEAM_KEY)),
       fetchPublicJson(publicUrl(HERO_KEY)),
       fetchPublicJson(publicUrl(THEME_KEY)),
+      fetchPublicJson(publicUrl(MAP_POINTS_KEY)),
     ]);
     const seatmapData = seatmapDataRaw || {};
     const seatmap = SEAT_IDS.map((id) => ({
@@ -202,13 +204,14 @@ async function handleRead(request, response) {
     const team = teamRaw || DEFAULT_TEAM;
     const hero = heroRaw || DEFAULT_HERO;
     const theme = (themeRaw && themeRaw.theme) || 'none';
+    const mapPoints = Array.isArray(mapPointsRaw) ? mapPointsRaw : [];
 
     // ================= RESPONSE =================
     if (!debug) {
       response.setHeader('Cache-Control', getSession(request) ? 'no-store' : 's-maxage=900, stale-while-revalidate=86400');
     }
 
-    const payload = { alumni, nextCourseText, seatmap, faq, team, hero, theme };
+    const payload = { alumni, nextCourseText, seatmap, faq, team, hero, theme, mapPoints };
     if (debug) {
       payload.debug = {
         lang,
@@ -220,7 +223,7 @@ async function handleRead(request, response) {
     }
     return response.status(200).json(payload);
   } catch (err) {
-    return response.status(500).json({ error: err.message, alumni: [], nextCourseText: '', seatmap: [], faq: DEFAULT_FAQ, team: DEFAULT_TEAM, hero: DEFAULT_HERO, theme: 'none' });
+    return response.status(500).json({ error: err.message, alumni: [], nextCourseText: '', seatmap: [], faq: DEFAULT_FAQ, team: DEFAULT_TEAM, hero: DEFAULT_HERO, theme: 'none', mapPoints: [] });
   }
 }
 
@@ -323,6 +326,38 @@ async function handleSaveTheme(request, response) {
   return response.status(200).json({ ok: true, theme });
 }
 
+async function handleSaveMapPoint(request, response) {
+  const { city, label } = request.body || {};
+  if (!city || !city.trim()) return response.status(400).json({ error: 'Falta la ciudad' });
+
+  const matched = lookupCity(city.trim());
+  if (!matched) {
+    return response.status(400).json({ error: 'No reconocemos esa ciudad. Prueba a escribirla igual que aparece en el buscador de ciudades del formulario de alumnos.' });
+  }
+
+  const points = (await fetchPublicJson(publicUrl(MAP_POINTS_KEY))) || [];
+  const point = {
+    id: 'mp' + Date.now(),
+    city: matched.name,
+    label: (label || '').trim(),
+    cityLat: matched.lat,
+    cityLon: matched.lon,
+  };
+  points.push(point);
+  await putObject(MAP_POINTS_KEY, JSON.stringify(points), 'application/json');
+  return response.status(200).json({ ok: true, point, mapPoints: points });
+}
+
+async function handleDeleteMapPoint(request, response) {
+  const { id } = request.body || {};
+  if (!id) return response.status(400).json({ error: 'Falta el punto a borrar' });
+
+  const points = (await fetchPublicJson(publicUrl(MAP_POINTS_KEY))) || [];
+  const filtered = points.filter((p) => p.id !== id);
+  await putObject(MAP_POINTS_KEY, JSON.stringify(filtered), 'application/json');
+  return response.status(200).json({ ok: true, mapPoints: filtered });
+}
+
 async function handlePost(request, response) {
   const session = requireAuth(request, response);
   if (!session) return;
@@ -338,6 +373,7 @@ async function handlePost(request, response) {
     if (type === 'team') return await handleSaveTeam(request, response);
     if (type === 'hero') return await handleSaveHero(request, response);
     if (type === 'theme') return await handleSaveTheme(request, response);
+    if (type === 'mapPoint') return await handleSaveMapPoint(request, response);
     return await handleSaveSeat(request, response); // default: seat (no type sent, matches existing admin.html)
   } catch (err) {
     return response.status(500).json({ error: err.message });
@@ -354,7 +390,9 @@ async function handleDelete(request, response) {
   }
 
   try {
-    return await handleDeleteSeat(request, response); // only seats support single-item delete; faq/team/hero save the whole thing via POST
+    const type = (request.body || {}).type;
+    if (type === 'mapPoint') return await handleDeleteMapPoint(request, response);
+    return await handleDeleteSeat(request, response); // default: seat (matches existing admin.html)
   } catch (err) {
     return response.status(500).json({ error: err.message });
   }

@@ -2791,10 +2791,17 @@
             .then((res) => (res.ok ? res.json() : Promise.reject()))
             .then((data) => {
                 const withCity = (data.alumni || []).filter((a) => a.cityLat != null && a.cityLon != null);
-                const points = withCity.map((a) => ({
+                const alumniPoints = withCity.map((a) => ({
                     city: a.city, lon: a.cityLon, lat: a.cityLat, airline: a.airline,
                     color: airlineColor(a.airline)
                 }));
+                // Standalone points added straight from the admin panel — no
+                // alumni photo/testimonial required — show up on the same map.
+                const extraPoints = (data.mapPoints || []).map((p) => ({
+                    city: p.city, lon: p.cityLon, lat: p.cityLat, airline: p.label,
+                    color: airlineColor(p.label)
+                }));
+                const points = [...alumniPoints, ...extraPoints];
                 drawRoutesAndPins(points.length ? points : DEFAULT_POINTS.map((p) => ({ ...p, color: airlineColor(p.airline) })));
             })
             .catch(() => drawRoutesAndPins(DEFAULT_POINTS.map((p) => ({ ...p, color: airlineColor(p.airline) }))));
