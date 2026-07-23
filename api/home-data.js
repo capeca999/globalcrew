@@ -208,6 +208,7 @@ async function handleRead(request, response) {
 
     // ================= RESPONSE =================
     if (!debug) {
+      response.setHeader('Vary', 'Cookie');
       response.setHeader('Cache-Control', getSession(request) ? 'no-store' : 's-maxage=900, stale-while-revalidate=86400');
     }
 

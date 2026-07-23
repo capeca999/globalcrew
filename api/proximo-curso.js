@@ -35,6 +35,8 @@ async function handleRead(request, response) {
       text = await fetchPublicText(mostRecentUrl(esTexts.length ? esTexts : blobs));
     }
 
+    response.setHeader('Vary', 'Cookie');
+
     response.setHeader('Cache-Control', getSession(request) ? 'no-store' : 's-maxage=900, stale-while-revalidate=3600');
     return response.status(200).json({ text });
   } catch (err) {

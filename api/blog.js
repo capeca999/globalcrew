@@ -47,6 +47,8 @@ async function handleGetOne(request, response) {
       return response.status(404).json({ error: 'Artículo no encontrado' });
     }
 
+    response.setHeader('Vary', 'Cookie');
+
     response.setHeader('Cache-Control', isAdmin ? 'no-store' : 's-maxage=600, stale-while-revalidate=3600');
     return response.status(200).json({ post });
   } catch (err) {
@@ -73,6 +75,8 @@ async function handleList(request, response) {
       posts = posts.filter((p) => p.category === category);
     }
     posts.sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0));
+
+    response.setHeader('Vary', 'Cookie');
 
     response.setHeader('Cache-Control', isAdmin ? 'no-store' : 's-maxage=600, stale-while-revalidate=3600');
     return response.status(200).json({ posts });

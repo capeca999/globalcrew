@@ -143,6 +143,7 @@ async function handleList(request, response) {
     alumni.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
 
     if (!debug) {
+      response.setHeader('Vary', 'Cookie');
       response.setHeader('Cache-Control', getSession(request) ? 'no-store' : 's-maxage=300, stale-while-revalidate=600');
     }
 
@@ -168,6 +169,8 @@ async function handleListAirlines(request, response) {
     const airlines = logos
       .map((l) => ({ name: baseName(l.pathname).replace(IMAGE_RE, ''), logoUrl: l.url }))
       .sort((a, b) => a.name.localeCompare(b.name, 'es'));
+
+    response.setHeader('Vary', 'Cookie');
 
     response.setHeader('Cache-Control', getSession(request) ? 'no-store' : 's-maxage=300, stale-while-revalidate=600');
     return response.status(200).json({ airlines });
