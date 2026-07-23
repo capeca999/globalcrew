@@ -200,7 +200,7 @@
             </div>
             <div class="field">
                 <!-- Replace YOUR_SITE_KEY_HERE with the site key from google.com/recaptcha/admin, registered for globalcrewtcp.com -->
-                <div class="g-recaptcha" data-sitekey="6Ld66V8tAAAAADcKjQpa_D7nedeixVdb4K97xVB6"></div>
+                <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div>
             </div>
             <button type="submit" class="btn btn-primary">Entrar</button>
             <p class="msg error" id="loginMsg"></p>
@@ -589,8 +589,17 @@
                             </select>
                         </div>
                         <div class="field">
-                            <label for="mapPointLabel">Etiqueta (opcional, ej. aerolínea)</label>
-                            <input type="text" id="mapPointLabel" list="airlineOptions" placeholder="Ej: Ryanair" autocomplete="off">
+                            <label for="mapPointLabel">Aerolínea (opcional)</label>
+                            <select id="mapPointLabel">
+                                <option value="">Sin aerolínea / otro</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="mapPointColor">Color del punto en el mapa</label>
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <input type="color" id="mapPointColor" value="#E4572E" style="width:56px;height:40px;padding:2px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer;">
+                            <span id="mapPointColorHex" style="font-family:var(--ff-mono);font-size:.8rem;color:var(--ink-soft);">#E4572E</span>
                         </div>
                     </div>
                     <div class="form-actions">
@@ -1207,6 +1216,13 @@
             document.getElementById('airlineOptions').innerHTML =
                 airlines.map((a) => `<option value="${a.name}"></option>`).join('');
 
+            // Also feed the map point form's airline dropdown.
+            const mapPointLabelSelect = document.getElementById('mapPointLabel');
+            if (mapPointLabelSelect) {
+                mapPointLabelSelect.innerHTML = '<option value="">Sin aerolínea / otro</option>' +
+                    airlines.map((a) => `<option value="${a.name}">${a.name}</option>`).join('');
+            }
+
             if (!airlines.length) {
                 airlineList.innerHTML = '<p class="empty-note">Todavía no hay ninguna aerolínea con logo.</p>';
                 return;
@@ -1775,6 +1791,29 @@
         })
         .catch(() => { /* the field just stays with the placeholder if this fails to load */ });
 
+    // Same brand colors used for the dots on the public map — picking a
+    // known airline here suggests its color automatically (still fully
+    // editable with the color picker afterwards).
+    const MAP_AIRLINE_COLORS = {
+        'iberia': '#D91023', 'vueling': '#FFCC00', 'volotea': '#6D2077', 'ryanair': '#073590',
+        'easyjet': '#FF6600', 'world2fly': '#0072CE', 'emirates': '#D71921', 'qatar': '#5C0632',
+        'qatar airways': '#5C0632', 'air arabia': '#E4032E', 'air nostrum': '#004990',
+        'klasjet': '#8C8783', 'eurowings': '#6600CC', 'tradeair': '#0057A8',
+    };
+
+    const mapPointColorInput = document.getElementById('mapPointColor');
+    const mapPointColorHex = document.getElementById('mapPointColorHex');
+    mapPointColorInput.addEventListener('input', () => {
+        mapPointColorHex.textContent = mapPointColorInput.value.toUpperCase();
+    });
+    document.getElementById('mapPointLabel').addEventListener('change', (e) => {
+        const known = MAP_AIRLINE_COLORS[(e.target.value || '').trim().toLowerCase()];
+        if (known) {
+            mapPointColorInput.value = known;
+            mapPointColorHex.textContent = known.toUpperCase();
+        }
+    });
+
     document.getElementById('mapPointForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const msg = document.getElementById('mapPointMsg');
@@ -1788,6 +1827,7 @@
                     type: 'mapPoint',
                     city: mapPointCityInput.value,
                     label: document.getElementById('mapPointLabel').value,
+                    color: mapPointColorInput.value,
                 }),
             });
             const data = await res.json();
@@ -1795,6 +1835,8 @@
                 msg.textContent = '¡Añadido! Puede tardar unos minutos en verse en la web (caché).';
                 msg.className = 'msg ok';
                 document.getElementById('mapPointForm').reset();
+                mapPointColorInput.value = '#E4572E';
+                mapPointColorHex.textContent = '#E4572E';
                 loadMapPoints();
             } else {
                 msg.textContent = data.error || 'No se ha podido guardar.'; msg.className = 'msg error';
@@ -1819,10 +1861,12 @@
             }
             list.innerHTML = points.map((p) => `
                 <div class="post-row">
-                    <div style="width:64px;height:48px;background:var(--sky);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">📍</div>
+                    <div style="width:64px;height:48px;background:var(--sky);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+                        <span style="width:16px;height:16px;border-radius:50%;background:${p.color || '#E4572E'};border:2px solid #fff;box-shadow:0 0 0 1px var(--line);"></span>
+                    </div>
                     <div class="post-info">
                         <h3>${p.city}</h3>
-                        <div class="post-meta">${p.label || 'Sin etiqueta'}</div>
+                        <div class="post-meta">${p.label || 'Sin aerolínea'} · ${(p.color || '#E4572E').toUpperCase()}</div>
                     </div>
                     <div class="post-actions">
                         <button type="button" class="btn btn-danger" data-delete-point="${p.id}">Borrar</button>

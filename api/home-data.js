@@ -327,7 +327,7 @@ async function handleSaveTheme(request, response) {
 }
 
 async function handleSaveMapPoint(request, response) {
-  const { city, label } = request.body || {};
+  const { city, label, color } = request.body || {};
   if (!city || !city.trim()) return response.status(400).json({ error: 'Falta la ciudad' });
 
   const matched = lookupCity(city.trim());
@@ -340,6 +340,7 @@ async function handleSaveMapPoint(request, response) {
     id: 'mp' + Date.now(),
     city: matched.name,
     label: (label || '').trim(),
+    color: /^#[0-9a-fA-F]{6}$/.test(color || '') ? color : '#E4572E',
     cityLat: matched.lat,
     cityLon: matched.lon,
   };
