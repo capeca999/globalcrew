@@ -950,7 +950,7 @@
         }
         .blog-filter:hover{border-color:var(--steel);}
         .blog-filter.active{background:var(--navy-950);color:#fff;border-color:var(--navy-950);}
-        .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;}
+        .blog-grid{display:grid;grid-template-columns:minmax(0,480px);justify-content:center;gap:26px;}
         .blog-card{
             background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);
             overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .3s,transform .3s;cursor:pointer;
@@ -979,10 +979,10 @@
         .blog-card-toggle svg{width:13px;height:13px;transform:rotate(90deg);transition:transform .3s var(--ease);}
         .blog-card-toggle.open svg{transform:rotate(-90deg);}
         @media (max-width:980px){
-            .blog-grid{grid-template-columns:repeat(2,1fr);}
+            .blog-grid{grid-template-columns:minmax(0,480px);}
         }
         @media (max-width:640px){
-            .blog-grid{grid-template-columns:1fr;}
+            .blog-grid{grid-template-columns:minmax(0,1fr);}
             .blog-filters{gap:6px;}
             .blog-filter{padding:8px 14px;font-size:.72rem;}
         }
@@ -1283,7 +1283,7 @@
                 <div class="stat-label" data-i18n="stats.students">Alumnos formados</div>
             </div>
             <div class="stat-card reveal" style="transition-delay:.2s">
-                <div class="stat-num"><span data-count="94">0</span>%</div>
+                <div class="stat-num"><span data-count="90">0</span>%</div>
                 <div class="stat-label" data-i18n="stats.employability">Empleabilidad</div>
             </div>
             <div class="stat-card reveal" style="transition-delay:.3s">
@@ -3560,7 +3560,7 @@
             try {
                 const res = await fetch(`/api/blog?lang=${currentLang}`);
                 const data = await res.json();
-                const posts = (Array.isArray(data.posts) ? data.posts : []).slice(0, 3);
+                const posts = (Array.isArray(data.posts) ? data.posts : []).slice(0, 1);
 
                 if (!posts.length) {
                     grid.innerHTML = `<p class="blog-empty" data-i18n="blog.empty">Muy pronto, los primeros artículos del blog.</p>`;
