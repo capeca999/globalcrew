@@ -200,7 +200,7 @@
             </div>
             <div class="field">
                 <!-- Replace YOUR_SITE_KEY_HERE with the site key from google.com/recaptcha/admin, registered for globalcrewtcp.com -->
-                <div class="g-recaptcha" data-sitekey="6Ld66V8tAAAAADcKjQpa_D7nedeixVdb4K97xVB6"></div>
+                <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div>
             </div>
             <button type="submit" class="btn btn-primary">Entrar</button>
             <p class="msg error" id="loginMsg"></p>
@@ -584,14 +584,15 @@
                     <div class="form-row-two">
                         <div class="field">
                             <label for="mapPointCity">Ciudad</label>
-                            <input type="text" id="mapPointCity" list="cityOptions" placeholder="Escribe para buscar... p.ej. Dubai" autocomplete="off" required>
+                            <select id="mapPointCity" required>
+                                <option value="">Selecciona una ciudad...</option>
+                            </select>
                         </div>
                         <div class="field">
                             <label for="mapPointLabel">Etiqueta (opcional, ej. aerolínea)</label>
-                            <input type="text" id="mapPointLabel" placeholder="Ej: Ryanair">
+                            <input type="text" id="mapPointLabel" list="airlineOptions" placeholder="Ej: Ryanair" autocomplete="off">
                         </div>
                     </div>
-                    <p id="mapPointCityHint" style="font-family:var(--ff-mono);font-size:.72rem;color:var(--ink-soft);margin-top:-8px;margin-bottom:14px;"></p>
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary" id="mapPointSaveBtn" style="width:auto;">Añadir punto</button>
                         <p class="msg" id="mapPointMsg"></p>
@@ -936,7 +937,7 @@
             if (btn.dataset.tab === 'team' && !teamLoaded) { teamLoaded = true; loadTeam(); }
             if (btn.dataset.tab === 'hero' && !heroLoaded) { heroLoaded = true; loadHero(); }
             if (btn.dataset.tab === 'season' && !seasonLoaded) { seasonLoaded = true; loadSeason(); }
-            if (btn.dataset.tab === 'mapPoints' && !mapPointsLoaded) { mapPointsLoaded = true; loadMapPoints(); }
+            if (btn.dataset.tab === 'mapPoints' && !mapPointsLoaded) { mapPointsLoaded = true; loadMapPoints(); loadAirlines(); }
         });
     });
 
@@ -1765,16 +1766,14 @@
 
     // ===================== PUNTOS DEL MAPA =====================
     const mapPointCityInput = document.getElementById('mapPointCity');
-    const mapPointCityHint = document.getElementById('mapPointCityHint');
-    mapPointCityInput.addEventListener('input', () => {
-        const val = mapPointCityInput.value.trim();
-        if (!val) { mapPointCityHint.textContent = ''; return; }
-        const known = CITY_INDEX[normalizeCity(val)];
-        mapPointCityHint.textContent = known
-            ? '✓ Se marcará como "' + known + '"'
-            : 'No está en la lista — prueba a escribirla igual que en el buscador (o revisa que no tenga una errata).';
-        mapPointCityHint.style.color = known ? '#2E7D4F' : '#B3261E';
-    });
+    fetch('/cities.json')
+        .then((res) => res.json())
+        .then((data) => {
+            const names = Object.values(data).map((c) => c.display).sort((a, b) => a.localeCompare(b, 'es'));
+            mapPointCityInput.innerHTML = '<option value="">Selecciona una ciudad...</option>' +
+                names.map((n) => `<option value="${n}">${n}</option>`).join('');
+        })
+        .catch(() => { /* the field just stays with the placeholder if this fails to load */ });
 
     document.getElementById('mapPointForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -1796,7 +1795,6 @@
                 msg.textContent = '¡Añadido! Puede tardar unos minutos en verse en la web (caché).';
                 msg.className = 'msg ok';
                 document.getElementById('mapPointForm').reset();
-                mapPointCityHint.textContent = '';
                 loadMapPoints();
             } else {
                 msg.textContent = data.error || 'No se ha podido guardar.'; msg.className = 'msg error';
