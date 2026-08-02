@@ -4,67 +4,156 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Política de Cookies · Global Crew Valencia</title>
-<meta name="robots" content="noindex, follow">
+<meta name="robots" content="index, follow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="images/favicon-32.png">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-:root{
-  --navy-950:#3D0910;--navy-800:#750C1B;--steel:#8C8783;--steel-dark:#4A4643;
-  --cream:#F7F1EC;--ink:#241E1C;--ink-soft:#6E6763;--line:rgba(43,38,36,.14);
-}
-body{font-family:'Inter',sans-serif;color:var(--ink);background:var(--cream);line-height:1.65;}
-.wrap{max-width:760px;margin:0 auto;padding:56px 24px 100px;}
-a{color:var(--navy-800);}
-.back{display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--ink-soft);text-decoration:none;margin-bottom:36px;}
-.back:hover{color:var(--navy-800);}
-h1{font-family:'Space Grotesk',sans-serif;font-size:2rem;color:var(--navy-950);margin-bottom:8px;}
-.updated{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--ink-soft);letter-spacing:.04em;margin-bottom:36px;}
-h2{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;color:var(--navy-800);margin:36px 0 12px;}
-p,li{font-size:.96rem;color:var(--ink);margin-bottom:10px;}
-ul{padding-left:20px;margin-bottom:14px;}
-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.9rem;}
-th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);}
-th{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.04em;color:var(--ink-soft);text-transform:uppercase;}
-.footer-note{margin-top:56px;padding-top:24px;border-top:1px solid var(--line);font-size:.82rem;color:var(--ink-soft);}
+    :root{
+        --navy-950:#3D0910;--navy-800:#750C1B;--steel:#8C8783;--steel-light:#D6D2CD;
+        --cream:#F7F1EC;--sky:#EFEBE8;--coral:#E4572E;--ink:#241E1C;--ink-soft:#6E6763;
+        --line:rgba(43,38,36,0.14);--ff-display:'Space Grotesk',sans-serif;--ff-body:'Inter',sans-serif;
+        --ff-mono:'IBM Plex Mono',monospace;--radius-lg:18px;--ease:cubic-bezier(.22,.9,.32,1);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:var(--ff-body);color:var(--ink);background:var(--sky);-webkit-font-smoothing:antialiased;}
+    a{color:var(--navy-800);}
+    .wrap{max-width:820px;margin:0 auto;padding:0 32px;}
+    @media (max-width:640px){.wrap{padding:0 20px;}}
+
+    .mini-nav{background:var(--navy-950);padding:20px 0;}
+    .mini-nav .wrap{display:flex;align-items:center;justify-content:space-between;max-width:none;width:100%;padding:0 32px;}
+    .mini-logo{display:flex;align-items:center;gap:11px;color:#fff;text-decoration:none;}
+    .mini-logo-mark{width:38px;height:38px;border-radius:50%;overflow:hidden;flex-shrink:0;background:rgba(247,241,236,.08);}
+    .mini-logo-mark img{width:100%;height:100%;object-fit:cover;display:block;}
+    .mini-logo-text{font-family:var(--ff-display);font-weight:700;font-size:1.05rem;line-height:1.1;}
+    .mini-logo-text span{display:block;font-family:var(--ff-mono);font-size:.58rem;letter-spacing:.14em;color:rgba(247,241,236,.5);font-weight:500;margin-top:2px;}
+    .back-link{
+        display:flex;align-items:center;gap:8px;font-family:var(--ff-display);font-weight:600;font-size:.82rem;
+        color:#fff;text-decoration:none;background:rgba(247,241,236,.08);border:1px solid rgba(247,241,236,.2);
+        padding:9px 18px 9px 14px;border-radius:100px;transition:background .25s;
+    }
+    .back-link:hover{background:var(--coral);}
+    .back-link svg{width:15px;height:15px;}
+
+    .content{padding:56px 0 100px;}
+    .eyebrow{font-family:var(--ff-mono);font-size:.72rem;letter-spacing:.1em;color:var(--coral);text-transform:uppercase;}
+    h1{font-family:var(--ff-display);font-weight:700;font-size:clamp(1.7rem,4vw,2.3rem);color:var(--navy-950);margin:12px 0 8px;}
+    .updated{font-family:var(--ff-mono);font-size:.76rem;color:var(--ink-soft);margin-bottom:36px;}
+    h2{font-family:var(--ff-display);font-weight:700;font-size:1.2rem;color:var(--navy-950);margin:36px 0 12px;}
+    p{font-size:.96rem;line-height:1.7;color:var(--ink);margin-bottom:14px;}
+    ul{margin:0 0 14px 22px;}
+    li{font-size:.96rem;line-height:1.7;margin-bottom:6px;}
+    table{width:100%;border-collapse:collapse;margin:16px 0 24px;font-size:.85rem;}
+    th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+    th{font-family:var(--ff-mono);font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);}
+    .btn-cta{
+        display:inline-flex;align-items:center;gap:8px;font-family:var(--ff-display);font-weight:600;font-size:.9rem;
+        color:#fff;background:var(--navy-950);padding:12px 22px;border-radius:100px;text-decoration:none;
+        cursor:pointer;border:none;margin-top:8px;
+    }
+    .btn-cta:hover{background:var(--coral);}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <a href="index.html" class="back">← Volver a la web</a>
-  <h1>Política de Cookies</h1>
-  <p class="updated">Última actualización: julio de 2026</p>
 
-  <p>Una cookie es un pequeño archivo que se guarda en tu navegador cuando visitas una web. Te explicamos qué cookies usa globalcrewtcp.com y para qué sirven.</p>
+<header class="mini-nav">
+    <div class="wrap">
+        <a href="index.html" class="mini-logo">
+            <span class="mini-logo-mark"><img src="images/logo-nav.png" alt="Global Crew Valencia"></span>
+            <span class="mini-logo-text">GLOBAL CREW<span>ESCUELA DE TRIPULANTES</span></span>
+        </a>
+        <a href="index.html" class="back-link">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M5 12L11 6M5 12L11 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Volver a la web</span>
+        </a>
+    </div>
+</header>
 
-  <h2>Cookies que utilizamos actualmente</h2>
-  <p>Esta web, en su configuración actual, no instala cookies propias de seguimiento ni de publicidad. Únicamente pueden generarse las cookies técnicas estrictamente necesarias para que la web funcione (por ejemplo, para recordar tu preferencia si cierras el aviso de la próxima convocatoria).</p>
+<div class="wrap content">
+    <span class="eyebrow">LEGAL</span>
+    <h1>Política de Cookies</h1>
+    <p class="updated">Última actualización: agosto de 2026</p>
 
-  <table>
-    <tr><th>Tipo</th><th>Finalidad</th><th>Duración</th></tr>
-    <tr><td>Técnicas</td><td>Necesarias para el funcionamiento básico de la web</td><td>Sesión</td></tr>
-  </table>
+    <p>
+        Esta web, propiedad de <strong>Global Crew Valencia</strong> (en adelante, "nosotros" o "el sitio"), utiliza
+        cookies y tecnologías similares (como el almacenamiento local del navegador) para que funcione correctamente,
+        recordar tus preferencias y entender cómo se usa. Esta página explica qué cookies usamos, para qué sirven y
+        cómo puedes gestionarlas, conforme a la Ley 34/2002 (LSSI-CE) y al Reglamento General de Protección de Datos (RGPD).
+    </p>
 
-  <h2>Servicios de terceros integrados</h2>
-  <p>Algunos elementos de la web cargan contenido de terceros, que pueden establecer sus propias cookies conforme a sus políticas:</p>
-  <ul>
-    <li><strong>YouTube</strong> (vídeo incrustado): puede instalar cookies de Google al reproducir el vídeo.</li>
-    <li><strong>WhatsApp</strong>: al pulsar el botón de WhatsApp, te redirige a la app o web de WhatsApp, sujeta a la política de Meta.</li>
-    <li><strong>Formspree</strong>: procesa el envío del formulario de contacto; no instala cookies de seguimiento en tu navegador.</li>
-  </ul>
+    <h2>¿Qué es una cookie?</h2>
+    <p>
+        Una cookie es un pequeño archivo de texto que un sitio web guarda en tu navegador cuando lo visitas. Sirve
+        para que la web te "recuerde" en visitas posteriores (por ejemplo, tu idioma), o para que quien la gestiona
+        entienda cómo se usa. Algunas cookies son imprescindibles para que la web funcione; otras son opcionales.
+    </p>
 
-  <h2>Cómo gestionar las cookies</h2>
-  <p>Puedes permitir, bloquear o eliminar las cookies instaladas en tu equipo mediante la configuración de tu navegador:</p>
-  <ul>
-    <li>Chrome: Configuración → Privacidad y seguridad → Cookies</li>
-    <li>Safari: Preferencias → Privacidad</li>
-    <li>Firefox: Opciones → Privacidad y seguridad</li>
-  </ul>
+    <h2>¿Qué cookies usamos?</h2>
 
-  <div class="footer-note">
-    Este documento es una plantilla general y no sustituye el asesoramiento de un profesional legal. Si en el futuro añadís herramientas de analítica o publicidad (Google Analytics, Meta Pixel, etc.), esta política debería actualizarse e incluir un panel de configuración de cookies.
-  </div>
+    <h2 style="font-size:1.02rem;margin-top:24px;">1. Cookies técnicas o necesarias (no requieren tu consentimiento)</h2>
+    <p>Son imprescindibles para que la web funcione. No se pueden desactivar porque, sin ellas, algunas partes del sitio dejarían de funcionar.</p>
+    <table>
+        <tr><th>Nombre</th><th>Finalidad</th><th>Duración</th><th>Titular</th></tr>
+        <tr><td><code>gcLang</code></td><td>Recuerda si prefieres ver la web en español o inglés.</td><td>Persistente (hasta que la borres)</td><td>Propia</td></tr>
+        <tr><td><code>gc_admin_session</code></td><td>Mantiene iniciada la sesión del equipo en el panel de administración.</td><td>8 horas</td><td>Propia</td></tr>
+        <tr><td><code>gc_cookie_consent</code></td><td>Recuerda qué elegiste en este aviso de cookies, para no volver a preguntarte.</td><td>Persistente (hasta que la borres)</td><td>Propia</td></tr>
+    </table>
+
+    <h2 style="font-size:1.02rem;">2. Cookies analíticas (requieren tu consentimiento)</h2>
+    <p>Nos ayudan a entender cuánta gente visita la web, desde dónde y qué páginas les interesan más, de forma agregada. Solo se activan si las aceptas.</p>
+    <table>
+        <tr><th>Nombre</th><th>Finalidad</th><th>Duración</th><th>Titular</th></tr>
+        <tr><td><code>_ga</code></td><td>Distingue usuarios únicos, para las estadísticas de Google Analytics.</td><td>2 años</td><td>Google</td></tr>
+        <tr><td><code>_ga_*</code></td><td>Mantiene el estado de la sesión de navegación para Google Analytics 4.</td><td>2 años</td><td>Google</td></tr>
+    </table>
+    <p>
+        Puedes consultar la política de privacidad de Google sobre estas cookies en
+        <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener">policies.google.com/technologies/cookies</a>.
+    </p>
+
+    <h2>¿Cómo puedo aceptar, rechazar o cambiar mi elección?</h2>
+    <p>
+        Al entrar por primera vez en la web verás un aviso donde puedes <strong>aceptar todas las cookies</strong>,
+        <strong>rechazar las que no son necesarias</strong>, o <strong>elegir cuáles quieres</strong> de forma individual.
+        Rechazarlas no te impide navegar por la web con normalidad.
+    </p>
+    <p>Si cambias de opinión más adelante, puedes volver a abrir esa configuración en cualquier momento:</p>
+    <button type="button" class="btn-cta cookie-settings-link" id="reopenCookieSettings">Configurar mis cookies</button>
+
+    <h2>¿Cómo puedo desactivar las cookies desde mi navegador?</h2>
+    <p>
+        Además de la configuración de esta web, también puedes bloquear o borrar las cookies directamente desde los
+        ajustes de tu navegador. Ten en cuenta que si desactivas las cookies técnicas, algunas partes de la web
+        (como recordar tu idioma) podrían dejar de funcionar correctamente.
+    </p>
+    <ul>
+        <li><a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener">Google Chrome</a></li>
+        <li><a href="https://support.mozilla.org/es/kb/Deshabilitar%20cookies%20de%20terceros" target="_blank" rel="noopener">Mozilla Firefox</a></li>
+        <li><a href="https://support.apple.com/es-es/guide/safari/sfri11471/mac" target="_blank" rel="noopener">Safari</a></li>
+        <li><a href="https://support.microsoft.com/es-es/microsoft-edge" target="_blank" rel="noopener">Microsoft Edge</a></li>
+    </ul>
+
+    <h2>Cambios en esta política</h2>
+    <p>
+        Podemos actualizar esta política si cambian las cookies que usamos o la normativa aplicable. Si el cambio es
+        relevante, volveremos a mostrarte el aviso de consentimiento.
+    </p>
+
+    <h2>Contacto</h2>
+    <p>
+        Si tienes cualquier duda sobre esta política, puedes escribirnos a
+        <a href="mailto:info@globalcrewvalencia.com">info@globalcrewvalencia.com</a>.
+    </p>
 </div>
+
+<script>
+    // If someone lands here directly (not via the banner), still let them
+    // reopen the same settings panel — but since that panel only exists on
+    // the main site's markup, send them to the homepage with a flag instead.
+    document.getElementById('reopenCookieSettings').addEventListener('click', function () {
+        window.location.href = 'index.html#cookie-settings';
+    });
+</script>
+
 </body>
 </html>

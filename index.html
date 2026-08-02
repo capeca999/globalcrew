@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-FKESVCLZ3G"></script>
+<!-- Google tag (gtag.js) — only actually loads after cookie consent, see cookie-consent.js logic below -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-FKESVCLZ3G');
+  window.__gaMeasurementId = 'G-FKESVCLZ3G';
 </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1111,6 +1109,66 @@
         @media (prefers-reduced-motion:reduce){
             .season-particle{display:none;}
         }
+        /* ===================== COOKIE CONSENT ===================== */
+        #cookieBanner{
+            position:fixed;left:0;right:0;bottom:0;z-index:400;
+            background:var(--navy-950);color:#fff;padding:22px 24px;
+            box-shadow:0 -12px 40px -12px rgba(0,0,0,.4);
+            transform:translateY(110%);transition:transform .4s var(--ease);
+        }
+        #cookieBanner.open{transform:translateY(0);}
+        .cookie-banner-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+        .cookie-banner-text{flex:1 1 320px;font-size:.86rem;line-height:1.55;color:rgba(247,241,236,.85);}
+        .cookie-banner-text a{color:var(--coral);text-decoration:underline;}
+        .cookie-banner-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;flex:0 0 auto;}
+        .cookie-btn{
+            font-family:var(--ff-display);font-weight:600;font-size:.86rem;
+            padding:11px 20px;border-radius:100px;cursor:pointer;border:1px solid transparent;
+            transition:transform .2s,background .2s;white-space:nowrap;
+        }
+        .cookie-btn:hover{transform:translateY(-1px);}
+        .cookie-btn-reject{background:transparent;color:#fff;border-color:rgba(247,241,236,.4);}
+        .cookie-btn-reject:hover{background:rgba(247,241,236,.08);}
+        .cookie-btn-accept{background:var(--coral);color:#fff;}
+        .cookie-btn-accept:hover{background:#c94322;}
+        .cookie-btn-settings{background:transparent;color:rgba(247,241,236,.75);text-decoration:underline;padding:11px 4px;}
+
+        #cookieSettings{
+            position:fixed;inset:0;z-index:401;background:rgba(36,30,28,.7);
+            display:flex;align-items:center;justify-content:center;padding:20px;
+            opacity:0;pointer-events:none;transition:opacity .25s var(--ease);
+        }
+        #cookieSettings.open{opacity:1;pointer-events:auto;}
+        .cookie-settings-card{
+            background:#fff;border-radius:var(--radius-lg);max-width:520px;width:100%;
+            max-height:86vh;overflow-y:auto;padding:30px;color:var(--ink);
+        }
+        .cookie-settings-card h3{font-family:var(--ff-display);font-size:1.2rem;color:var(--navy-950);margin-bottom:10px;}
+        .cookie-settings-card p{font-size:.88rem;color:var(--ink-soft);line-height:1.55;margin-bottom:20px;}
+        .cookie-category{
+            display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+            padding:16px 0;border-top:1px solid var(--line);
+        }
+        .cookie-category-info h4{font-family:var(--ff-display);font-size:.92rem;color:var(--navy-950);margin-bottom:4px;}
+        .cookie-category-info p{font-size:.8rem;color:var(--ink-soft);margin:0;}
+        .cookie-switch{position:relative;width:42px;height:24px;flex-shrink:0;margin-top:2px;}
+        .cookie-switch input{opacity:0;width:0;height:0;}
+        .cookie-switch-track{
+            position:absolute;inset:0;background:var(--line);border-radius:100px;cursor:pointer;transition:background .2s;
+        }
+        .cookie-switch-track::before{
+            content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;
+            transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3);
+        }
+        .cookie-switch input:checked + .cookie-switch-track{background:var(--coral);}
+        .cookie-switch input:checked + .cookie-switch-track::before{transform:translateX(18px);}
+        .cookie-switch input:disabled + .cookie-switch-track{background:var(--steel);opacity:.6;cursor:not-allowed;}
+        .cookie-settings-actions{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap;}
+        @media (max-width:640px){
+            .cookie-banner-inner{flex-direction:column;align-items:stretch;}
+            .cookie-banner-actions{justify-content:stretch;}
+            .cookie-btn{flex:1;text-align:center;}
+        }
     </style>
     <script type="application/ld+json">
         {
@@ -1283,7 +1341,7 @@
                 <div class="stat-label" data-i18n="stats.students">Alumnos formados</div>
             </div>
             <div class="stat-card reveal" style="transition-delay:.2s">
-                <div class="stat-num"><span data-count="90">0</span>%</div>
+                <div class="stat-num"><span data-count="94">0</span>%</div>
                 <div class="stat-label" data-i18n="stats.employability">Empleabilidad</div>
             </div>
             <div class="stat-card reveal" style="transition-delay:.3s">
@@ -2001,7 +2059,7 @@
         </div>
         <div class="footer-bottom">
             <span data-i18n="footer.copyright">© 2026 Global Crew Valencia · Escuela de Tripulantes.</span>
-            <span><a href="privacidad.html" data-i18n="footer.privacy">Privacidad</a> · <a href="cookies.html" data-i18n="footer.cookies">Cookies</a> · <a href="aviso-legal.html" data-i18n="footer.legal">Aviso legal</a></span>
+            <span><a href="privacidad.html" data-i18n="footer.privacy">Privacidad</a> · <a href="cookies.html" data-i18n="footer.cookies">Cookies</a> · <a href="aviso-legal.html" data-i18n="footer.legal">Aviso legal</a> · <a href="#" class="cookie-settings-link">Configurar cookies</a></span>
         </div>
     </div>
 </footer>
@@ -3734,6 +3792,131 @@
         loadHomeDataFromBlob(currentLang);
     }
 </script><div id="seasonEffect" aria-hidden="true"></div>
+
+<div id="cookieBanner" role="dialog" aria-label="Aviso de cookies">
+    <div class="cookie-banner-inner">
+        <p class="cookie-banner-text">
+            Usamos cookies propias (necesarias para que la web funcione) y de terceros (Google Analytics, para saber cuánta gente nos visita) tal como se explica en nuestra <a href="cookies.html">Política de Cookies</a>. Puedes aceptarlas todas, rechazar las que no son necesarias, o elegir cuáles quieres.
+        </p>
+        <div class="cookie-banner-actions">
+            <button type="button" class="cookie-btn cookie-btn-settings" id="cookieOpenSettings">Configurar</button>
+            <button type="button" class="cookie-btn cookie-btn-reject" id="cookieRejectAll">Rechazar todas</button>
+            <button type="button" class="cookie-btn cookie-btn-accept" id="cookieAcceptAll">Aceptar todas</button>
+        </div>
+    </div>
+</div>
+
+<div id="cookieSettings">
+    <div class="cookie-settings-card">
+        <h3>Preferencias de cookies</h3>
+        <p>Puedes activar o desactivar cada tipo de cookie. Las necesarias no se pueden desactivar porque la web no funcionaría sin ellas. Más detalles en la <a href="cookies.html" style="color:var(--coral);">Política de Cookies</a>.</p>
+
+        <div class="cookie-category">
+            <div class="cookie-category-info">
+                <h4>Necesarias</h4>
+                <p>Recuerdan tu idioma y, si eres del equipo, tu sesión al entrar al panel. Siempre activas.</p>
+            </div>
+            <label class="cookie-switch">
+                <input type="checkbox" checked disabled>
+                <span class="cookie-switch-track"></span>
+            </label>
+        </div>
+
+        <div class="cookie-category">
+            <div class="cookie-category-info">
+                <h4>Analíticas (Google Analytics)</h4>
+                <p>Nos ayudan a saber cuánta gente visita la web y qué páginas ven, de forma anónima/agregada.</p>
+            </div>
+            <label class="cookie-switch">
+                <input type="checkbox" id="cookieAnalyticsToggle">
+                <span class="cookie-switch-track"></span>
+            </label>
+        </div>
+
+        <div class="cookie-settings-actions">
+            <button type="button" class="btn" style="background:var(--sky);color:var(--ink);border-radius:100px;padding:12px 22px;font-family:var(--ff-display);font-weight:600;" id="cookieSettingsClose">Cancelar</button>
+            <button type="button" class="cookie-btn cookie-btn-accept" id="cookieSettingsSave">Guardar preferencias</button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    var STORAGE_KEY = 'gc_cookie_consent'; // { analytics: true|false, ts: <timestamp> }
+
+    function loadGA() {
+        if (window.__gaLoaded || !window.__gaMeasurementId) return;
+        window.__gaLoaded = true;
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + window.__gaMeasurementId;
+        document.head.appendChild(s);
+        gtag('js', new Date());
+        gtag('config', window.__gaMeasurementId);
+    }
+
+    function getConsent() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) { return null; }
+    }
+    function saveConsent(analytics) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ analytics: analytics, ts: Date.now() }));
+    }
+
+    var banner = document.getElementById('cookieBanner');
+    var settings = document.getElementById('cookieSettings');
+    var analyticsToggle = document.getElementById('cookieAnalyticsToggle');
+
+    function applyConsent(consent) {
+        if (consent && consent.analytics) loadGA();
+    }
+
+    function showBanner() { banner.classList.add('open'); }
+    function hideBanner() { banner.classList.remove('open'); }
+    function openSettings() {
+        var current = getConsent();
+        analyticsToggle.checked = !!(current && current.analytics);
+        settings.classList.add('open');
+    }
+    function closeSettings() { settings.classList.remove('open'); }
+
+    document.getElementById('cookieAcceptAll').addEventListener('click', function() {
+        saveConsent(true);
+        applyConsent({ analytics: true });
+        hideBanner();
+    });
+    document.getElementById('cookieRejectAll').addEventListener('click', function() {
+        saveConsent(false);
+        hideBanner();
+    });
+    document.getElementById('cookieOpenSettings').addEventListener('click', openSettings);
+    document.getElementById('cookieSettingsClose').addEventListener('click', closeSettings);
+    document.getElementById('cookieSettingsSave').addEventListener('click', function() {
+        var analytics = analyticsToggle.checked;
+        saveConsent(analytics);
+        applyConsent({ analytics: analytics });
+        closeSettings();
+        hideBanner();
+    });
+    settings.addEventListener('click', function(e) { if (e.target === settings) closeSettings(); });
+
+    // A small "Configuración de cookies" link (added in the footer of each
+    // page) lets people change their mind after the fact.
+    document.querySelectorAll('.cookie-settings-link').forEach(function(el) {
+        el.addEventListener('click', function(e) { e.preventDefault(); openSettings(); });
+    });
+
+    var existing = getConsent();
+    if (existing) {
+        applyConsent(existing);
+    } else {
+        showBanner();
+    }
+
+    if (window.location.hash === '#cookie-settings') {
+        openSettings();
+    }
+})();
+</script>
 
 </body>
 </html>
